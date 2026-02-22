@@ -1,0 +1,6 @@
+---
+# Disable clang-format for third-party code.
+# These files are vendored and must not be reformatted.
+DisableFormat: true
+SortIncludes: Never
+...

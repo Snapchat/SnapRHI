@@ -1,0 +1,132 @@
+//
+// draw_color.msl
+// SnapRHI Demo Application - Metal Shader
+//
+// Copyright (c) 2026 Snap Inc. All rights reserved.
+//
+// This Metal shader draws a colored, rotating triangle.
+// It demonstrates the SnapRHI binding model for Metal:
+// - Argument buffers for descriptor set emulation
+// - Explicit buffer binding slots
+//
+// Binding Model:
+// - Argument buffer at buffer(3) contains pointer to uniform data at id(2)
+// - Vertex attributes at attribute(0) for position, attribute(1) for color
+//
+
+#include <metal_stdlib>
+using namespace metal;
+
+// =============================================================================
+// Data Structures
+// =============================================================================
+
+/**
+ * @brief Vertex input structure matching TriangleRenderer::Vertex.
+ *
+ * The attribute indices must match the vertex input state configuration:
+ * - attribute(0): position (vec2)
+ * - attribute(1): color (vec4)
+ */
+struct VertexInput {
+    float2 position [[attribute(0)]];  // 2D position in NDC
+    float4 color [[attribute(1)]];     // RGBA color per vertex
+};
+
+/**
+ * @brief Vertex shader output / Fragment shader input.
+ *
+ * The position is written to the rasterizer, color is interpolated.
+ */
+struct VertexOutput {
+    float4 position [[position]];  // Clip-space position for rasterization
+    float4 color;                  // Interpolated color for fragment shader
+};
+
+/**
+ * @brief Uniform data structure matching TriangleRenderer::UniformData.
+ *
+ * This must be 16-byte aligned and match the CPU-side struct layout exactly.
+ */
+struct TriangleSettings {
+    float4x4 transform;  // 4x4 transformation matrix (64 bytes)
+    float4 color;        // Color multiplier (16 bytes)
+};
+
+/**
+ * @brief Argument buffer structure for descriptor set emulation.
+ *
+ * SnapRHI uses argument buffers to emulate Vulkan-style descriptor sets.
+ * The buffer index (3) corresponds to kDescriptorSetIndex in TriangleRenderer.
+ * The id(2) corresponds to kUniformBufferBinding.
+ */
+struct ArgumentBuffer {
+    constant TriangleSettings* transformSettings [[id(2)]];
+};
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
+
+/**
+ * @brief Adjusts clip-space Z for Metal's depth range.
+ *
+ * Metal uses [0, 1] depth range while OpenGL/Vulkan use [-1, 1].
+ * This remaps the Z coordinate from [-w, w] to [0, w].
+ *
+ * @param position Clip-space position with OpenGL-style Z.
+ * @return Position with Metal-compatible Z range.
+ */
+float4 adjustDepthRangeForMetal(float4 position) {
+    // Remap Z from [-1, 1] * w to [0, 1] * w
+    position.z = position.z * 0.5 + 0.5 * position.w;
+    return position;
+}
+
+// =============================================================================
+// Vertex Shader
+// =============================================================================
+
+/**
+ * @brief Vertex shader entry point for the triangle demo.
+ *
+ * Transforms vertex positions using the uniform matrix and passes
+ * through the color multiplied by the uniform tint.
+ *
+ * @param input       Vertex attributes from the vertex buffer.
+ * @param argBuffer   Argument buffer containing uniform data pointer.
+ * @return Transformed vertex data for rasterization.
+ */
+vertex VertexOutput snap_rhi_demo_triangle_vs(
+    VertexInput input [[stage_in]],
+    constant ArgumentBuffer& argBuffer [[buffer(3)]]) {
+
+    VertexOutput output;
+
+    // Transform 2D position to 4D homogeneous coordinates and apply matrix
+    float4 worldPosition = argBuffer.transformSettings->transform * float4(input.position, 0.0, 1.0);
+
+    // Adjust depth for Metal's [0, 1] range
+    output.position = adjustDepthRangeForMetal(worldPosition);
+
+    // Multiply vertex color by uniform tint
+    output.color = input.color * argBuffer.transformSettings->color;
+
+    return output;
+}
+
+// =============================================================================
+// Fragment Shader
+// =============================================================================
+
+/**
+ * @brief Fragment shader entry point for the triangle demo.
+ *
+ * Simply outputs the interpolated vertex color.
+ *
+ * @param input Interpolated data from vertex shader.
+ * @return Final fragment color for the render target.
+ */
+fragment float4 snap_rhi_demo_triangle_fs(VertexOutput input [[stage_in]]) {
+    return input.color;
+}

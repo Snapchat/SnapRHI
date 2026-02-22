@@ -1,0 +1,129 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.snap.rhi.demo'
+    compileSdk 34
+    ndkVersion "28.0.13004108"
+
+    defaultConfig {
+        applicationId 'com.snap.rhi.demo'
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+
+        externalNativeBuild {
+            cmake {
+                // Common CMake arguments shared by all flavors.
+                arguments "-DSNAP_RHI_BUILD_EXAMPLES=ON",
+                          "-DSNAP_RHI_ENABLE_DEBUG_LABELS=ON",
+                          "-DSNAP_RHI_ENABLE_LOGS=ON"
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Product flavors: select the rendering backend.
+    //
+    //   Android Studio : Build → Select Build Variant → vulkanDebug / openglDebug
+    //   Command line   : ./gradlew assembleVulkanDebug
+    //                    ./gradlew assembleOpenglDebug
+    // -------------------------------------------------------------------------
+    flavorDimensions = ["backend"]
+
+    productFlavors {
+        vulkan {
+            dimension "backend"
+            applicationIdSuffix ".vulkan"
+            versionNameSuffix "-vulkan"
+            externalNativeBuild {
+                cmake {
+                    arguments "-DSNAP_RHI_ENABLE_VULKAN=ON",
+                              "-DSNAP_RHI_DEMO_APP_API=vulkan"
+                }
+            }
+        }
+        opengl {
+            dimension "backend"
+            applicationIdSuffix ".opengl"
+            versionNameSuffix "-opengl"
+            externalNativeBuild {
+                cmake {
+                    arguments "-DSNAP_RHI_ENABLE_OPENGL=ON",
+                              "-DSNAP_RHI_DEMO_APP_API=opengl"
+                }
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            jniDebuggable true
+            minifyEnabled false
+        }
+        release {
+            debuggable false
+            jniDebuggable false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            assets.srcDirs += ['../../../assets']
+            jniLibs.srcDirs = ['src/main/jniLibs']
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            // Point at the SnapRHI root so the demo app is built as a
+            // subdirectory (not standalone), avoiding find_package(snap-rhi).
+            path file('../../../../../CMakeLists.txt')
+            version "3.25.0+"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        prefab true
+    }
+
+    packaging {
+        jniLibs {
+            keepDebugSymbols += ['**/*.so']
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.core:core:1.12.0'
+
+    constraints {
+        implementation('org.jetbrains.kotlin:kotlin-stdlib') {
+            version { strictly '1.9.22' }
+        }
+    }
+}
+
+configurations.configureEach {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'org.jetbrains.kotlin' &&
+            details.requested.name.startsWith('kotlin-stdlib')) {
+            details.useVersion '1.9.22'
+        }
+    }
+}

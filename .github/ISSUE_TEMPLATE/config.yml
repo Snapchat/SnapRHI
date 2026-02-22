@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "Documentation"
+    url: "https://github.com/Snapchat/SnapRHI/tree/main/docs"
+    about: "Check the docs before opening an issue — your answer may already be there."
+  - name: "Discussions"
+    url: "https://github.com/Snapchat/SnapRHI/discussions"
+    about: "Ask questions and share ideas in GitHub Discussions."
+  - name: "Security Vulnerability"
+    url: "https://github.com/Snapchat/SnapRHI/blob/main/SECURITY.md"
+    about: "Report a security vulnerability. Do NOT use public issues."

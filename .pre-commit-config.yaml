@@ -1,0 +1,45 @@
+# ============================================================================
+# SnapRHI — pre-commit hooks
+# ============================================================================
+# Install:  pip install pre-commit && pre-commit install
+# Run all:  pre-commit run --all-files
+# Update:   pre-commit autoupdate
+#
+# See https://pre-commit.com for documentation.
+# ============================================================================
+
+exclude: '^(third-party/|\.git/|\.idea/)'
+
+repos:
+  # ── General checks ───────────────────────────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ['--maxkb=100']
+        exclude: '^.*\.(spv|png|icns|jar)$'
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  # ── C / C++ / ObjC formatting ────────────────────────────────────────
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v19.1.6
+    hooks:
+      - id: clang-format
+        files: |
+          (?x)^(
+              src|
+              examples
+          )/.*$
+        types_or: [c, c++, objective-c, objective-c++]
+
+  # ── Python formatting ───────────────────────────────────────────────
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        types_or: [python, pyi]

@@ -1,0 +1,54 @@
+# EditorConfig — consistent coding style across all IDEs
+# https://editorconfig.org
+#
+# Supported by: VS Code, CLion, Visual Studio, Xcode (via plugin), Android Studio
+
+root = true
+
+# ── Defaults ─────────────────────────────────────────────────────────
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# ── C / C++ / Objective-C / Metal ────────────────────────────────────
+[*.{c,cc,cpp,cxx,h,hh,hpp,hxx,m,mm,metal,msl}]
+indent_size = 4
+
+# ── CMake ────────────────────────────────────────────────────────────
+[{CMakeLists.txt,*.cmake}]
+indent_size = 4
+
+# ── Shader Languages ────────────────────────────────────────────────
+[*.{glsl,vert,frag,comp,geom,tesc,tese}]
+indent_size = 4
+
+# ── Build / Config / CI ─────────────────────────────────────────────
+[*.{json,yml,yaml}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+[Makefile]
+indent_style = tab
+
+# ── Gradle (Android) ────────────────────────────────────────────────
+[*.{gradle,gradle.kts}]
+indent_size = 4
+
+# ── Java / Kotlin (Android) ─────────────────────────────────────────
+[*.{java,kt,kts}]
+indent_size = 4
+
+# ── Shell Scripts ────────────────────────────────────────────────────
+[*.sh]
+indent_size = 4
+
+# ── Windows files ────────────────────────────────────────────────────
+[*.{bat,cmd,ps1}]
+end_of_line = crlf
+indent_size = 4

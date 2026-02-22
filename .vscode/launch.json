@@ -1,0 +1,134 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        // ─── macOS Metal ────────────────────────────────────────────
+        {
+            "name": "Demo App — Metal (macOS)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/macos-metal-demo/examples/triangle-demo-app/snap_rhi_demo_app.app/Contents/MacOS/snap_rhi_demo_app",
+            "cwd": "${workspaceFolder}/build/macos-metal-demo/examples/triangle-demo-app",
+            "preLaunchTask": "Build: macos-metal-demo",
+            "args": [],
+            "env": {}
+        },
+        // ─── macOS Vulkan ───────────────────────────────────────────
+        {
+            "name": "Demo App — Vulkan (macOS)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/macos-vulkan-demo/examples/triangle-demo-app/snap_rhi_demo_app.app/Contents/MacOS/snap_rhi_demo_app",
+            "cwd": "${workspaceFolder}/build/macos-vulkan-demo/examples/triangle-demo-app",
+            "preLaunchTask": "Build: macos-vulkan-demo",
+            "args": [],
+            "env": {
+                // Required: Let dlopen find the Vulkan Loader (libvulkan.1.dylib)
+                //   Homebrew Apple Silicon: /opt/homebrew/lib
+                //   Homebrew Intel:         /usr/local/lib
+                "DYLD_LIBRARY_PATH": "/opt/homebrew/lib",
+                // Required: Tell the Vulkan Loader where to find the MoltenVK ICD driver
+                //   Homebrew Apple Silicon: /opt/homebrew/etc/vulkan/icd.d/MoltenVK_icd.json
+                //   Homebrew Intel:         /usr/local/etc/vulkan/icd.d/MoltenVK_icd.json
+                //   Manual SDK:             ~/VulkanSDK/<version>/macOS/share/vulkan/icd.d/MoltenVK_icd.json
+                "VK_ICD_FILENAMES": "/opt/homebrew/etc/vulkan/icd.d/MoltenVK_icd.json",
+                "VK_DRIVER_FILES": "/opt/homebrew/etc/vulkan/icd.d/MoltenVK_icd.json"
+            }
+        },
+        // ─── macOS OpenGL ───────────────────────────────────────────
+        {
+            "name": "Demo App — OpenGL (macOS)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/macos-opengl-demo/examples/triangle-demo-app/snap_rhi_demo_app.app/Contents/MacOS/snap_rhi_demo_app",
+            "cwd": "${workspaceFolder}/build/macos-opengl-demo/examples/triangle-demo-app",
+            "preLaunchTask": "Build: macos-opengl-demo",
+            "args": [],
+            "env": {}
+        },
+        // ─── macOS Metal Validation ─────────────────────────────────
+        {
+            "name": "Demo App — Metal + Validation (macOS)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/macos-metal-demo-validation/examples/triangle-demo-app/snap_rhi_demo_app.app/Contents/MacOS/snap_rhi_demo_app",
+            "cwd": "${workspaceFolder}/build/macos-metal-demo-validation/examples/triangle-demo-app",
+            "preLaunchTask": "Build: macos-metal-demo-validation",
+            "args": [],
+            "env": {
+                "MTL_DEBUG_LAYER": "1",
+                "MTL_SHADER_VALIDATION": "1"
+            }
+        },
+        // ─── macOS Vulkan Validation ────────────────────────────────
+        {
+            "name": "Demo App — Vulkan + Validation (macOS)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/macos-vulkan-demo-validation/examples/triangle-demo-app/snap_rhi_demo_app.app/Contents/MacOS/snap_rhi_demo_app",
+            "cwd": "${workspaceFolder}/build/macos-vulkan-demo-validation/examples/triangle-demo-app",
+            "preLaunchTask": "Build: macos-vulkan-demo-validation",
+            "args": [],
+            "env": {
+                "DYLD_LIBRARY_PATH": "/opt/homebrew/lib",
+                "VK_ICD_FILENAMES": "/opt/homebrew/etc/vulkan/icd.d/MoltenVK_icd.json",
+                "VK_DRIVER_FILES": "/opt/homebrew/etc/vulkan/icd.d/MoltenVK_icd.json",
+                "VK_LAYER_PATH": "/opt/homebrew/share/vulkan/explicit_layer.d"
+            }
+        },
+        // ─── macOS OpenGL Validation ────────────────────────────────
+        {
+            "name": "Demo App — OpenGL + Validation (macOS)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/macos-opengl-demo-validation/examples/triangle-demo-app/snap_rhi_demo_app.app/Contents/MacOS/snap_rhi_demo_app",
+            "cwd": "${workspaceFolder}/build/macos-opengl-demo-validation/examples/triangle-demo-app",
+            "preLaunchTask": "Build: macos-opengl-demo-validation",
+            "args": [],
+            "env": {}
+        },
+        // ─── Linux Vulkan ───────────────────────────────────────────
+        {
+            "name": "Demo App — Vulkan (Linux)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/linux-vulkan-demo/examples/triangle-demo-app/snap_rhi_demo_app",
+            "cwd": "${workspaceFolder}/build/linux-vulkan-demo/examples/triangle-demo-app",
+            "preLaunchTask": "Build: linux-vulkan-demo",
+            "MIMode": "gdb",
+            "setupCommands": [
+                { "text": "-enable-pretty-printing", "ignoreFailures": true }
+            ]
+        },
+        // ─── Linux OpenGL ───────────────────────────────────────────
+        {
+            "name": "Demo App — OpenGL (Linux)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/linux-opengl-demo/examples/triangle-demo-app/snap_rhi_demo_app",
+            "cwd": "${workspaceFolder}/build/linux-opengl-demo/examples/triangle-demo-app",
+            "preLaunchTask": "Build: linux-opengl-demo",
+            "MIMode": "gdb",
+            "setupCommands": [
+                { "text": "-enable-pretty-printing", "ignoreFailures": true }
+            ]
+        },
+        // ─── Windows Vulkan ─────────────────────────────────────────
+        {
+            "name": "Demo App — Vulkan (Windows)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/windows-vulkan-demo/examples/triangle-demo-app/Debug/snap_rhi_demo_app.exe",
+            "cwd": "${workspaceFolder}/build/windows-vulkan-demo/examples/triangle-demo-app",
+            "preLaunchTask": "Build: windows-vulkan-demo"
+        },
+        // ─── Windows OpenGL ─────────────────────────────────────────
+        {
+            "name": "Demo App — OpenGL (Windows)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/windows-opengl-demo/examples/triangle-demo-app/Debug/snap_rhi_demo_app.exe",
+            "cwd": "${workspaceFolder}/build/windows-opengl-demo/examples/triangle-demo-app",
+            "preLaunchTask": "Build: windows-opengl-demo"
+        }
+    ]
+}

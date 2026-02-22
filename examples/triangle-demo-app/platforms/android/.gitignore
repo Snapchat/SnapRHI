@@ -1,0 +1,17 @@
+# Android build artifacts
+.gradle/
+build/
+app/build/
+
+# Local configuration (machine-specific paths)
+local.properties
+
+# IDE
+.idea/
+*.iml
+
+# macOS
+.DS_Store
+
+# Logs
+*.log

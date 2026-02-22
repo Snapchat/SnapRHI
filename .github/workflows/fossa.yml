@@ -1,0 +1,59 @@
+# ============================================================================
+# FOSSA — License compliance scanning
+# ============================================================================
+# Runs FOSSA CLI to analyze dependencies and check license policy.
+#
+# Required secret:
+#   FOSSA_API_KEY — obtain from https://app.fossa.com → Settings → API Keys
+# ============================================================================
+
+name: FOSSA
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Analyze: upload dependency graph to FOSSA
+  # ---------------------------------------------------------------------------
+  analyze:
+    name: "License scan"
+    runs-on: ubuntu-24.04
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install FOSSA CLI
+        run: |
+          curl -H 'Cache-Control: no-cache' \
+               https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh \
+               | bash
+
+      - name: Run FOSSA analyze
+        env:
+          FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+        run: fossa analyze --branch "${{ github.ref_name }}"
+
+  # ---------------------------------------------------------------------------
+  # Test: check that all licenses pass the configured policy
+  # ---------------------------------------------------------------------------
+  check:
+    name: "License check"
+    runs-on: ubuntu-24.04
+    needs: analyze
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install FOSSA CLI
+        run: |
+          curl -H 'Cache-Control: no-cache' \
+               https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh \
+               | bash
+
+      - name: Run FOSSA test
+        env:
+          FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+        run: fossa test

@@ -1,0 +1,255 @@
+# ============================================================================
+# SnapRHI — CI Build Matrix
+# ============================================================================
+# Builds the SnapRHI library for every platform × backend combination.
+#
+# Matrix:
+#   macOS   — Metal, Vulkan, OpenGL
+#   iOS     — Metal, Vulkan, OpenGL ES  (Xcode, library only — no device tests)
+#   Linux   — Vulkan, OpenGL
+#   Windows — Vulkan, OpenGL
+#   Android — Vulkan, OpenGL ES         (NDK cross-compile, library only)
+# ============================================================================
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# ---------------------------------------------------------------------------
+# Code formatting check
+# ---------------------------------------------------------------------------
+jobs:
+  format:
+    name: "clang-format"
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jidicula/clang-format-action@v4.14.0
+        with:
+          clang-format-version: '19'
+          check-path: 'src'
+      - uses: jidicula/clang-format-action@v4.14.0
+        with:
+          clang-format-version: '19'
+          check-path: 'examples'
+
+  # ---------------------------------------------------------------------------
+  # Desktop builds (macOS, Linux, Windows)
+  # ---------------------------------------------------------------------------
+  desktop:
+    name: "${{ matrix.os }} — ${{ matrix.backend }}"
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # ── macOS ──────────────────────────────────────────────
+          - os: macOS
+            runner: macos-14            # Apple Silicon
+            backend: Metal
+            cmake_flags: >-
+              -DSNAP_RHI_ENABLE_METAL=ON
+          - os: macOS
+            runner: macos-14
+            backend: Vulkan
+            cmake_flags: >-
+              -DSNAP_RHI_ENABLE_VULKAN=ON
+            install_vulkan_sdk: true
+          - os: macOS
+            runner: macos-14
+            backend: OpenGL
+            cmake_flags: >-
+              -DSNAP_RHI_ENABLE_OPENGL=ON
+
+          # ── Linux ──────────────────────────────────────────────
+          - os: Linux
+            runner: ubuntu-24.04
+            backend: Vulkan
+            cmake_flags: >-
+              -DSNAP_RHI_ENABLE_VULKAN=ON
+          - os: Linux
+            runner: ubuntu-24.04
+            backend: OpenGL
+            cmake_flags: >-
+              -DSNAP_RHI_ENABLE_OPENGL=ON
+
+          # ── Windows ────────────────────────────────────────────
+          - os: Windows
+            runner: windows-latest
+            backend: Vulkan
+            cmake_flags: >-
+              -DSNAP_RHI_ENABLE_VULKAN=ON
+            install_vulkan_sdk: true
+          - os: Windows
+            runner: windows-latest
+            backend: OpenGL
+            cmake_flags: >-
+              -DSNAP_RHI_ENABLE_OPENGL=ON
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── Linux dependencies ───────────────────────────────────
+      - name: Install Linux packages
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake ninja-build \
+            libvulkan-dev libgl1-mesa-dev libx11-dev \
+            libxext-dev libxrandr-dev libxcursor-dev \
+            libxi-dev libxinerama-dev libxkbcommon-dev \
+            libwayland-dev
+
+      # ── Ninja (Windows) ─────────────────────────────────────
+      - name: Set up MSVC (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      # ── Vulkan SDK (macOS & Windows) ─────────────────────────
+      - name: Install Vulkan SDK
+        if: matrix.install_vulkan_sdk == true
+        uses: humbletim/setup-vulkan-sdk@v1.2.1
+        with:
+          vulkan-query-version: 1.3.296.0
+          vulkan-components: Vulkan-Headers, Vulkan-Loader, SPIRV-Headers
+          vulkan-use-cache: true
+
+      # ── Configure & Build ────────────────────────────────────
+      - name: Configure
+        run: >
+          cmake -B build -S . -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          ${{ matrix.cmake_flags }}
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+  # ---------------------------------------------------------------------------
+  # iOS builds (Xcode cross-compile, library only)
+  # ---------------------------------------------------------------------------
+  ios:
+    name: "iOS — ${{ matrix.backend }}"
+    runs-on: macos-14
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - backend: Metal
+            cmake_flags: >-
+              -DSNAP_RHI_ENABLE_METAL=ON
+          - backend: Vulkan
+            cmake_flags: >-
+              -DSNAP_RHI_ENABLE_VULKAN=ON
+            install_vulkan_sdk: true
+          - backend: OpenGL ES
+            cmake_flags: >-
+              -DSNAP_RHI_ENABLE_OPENGL=ON
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── Vulkan SDK (for MoltenVK.xcframework) ───────────────
+      - name: Install Vulkan SDK
+        if: matrix.install_vulkan_sdk == true
+        run: |
+          VULKAN_SDK_VERSION="1.3.296.0"
+          VULKAN_SDK_ZIP="vulkansdk-macos-$VULKAN_SDK_VERSION.zip"
+          curl -fsSL -o "$VULKAN_SDK_ZIP" \
+            "https://sdk.lunarg.com/sdk/download/$VULKAN_SDK_VERSION/mac/$VULKAN_SDK_ZIP"
+          unzip -q "$VULKAN_SDK_ZIP" -d vulkan-sdk-extract
+          INSTALLER=$(find vulkan-sdk-extract -name InstallVulkan -path "*/Contents/MacOS/*" | head -1)
+          "$INSTALLER" \
+            --root "$HOME/VulkanSDK/$VULKAN_SDK_VERSION" \
+            --accept-licenses --default-answer --confirm-command install
+          echo "VULKAN_SDK=$HOME/VulkanSDK/$VULKAN_SDK_VERSION/macOS" >> "$GITHUB_ENV"
+
+      - name: Configure (iOS)
+        run: >
+          cmake -B build -S . -G Xcode
+          -DCMAKE_SYSTEM_NAME=iOS
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0
+          ${{ matrix.cmake_flags }}
+
+      - name: Build (iOS)
+        run: >
+          cmake --build build
+          --config Release
+          -- -sdk iphoneos
+          -destination "generic/platform=iOS"
+          CODE_SIGNING_ALLOWED=NO
+
+  # ---------------------------------------------------------------------------
+  # Android builds (NDK cross-compile, library only)
+  # ---------------------------------------------------------------------------
+  android:
+    name: "Android — ${{ matrix.backend }}"
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - backend: Vulkan
+            cmake_flags: >-
+              -DSNAP_RHI_ENABLE_VULKAN=ON
+          - backend: OpenGL ES
+            cmake_flags: >-
+              -DSNAP_RHI_ENABLE_OPENGL=ON
+    env:
+      ANDROID_NDK_VERSION: "28.2.13676358"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Android NDK
+        run: |
+          # NDK is pre-installed on GitHub runners; find the path
+          ANDROID_HOME="${ANDROID_HOME:-$HOME/Android/Sdk}"
+          NDK_ROOT="$ANDROID_HOME/ndk/${{ env.ANDROID_NDK_VERSION }}"
+          if [ ! -d "$NDK_ROOT" ]; then
+            echo "Installing NDK ${{ env.ANDROID_NDK_VERSION }}..."
+            $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager \
+              "ndk;${{ env.ANDROID_NDK_VERSION }}"
+          fi
+          echo "NDK_ROOT=$NDK_ROOT" >> "$GITHUB_ENV"
+
+      - name: Configure (Android arm64-v8a)
+        run: >
+          cmake -B build -S .
+          -DCMAKE_TOOLCHAIN_FILE="$NDK_ROOT/build/cmake/android.toolchain.cmake"
+          -DANDROID_ABI=arm64-v8a
+          -DANDROID_PLATFORM=android-26
+          -DCMAKE_BUILD_TYPE=Release
+          ${{ matrix.cmake_flags }}
+
+      - name: Build (Android arm64-v8a)
+        run: cmake --build build --config Release --parallel
+
+  # ---------------------------------------------------------------------------
+  # Summary gate — single required check for branch protection
+  # ---------------------------------------------------------------------------
+  ci-ok:
+    name: CI ✅
+    if: always()
+    needs: [format, desktop, ios, android]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: All jobs passed
+        run: |
+          results=("${{ needs.format.result }}" "${{ needs.desktop.result }}" "${{ needs.ios.result }}" "${{ needs.android.result }}")
+          for r in "${results[@]}"; do
+            if [[ "$r" != "success" ]]; then
+              echo "❌ One or more jobs failed: ${results[*]}"
+              exit 1
+            fi
+          done
+          echo "✅ All CI jobs passed"

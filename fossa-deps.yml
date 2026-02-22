@@ -1,0 +1,42 @@
+# ============================================================================
+# FOSSA Dependency Declarations
+# ============================================================================
+# FOSSA cannot auto-discover FetchContent dependencies without running
+# cmake configure (which requires platform SDKs).  This file explicitly
+# declares every external dependency so FOSSA can track licenses correctly.
+#
+# Docs: https://github.com/fossas/fossa-cli/blob/master/docs/references/files/fossa-deps.yml.md
+# ============================================================================
+
+# ---------------------------------------------------------------------------
+# Referenced dependencies — known open-source packages fetched at build time
+# via CMake FetchContent.
+# ---------------------------------------------------------------------------
+referenced-dependencies:
+  # examples/triangle-demo-app/CMakeLists.txt — FetchContent (branch: main)
+  - type: git
+    name: https://github.com/libsdl-org/SDL
+    version: main
+
+  # examples/triangle-demo-app/CMakeLists.txt — FetchContent (tag: 1.0.1)
+  - type: git
+    name: https://github.com/g-truc/glm
+    version: 1.0.1
+
+  # src/backend/vulkan/CMakeLists.txt — FetchContent (tag: vulkan-sdk-1.3.296.0)
+  - type: git
+    name: https://github.com/KhronosGroup/SPIRV-Reflect
+    version: vulkan-sdk-1.3.296.0
+
+# ---------------------------------------------------------------------------
+# Vendored dependencies — code checked into third-party/ that FOSSA should
+# scan for license files and copyright notices.
+# ---------------------------------------------------------------------------
+vendored-dependencies:
+  - name: GLAD
+    path: third-party/GLAD
+    version: "2.0.8"
+
+  - name: gl-loader
+    path: third-party/gl-loader
+    version: "1.0.0"

@@ -1,0 +1,692 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 25,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "debug",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "release",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "validation",
+            "hidden": true,
+            "description": "Enable all validation features for comprehensive debugging",
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_ALL_VALIDATION": "ON"
+            }
+        },
+        {
+            "name": "macos-metal",
+            "displayName": "macOS Metal (Debug)",
+            "description": "Build for macOS with Metal backend",
+            "inherits": ["base", "debug"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_METAL": "ON",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "macos-metal-release",
+            "displayName": "macOS Metal (Release)",
+            "description": "Build for macOS with Metal backend (optimized)",
+            "inherits": ["base", "release"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_METAL": "ON",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "OFF",
+                "SNAP_RHI_ENABLE_LOGS": "OFF"
+            }
+        },
+        {
+            "name": "macos-metal-demo",
+            "displayName": "macOS Metal with Demo App",
+            "description": "Build for macOS with Metal backend and example app",
+            "inherits": ["base", "debug"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_METAL": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "metal",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "macos-opengl",
+            "displayName": "macOS OpenGL (Debug)",
+            "description": "Build for macOS with OpenGL backend",
+            "inherits": ["base", "debug"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "macos-opengl-demo",
+            "displayName": "macOS OpenGL with Demo App",
+            "description": "Build for macOS with OpenGL backend and example app",
+            "inherits": ["base", "debug"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "opengl",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "linux-opengl",
+            "displayName": "Linux OpenGL (Debug)",
+            "description": "Build for Linux with OpenGL backend",
+            "inherits": ["base", "debug"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "linux-opengl-demo",
+            "displayName": "Linux OpenGL with Demo App",
+            "description": "Build for Linux with OpenGL backend and example app",
+            "inherits": ["base", "debug"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "opengl",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "linux-vulkan",
+            "displayName": "Linux Vulkan (Debug)",
+            "description": "Build for Linux with Vulkan backend",
+            "inherits": ["base", "debug"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "linux-vulkan-demo",
+            "displayName": "Linux Vulkan with Demo App",
+            "description": "Build for Linux with Vulkan backend and example app",
+            "inherits": ["base", "debug"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "vulkan",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON",
+                "SNAP_RHI_VULKAN_ENABLE_LAYERS": "ON"
+            }
+        },
+        {
+            "name": "windows-vulkan",
+            "displayName": "Windows Vulkan (Debug)",
+            "description": "Build for Windows with Vulkan backend",
+            "inherits": ["base", "debug"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "windows-vulkan-demo",
+            "displayName": "Windows Vulkan with Demo App",
+            "description": "Build for Windows with Vulkan backend and example app",
+            "inherits": ["base", "debug"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "vulkan",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON",
+                "SNAP_RHI_VULKAN_ENABLE_LAYERS": "ON"
+            }
+        },
+        {
+            "name": "windows-opengl",
+            "displayName": "Windows OpenGL (Debug)",
+            "description": "Build for Windows with OpenGL backend",
+            "inherits": ["base", "debug"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "windows-opengl-demo",
+            "displayName": "Windows OpenGL with Demo App",
+            "description": "Build for Windows with OpenGL backend and example app",
+            "inherits": ["base", "debug"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "opengl",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "macos-vulkan",
+            "displayName": "macOS Vulkan/MoltenVK (Debug)",
+            "description": "Build for macOS with Vulkan backend via MoltenVK",
+            "inherits": ["base", "debug"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "macos-vulkan-demo",
+            "displayName": "macOS Vulkan with Demo App",
+            "description": "Build for macOS with Vulkan backend and example app",
+            "inherits": ["base", "debug"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "vulkan",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON",
+                "SNAP_RHI_VULKAN_ENABLE_LAYERS": "ON"
+            }
+        },
+        {
+            "name": "macos-metal-demo-validation",
+            "displayName": "macOS Metal — Demo App + Full Validation",
+            "description": "Build for macOS with Metal backend and ALL validation enabled",
+            "inherits": ["base", "debug", "validation"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_METAL": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "metal"
+            }
+        },
+        {
+            "name": "macos-vulkan-demo-validation",
+            "displayName": "macOS Vulkan — Demo App + Full Validation",
+            "description": "Build for macOS with Vulkan backend and ALL validation enabled",
+            "inherits": ["base", "debug", "validation"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "vulkan"
+            }
+        },
+        {
+            "name": "linux-vulkan-demo-validation",
+            "displayName": "Linux Vulkan — Demo App + Full Validation",
+            "description": "Build for Linux with Vulkan backend and ALL validation enabled",
+            "inherits": ["base", "debug", "validation"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "vulkan"
+            }
+        },
+        {
+            "name": "windows-vulkan-demo-validation",
+            "displayName": "Windows Vulkan — Demo App + Full Validation",
+            "description": "Build for Windows with Vulkan backend and ALL validation enabled",
+            "inherits": ["base", "debug", "validation"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "vulkan"
+            }
+        },
+        {
+            "name": "macos-opengl-demo-validation",
+            "displayName": "macOS OpenGL — Demo App + Full Validation",
+            "description": "Build for macOS with OpenGL backend and ALL validation enabled",
+            "inherits": ["base", "debug", "validation"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "opengl"
+            }
+        },
+        {
+            "name": "linux-opengl-demo-validation",
+            "displayName": "Linux OpenGL — Demo App + Full Validation",
+            "description": "Build for Linux with OpenGL backend and ALL validation enabled",
+            "inherits": ["base", "debug", "validation"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "opengl"
+            }
+        },
+        {
+            "name": "windows-opengl-demo-validation",
+            "displayName": "Windows OpenGL — Demo App + Full Validation",
+            "description": "Build for Windows with OpenGL backend and ALL validation enabled",
+            "inherits": ["base", "debug", "validation"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "opengl"
+            }
+        },
+
+        {
+            "name": "xcode-base",
+            "hidden": true,
+            "generator": "Xcode",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            }
+        },
+        {
+            "name": "macos-xcode-metal-demo",
+            "displayName": "macOS — Xcode — Metal + Demo App",
+            "description": "Xcode project with Metal backend and demo app",
+            "inherits": ["xcode-base"],
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_METAL": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "metal",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "macos-xcode-vulkan-demo",
+            "displayName": "macOS — Xcode — Vulkan + Demo App",
+            "description": "Xcode project with Vulkan backend and demo app",
+            "inherits": ["xcode-base"],
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "vulkan",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON",
+                "SNAP_RHI_VULKAN_ENABLE_LAYERS": "ON"
+            }
+        },
+        {
+            "name": "macos-xcode-opengl-demo",
+            "displayName": "macOS — Xcode — OpenGL + Demo App",
+            "description": "Xcode project with OpenGL backend and demo app",
+            "inherits": ["xcode-base"],
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "opengl",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "ios-xcode-metal-demo",
+            "displayName": "iOS — Xcode — Metal + Demo App",
+            "description": "Xcode project targeting iOS with Metal backend",
+            "inherits": ["xcode-base"],
+            "cacheVariables": {
+                "CMAKE_SYSTEM_NAME": "iOS",
+                "SNAP_RHI_ENABLE_METAL": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "metal",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "ios-xcode-vulkan-demo",
+            "displayName": "iOS — Xcode — Vulkan + Demo App",
+            "description": "Xcode project targeting iOS with Vulkan backend via MoltenVK (static, no layers)",
+            "inherits": ["xcode-base"],
+            "cacheVariables": {
+                "CMAKE_SYSTEM_NAME": "iOS",
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "vulkan",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "ios-xcode-vulkan-demo-layers",
+            "displayName": "iOS — Xcode — Vulkan + Demo App + Layers",
+            "description": "Xcode project targeting iOS with Vulkan backend, Vulkan Loader frameworks, and validation layers. Not for App Store — development/debugging only.",
+            "inherits": ["xcode-base"],
+            "cacheVariables": {
+                "CMAKE_SYSTEM_NAME": "iOS",
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "vulkan",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON",
+                "SNAP_RHI_VULKAN_ENABLE_LAYERS": "ON"
+            }
+        },
+        {
+            "name": "ios-xcode-opengl-demo",
+            "displayName": "iOS — Xcode — OpenGL ES + Demo App",
+            "description": "Xcode project targeting iOS with OpenGL ES backend",
+            "inherits": ["xcode-base"],
+            "cacheVariables": {
+                "CMAKE_SYSTEM_NAME": "iOS",
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "opengl",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+
+        {
+            "name": "vs-base",
+            "hidden": true,
+            "generator": "Visual Studio 17 2022",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "windows-vs-vulkan-demo",
+            "displayName": "Windows — Visual Studio — Vulkan + Demo App",
+            "description": "Visual Studio solution with Vulkan backend and demo app",
+            "inherits": ["vs-base"],
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "vulkan",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON",
+                "SNAP_RHI_VULKAN_ENABLE_LAYERS": "ON"
+            }
+        },
+        {
+            "name": "windows-vs-opengl-demo",
+            "displayName": "Windows — Visual Studio — OpenGL + Demo App",
+            "description": "Visual Studio solution with OpenGL backend and demo app",
+            "inherits": ["vs-base"],
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_BUILD_EXAMPLES": "ON",
+                "SNAP_RHI_DEMO_APP_API": "opengl",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
+                "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "macos-metal",
+            "configurePreset": "macos-metal"
+        },
+        {
+            "name": "macos-metal-release",
+            "configurePreset": "macos-metal-release"
+        },
+        {
+            "name": "macos-metal-demo",
+            "configurePreset": "macos-metal-demo"
+        },
+        {
+            "name": "macos-opengl",
+            "configurePreset": "macos-opengl"
+        },
+        {
+            "name": "macos-opengl-demo",
+            "configurePreset": "macos-opengl-demo"
+        },
+        {
+            "name": "linux-opengl",
+            "configurePreset": "linux-opengl"
+        },
+        {
+            "name": "linux-opengl-demo",
+            "configurePreset": "linux-opengl-demo"
+        },
+        {
+            "name": "linux-vulkan",
+            "configurePreset": "linux-vulkan"
+        },
+        {
+            "name": "linux-vulkan-demo",
+            "configurePreset": "linux-vulkan-demo"
+        },
+        {
+            "name": "windows-vulkan",
+            "configurePreset": "windows-vulkan"
+        },
+        {
+            "name": "windows-vulkan-demo",
+            "configurePreset": "windows-vulkan-demo"
+        },
+        {
+            "name": "windows-opengl",
+            "configurePreset": "windows-opengl"
+        },
+        {
+            "name": "windows-opengl-demo",
+            "configurePreset": "windows-opengl-demo"
+        },
+        {
+            "name": "macos-vulkan",
+            "configurePreset": "macos-vulkan"
+        },
+        {
+            "name": "macos-vulkan-demo",
+            "configurePreset": "macos-vulkan-demo"
+        },
+        {
+            "name": "macos-metal-demo-validation",
+            "configurePreset": "macos-metal-demo-validation"
+        },
+        {
+            "name": "macos-vulkan-demo-validation",
+            "configurePreset": "macos-vulkan-demo-validation"
+        },
+        {
+            "name": "linux-vulkan-demo-validation",
+            "configurePreset": "linux-vulkan-demo-validation"
+        },
+        {
+            "name": "windows-vulkan-demo-validation",
+            "configurePreset": "windows-vulkan-demo-validation"
+        },
+        {
+            "name": "macos-opengl-demo-validation",
+            "configurePreset": "macos-opengl-demo-validation"
+        },
+        {
+            "name": "linux-opengl-demo-validation",
+            "configurePreset": "linux-opengl-demo-validation"
+        },
+        {
+            "name": "windows-opengl-demo-validation",
+            "configurePreset": "windows-opengl-demo-validation"
+        },
+        {
+            "name": "macos-xcode-metal-demo",
+            "configurePreset": "macos-xcode-metal-demo",
+            "configuration": "Debug"
+        },
+        {
+            "name": "macos-xcode-vulkan-demo",
+            "configurePreset": "macos-xcode-vulkan-demo",
+            "configuration": "Debug"
+        },
+        {
+            "name": "macos-xcode-opengl-demo",
+            "configurePreset": "macos-xcode-opengl-demo",
+            "configuration": "Debug"
+        },
+        {
+            "name": "ios-xcode-metal-demo",
+            "configurePreset": "ios-xcode-metal-demo",
+            "configuration": "Debug"
+        },
+        {
+            "name": "ios-xcode-vulkan-demo",
+            "configurePreset": "ios-xcode-vulkan-demo",
+            "configuration": "Debug"
+        },
+        {
+            "name": "ios-xcode-vulkan-demo-layers",
+            "configurePreset": "ios-xcode-vulkan-demo-layers",
+            "configuration": "Debug"
+        },
+        {
+            "name": "ios-xcode-opengl-demo",
+            "configurePreset": "ios-xcode-opengl-demo",
+            "configuration": "Debug"
+        },
+        {
+            "name": "windows-vs-vulkan-demo",
+            "configurePreset": "windows-vs-vulkan-demo",
+            "configuration": "Debug"
+        },
+        {
+            "name": "windows-vs-opengl-demo",
+            "configurePreset": "windows-vs-opengl-demo",
+            "configuration": "Debug"
+        }
+    ]
+}
