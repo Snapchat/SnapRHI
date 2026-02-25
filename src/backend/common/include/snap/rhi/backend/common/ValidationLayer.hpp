@@ -32,22 +32,22 @@ public:
     ValidationLayer(ValidationLayer&&) = default;
     ValidationLayer& operator=(ValidationLayer&&) = default;
 
-#define SNAP_RHI_VALIDATE(layer, condition, reportLevel, tags, ...)                        \
-    if constexpr ((static_cast<uint64_t>(tags) & (snap::rhi::EnabledValidationTags)) &&    \
-                  (static_cast<uint64_t>(reportLevel) >= SNAP_RHI_ENABLED_REPORT_LEVEL)) { \
-        (layer).validate((condition), (reportLevel), (tags), __VA_ARGS__);                 \
+#define SNAP_RHI_VALIDATE(layer, condition, reportLevel, tags, ...)                                                    \
+    if constexpr ((static_cast<uint64_t>(tags) & (snap::rhi::EnabledValidationTags)) &&                                \
+                  (static_cast<uint64_t>(reportLevel) >= SNAP_RHI_ENABLED_REPORT_LEVEL)) {                             \
+        (layer).validate((condition), (reportLevel), (tags), __VA_ARGS__);                                             \
     }
 
-#define SNAP_RHI_REPORT(layer, reportLevel, tags, ...)                                     \
-    if constexpr ((static_cast<uint64_t>(tags) & (snap::rhi::EnabledValidationTags)) &&    \
-                  (static_cast<uint64_t>(reportLevel) >= SNAP_RHI_ENABLED_REPORT_LEVEL)) { \
-        (layer).report((reportLevel), (tags), __VA_ARGS__);                                \
+#define SNAP_RHI_REPORT(layer, reportLevel, tags, ...)                                                                 \
+    if constexpr ((static_cast<uint64_t>(tags) & (snap::rhi::EnabledValidationTags)) &&                                \
+                  (static_cast<uint64_t>(reportLevel) >= SNAP_RHI_ENABLED_REPORT_LEVEL)) {                             \
+        (layer).report((reportLevel), (tags), __VA_ARGS__);                                                            \
     }
 
-#define SNAP_RHI_VALIDATE_WITH_CUSTOM_FUNC(reportLevel, tags, customValidateFunc)          \
-    if constexpr ((static_cast<uint64_t>(tags) & (snap::rhi::EnabledValidationTags)) &&    \
-                  (static_cast<uint64_t>(reportLevel) >= SNAP_RHI_ENABLED_REPORT_LEVEL)) { \
-        customValidateFunc();                                                              \
+#define SNAP_RHI_VALIDATE_WITH_CUSTOM_FUNC(reportLevel, tags, customValidateFunc)                                      \
+    if constexpr ((static_cast<uint64_t>(tags) & (snap::rhi::EnabledValidationTags)) &&                                \
+                  (static_cast<uint64_t>(reportLevel) >= SNAP_RHI_ENABLED_REPORT_LEVEL)) {                             \
+        customValidateFunc();                                                                                          \
     }
 
     /**

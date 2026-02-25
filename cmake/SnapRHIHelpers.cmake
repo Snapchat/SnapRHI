@@ -2,15 +2,40 @@
 # SnapRHI CMake Helpers
 # ============================================================================
 include_guard(GLOBAL)
+
 # Creates a library target and adds a namespaced alias for it.
 function(snap_rhi_add_library TARGET_NAME)
     add_library(${TARGET_NAME} ${ARGN})
     add_library(snap-rhi::${TARGET_NAME} ALIAS ${TARGET_NAME})
 endfunction()
+
 # Wrapper around target_link_libraries for consistent usage across SnapRHI.
+# Dependencies are always PUBLIC (transitive) — use target_link_libraries
+# PRIVATE directly for non-transitive deps like system frameworks.
+# Overridden by the packaging module when present.
 function(snap_rhi_target_link_libraries TARGET_NAME)
-    target_link_libraries(${TARGET_NAME} ${ARGN})
+    target_link_libraries(${TARGET_NAME} PUBLIC ${ARGN})
 endfunction()
+
+# Export helper — call after a target is fully configured.
+# No-op by default; overridden by packaging module when present.
+function(snap_rhi_export)
+    # Intentionally empty — packaging hook.
+endfunction()
+
+# Export-complete helper — call once at the end of the root CMakeLists.
+# No-op by default; overridden by packaging module when present.
+function(snap_rhi_export_complete)
+    # Intentionally empty — packaging hook.
+endfunction()
+
+# Hook for additional packaging modules.
+# Called after all backends and optional modules are configured.
+# No-op by default; overridden by packaging module when present.
+function(snap_rhi_add_packaging_modules)
+    # Intentionally empty — packaging hook.
+endfunction()
+
 # Finds an Apple framework and creates an imported target for it.
 function(snap_rhi_find_framework FRAMEWORK_NAME)
     cmake_parse_arguments(ARG "REQUIRED" "" "" ${ARGN})

@@ -62,7 +62,7 @@ void PipelineUBOState::setAllStates(DeviceContext* dc) {
 
         const uint64_t uboSize = bufferSize - legacyBufferInfo.offset;
 
-        pipeline->bindLegacyUBO(dc, {reinterpret_cast<const uint8_t*>(data), uboSize});
+        pipeline->bindLegacyUBO(dc, {reinterpret_cast<const uint8_t*>(data), static_cast<size_t>(uboSize)});
     } else if (pipeline->getPipelineUniformManagmentType() == PipelineUniformManagmentType::Compatible) {
         const auto& ubosDesc = pipeline->getPipelineCompatibleUBODescription();
         for (size_t i = 0; i < ubosDesc.size(); ++i) {

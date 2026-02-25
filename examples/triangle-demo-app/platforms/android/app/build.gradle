@@ -67,6 +67,11 @@ android {
             debuggable true
             jniDebuggable true
             minifyEnabled false
+            externalNativeBuild {
+                cmake {
+                    arguments "-DSNAP_RHI_VULKAN_ENABLE_LAYERS=ON"
+                }
+            }
         }
         release {
             debuggable false
@@ -105,6 +110,52 @@ android {
         jniLibs {
             keepDebugSymbols += ['**/*.so']
         }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Vulkan Validation Layers (debug builds only)
+//
+// Android's Vulkan loader discovers layers from the app's native lib directory.
+// This task downloads the pre-built VVL .so from the Khronos GitHub releases
+// and places it in jniLibs so it is bundled into debug APKs automatically.
+// ---------------------------------------------------------------------------
+def vvlVersion = '1.4.309.0'
+def vvlDir = file("src/main/jniLibs/arm64-v8a")
+def vvlLib = new File(vvlDir, "libVkLayer_khronos_validation.so")
+
+tasks.register('downloadVulkanValidationLayers') {
+    description 'Downloads Vulkan Validation Layers .so for Android arm64-v8a debug builds'
+    outputs.file(vvlLib)
+    onlyIf { !vvlLib.exists() }
+
+    doLast {
+        vvlDir.mkdirs()
+        def url = "https://github.com/KhronosGroup/Vulkan-ValidationLayers/releases/download/vulkan-sdk-${vvlVersion}/android-binaries-${vvlVersion}.zip"
+        def zipFile = new File(buildDir, "vvl-android-${vvlVersion}.zip")
+
+        logger.lifecycle("Downloading Vulkan Validation Layers ${vvlVersion} ...")
+        ant.get(src: url, dest: zipFile, skipexisting: false)
+
+        logger.lifecycle("Extracting libVkLayer_khronos_validation.so (arm64-v8a) ...")
+        copy {
+            from(zipTree(zipFile)) {
+                include "**/arm64-v8a/libVkLayer_khronos_validation.so"
+                eachFile { it.relativePath = new RelativePath(true, it.name) }
+            }
+            into vvlDir
+        }
+        zipFile.delete()
+        logger.lifecycle("VVL installed: ${vvlLib}")
+    }
+}
+
+// Hook into debug builds only — release builds skip VVL download.
+// Only gate on mergeJniLibFolders (APK packaging); the native CMake build does
+// not need the layer .so, so don't block externalNativeBuild tasks.
+tasks.configureEach { task ->
+    if (task.name.matches(/merge.*Debug.*JniLibFolders/)) {
+        task.dependsOn('downloadVulkanValidationLayers')
     }
 }
 

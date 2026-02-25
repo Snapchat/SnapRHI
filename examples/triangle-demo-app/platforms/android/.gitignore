@@ -3,6 +3,9 @@
 build/
 app/build/
 
+# Downloaded Vulkan Validation Layers (fetched by Gradle for debug builds)
+app/src/main/jniLibs/
+
 # Local configuration (machine-specific paths)
 local.properties
 

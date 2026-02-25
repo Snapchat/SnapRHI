@@ -14,7 +14,8 @@ gl::APIVersion computeVersion(const char* versionString) {
     const char* glVersionString =
         versionString ? versionString : reinterpret_cast<char const*>(glGetString(GL_VERSION));
     const bool isES = [glVersionString] {
-#if SNAP_RHI_OS_ANDROID() || SNAP_RHI_OS_IOS() || SNAP_RHI_PLATFORM_WEBASSEMBLY()
+#if SNAP_RHI_OS_ANDROID() || SNAP_RHI_OS_IOS() || SNAP_RHI_PLATFORM_WEBASSEMBLY() ||                                   \
+    (GLAD_OPENGL_ES && SNAP_RHI_OS_LINUX_BASED())
         return true;
 #else
         return strstr(glVersionString, "OpenGL ES") != nullptr;

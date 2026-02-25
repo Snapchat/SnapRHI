@@ -13,8 +13,17 @@
 #if SNAP_RHI_OS_APPLE()
 #define VK_USE_PLATFORM_METAL_EXT
 #endif
+
+#if SNAP_RHI_VULKAN_STATIC_LINK
+// Static linking mode: MoltenVK is linked directly into the binary.
+// Use the standard Vulkan headers — function calls resolve at link time
+// without GLAD's dlsym-based runtime loader.
+#include <vulkan/vulkan.h>
+#define SNAP_RHI_VULKAN_DYNAMIC_LOADING() (0)
+#else
 #include <GLAD/vulkan.h>
 #define SNAP_RHI_VULKAN_DYNAMIC_LOADING() (1)
+#endif
 
 namespace snap::rhi::backend::vulkan {
 enum class APIVersion : snap::rhi::APIVersionType {

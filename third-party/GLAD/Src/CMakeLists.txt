@@ -3,12 +3,16 @@
 # ============================================================================
 
 # Platform library (common)
-add_library(glad-platform STATIC gladPlatfrom.cpp)
-add_library(glad::glad-platform ALIAS glad-platform)
-target_include_directories(glad-platform PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-)
+snap_rhi_add_library(glad-platform STATIC gladPlatfrom.cpp)
+target_include_directories(glad-platform PUBLIC include)
+
+# Add glad:: alias for consistent target naming across build configurations
+if(NOT TARGET glad::glad-platform)
+    add_library(glad::glad-platform ALIAS glad-platform)
+endif()
+
+# Export target for packaging
+snap_rhi_export(glad-platform)
 
 # OpenGL loader (optional, included by parent when SNAP_RHI_ENABLE_OPENGL)
 if(SNAP_RHI_ENABLE_OPENGL)

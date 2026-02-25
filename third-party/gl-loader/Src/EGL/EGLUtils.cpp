@@ -40,7 +40,7 @@ bool GL_KHR_create_context_enabled = false;
 
 const EGLint* getEglConfigAttribs() {
     static EGLint configAttribs[] = {
-#if defined(GLAD_PLATFORM_OPENGL_ES) && GLAD_PLATFORM_OPENGL_ES
+#if GLAD_PLATFORM_OPENGL_ES()
         EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
 #else
         EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT,

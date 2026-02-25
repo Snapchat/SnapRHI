@@ -7,6 +7,6 @@
 #if SNAP_RHI_ENABLE_SOURCE_LOCATION
 #define SNAP_RHI_SOURCE_LOCATION() std::source_location::current()
 #else // #if SNAP_RHI_ENABLE_SOURCE_LOCATION
-#define SNAP_RHI_SOURCE_LOCATION() \
+#define SNAP_RHI_SOURCE_LOCATION()                                                                                     \
     std::source_location {}
 #endif // #else // #if SNAP_RHI_ENABLE_SOURCE_LOCATION

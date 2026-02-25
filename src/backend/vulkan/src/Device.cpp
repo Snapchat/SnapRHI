@@ -9,6 +9,7 @@
 #include "snap/rhi/backend/vulkan/DescriptorSet.h"
 #include "snap/rhi/backend/vulkan/DescriptorSetLayout.h"
 #include "snap/rhi/backend/vulkan/Fence.h"
+#include "snap/rhi/common/Scope.h"
 
 #if SNAP_RHI_OS_ANDROID()
 #include "snap/rhi/backend/common/platform/android/SyncHandle.h"
@@ -29,7 +30,10 @@
 #include <algorithm>
 #include <set>
 #include <snap/rhi/common/Throw.h>
+#include <string>
 #include <string_view>
+
+#include <cstdlib>
 
 namespace {
 using namespace std::literals;
@@ -199,7 +203,7 @@ constexpr std::array<ExtensionDescriptor, 8> kInstanceExtensionRegistry = {{
     {
         .name = VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
         .promotedToCore = 0,
-        .isRequired = true,
+        .isRequired = SNAP_RHI_VULKAN_DYNAMIC_LOADING(),
         .platforms = Platform::Apple,
         .dependencies = {},
         .dependencyCount = 0,
@@ -1144,13 +1148,91 @@ bool getTimestampQuerySupported(const VkPhysicalDeviceProperties& deviceProperti
     }
     return queueFamilyProperties.timestampValidBits != 0;
 }
+// ---------------------------------------------------------------------------
+// Auto-configure ICD and VVL layer discovery for the Vulkan Loader.
+//
+// When Vulkan libraries are not installed in a standard SDK location,
+// the Vulkan Loader cannot find the corresponding JSON manifests and
+// vkCreateInstance returns VK_ERROR_INCOMPATIBLE_DRIVER (Apple) or
+// fails to enable validation layers (all platforms).
+//
+// At CMake configure time we generate minimal JSON manifests that contain
+// absolute library paths (via $<TARGET_FILE:...> generator expressions).
+// The compile definitions SNAP_RHI_VK_ICD_MANIFEST_PATH and
+// SNAP_RHI_VK_LAYER_MANIFEST_DIR carry those paths into the binary.
+// This helper simply points the Vulkan Loader at them through environment
+// variables.  It is a no-op when the env vars are already set by the caller
+// or when the definitions are absent (e.g. standalone SDK builds).
+// ---------------------------------------------------------------------------
+
+// Platform-portable setenv that honours existing values.
+// Defined as a macro so it doesn't trigger -Wunused-function when the
+// SNAP_RHI_VK_* compile definitions are absent.
+#if SNAP_RHI_OS_WINDOWS()
+#define SNAP_RHI_SETENV_IF_ABSENT(name, value)                                                                         \
+    do {                                                                                                               \
+        if (!std::getenv(name))                                                                                        \
+            _putenv_s(name, value);                                                                                    \
+    } while (0)
+#else
+#define SNAP_RHI_SETENV_IF_ABSENT(name, value)                                                                         \
+    do {                                                                                                               \
+        if (!std::getenv(name))                                                                                        \
+            setenv(name, value, 0);                                                                                    \
+    } while (0)
+#endif
+
+static void ensureVulkanManifests() {
+#if SNAP_RHI_OS_ANDROID()
+    // Android's Vulkan loader ignores VK_LAYER_PATH and JSON manifests.
+    // Layers are discovered from the app's native lib directory (lib/<abi>/)
+    // which is only searched for debuggable APKs (android:debuggable=true).
+    // Nothing to set here — the VVL .so must be bundled into the APK at
+    // build time (see GLAD/Src/Vulkan/CMakeLists.txt POST_BUILD copy).
+    SNAP_RHI_LOGI("[Vulkan][Device] Android: layer discovery via app native lib dir (VK_LAYER_PATH not used)");
+#elif SNAP_RHI_OS_IOS()
+    // iOS uses either statically-linked MoltenVK or embedded .framework
+    // bundles inside the app.  The Vulkan Loader's env-var-based ICD/layer
+    // discovery (VK_ICD_FILENAMES, VK_LAYER_PATH) is not applicable here —
+    // those paths would reference the build machine, not the device.
+    SNAP_RHI_LOGI("[Vulkan][Device] iOS: MoltenVK via static link or embedded framework (env vars not used)");
+#else
+    // Desktop platforms (macOS, Linux, Windows): point the Vulkan Loader at
+    // build-time generated manifests via environment variables.
+#ifdef SNAP_RHI_VK_ICD_MANIFEST_PATH
+    if (!std::getenv("VK_ICD_FILENAMES") && !std::getenv("VK_DRIVER_FILES")) {
+        SNAP_RHI_SETENV_IF_ABSENT("VK_ICD_FILENAMES", SNAP_RHI_VK_ICD_MANIFEST_PATH);
+        SNAP_RHI_SETENV_IF_ABSENT("VK_DRIVER_FILES", SNAP_RHI_VK_ICD_MANIFEST_PATH);
+        SNAP_RHI_LOGI("[Vulkan][Device] VK_ICD_FILENAMES -> %s", SNAP_RHI_VK_ICD_MANIFEST_PATH);
+    }
+#endif
+#ifdef SNAP_RHI_VK_LAYER_MANIFEST_DIR
+    if (!std::getenv("VK_LAYER_PATH")) {
+        SNAP_RHI_SETENV_IF_ABSENT("VK_LAYER_PATH", SNAP_RHI_VK_LAYER_MANIFEST_DIR);
+        SNAP_RHI_LOGI("[Vulkan][Device] VK_LAYER_PATH -> %s", SNAP_RHI_VK_LAYER_MANIFEST_DIR);
+    }
+#endif
+#endif // platform selection
+}
+
+#undef SNAP_RHI_SETENV_IF_ABSENT
+
 } // unnamed namespace
 
 namespace snap::rhi::backend::vulkan {
 Device::Device(const snap::rhi::backend::vulkan::DeviceCreateInfo& info)
     : snap::rhi::backend::common::DeviceContextless(info), vkDeviceCreateinfo(info) {
+    ensureVulkanManifests();
 #if SNAP_RHI_VULKAN_DYNAMIC_LOADING()
-    gladLoaderInitSafe();
+    SNAP_RHI_LOGI("[Vulkan][Device] Loading Vulkan entry points via GLAD...");
+    int gladVersion = gladLoaderInitSafe();
+    if (gladVersion == 0) {
+        snap::rhi::common::throwException(
+            "[Vulkan::Device] Failed to load Vulkan entry points (gladLoaderInitSafe returned 0). "
+            "Ensure a Vulkan driver (e.g. MoltenVK on Apple platforms) is available.");
+    }
+    SNAP_RHI_LOGI(
+        "[Vulkan][Device] GLAD loaded Vulkan %d.%d", GLAD_VERSION_MAJOR(gladVersion), GLAD_VERSION_MINOR(gladVersion));
 #endif // SNAP_RHI_VULKAN_DYNAMIC_LOADING()
 
     initInstance(info.enabledInstanceExtensions);
@@ -1270,7 +1352,27 @@ void Device::initInstance(std::span<const char* const> additionalInstanceExtensi
     // ==========================================================================
 
     std::vector<VkLayerProperties> layerProperties = getInstanceLayerProperties(validationLayer);
+
+    SNAP_RHI_LOGI("[Vulkan][Device] Available instance layers (%zu):", layerProperties.size());
+    for (const auto& layer : layerProperties) {
+        SNAP_RHI_LOGI("[Vulkan][Device]   %s (v%u.%u.%u, impl %u)",
+                      layer.layerName,
+                      VK_API_VERSION_MAJOR(layer.specVersion),
+                      VK_API_VERSION_MINOR(layer.specVersion),
+                      VK_API_VERSION_PATCH(layer.specVersion),
+                      layer.implementationVersion);
+    }
+
     std::vector<const char*> enabledLayers = prepareLayerPropertiesList(layerProperties, InstanceLayerNames);
+
+    if (enabledLayers.empty()) {
+        SNAP_RHI_LOGW("[Vulkan][Device] No matching validation layers found — "
+                      "VVL may not be installed or discoverable on this platform");
+    } else {
+        for (const auto* layerName : enabledLayers) {
+            SNAP_RHI_LOGI("[Vulkan][Device] Enabling layer: %s", layerName);
+        }
+    }
 
     createInfo.enabledLayerCount = static_cast<uint32_t>(enabledLayers.size());
     createInfo.ppEnabledLayerNames = enabledLayers.data();
@@ -1296,8 +1398,9 @@ void Device::initInstance(std::span<const char* const> additionalInstanceExtensi
     }
 
 #if SNAP_RHI_OS_APPLE() && SNAP_RHI_VULKAN_DYNAMIC_LOADING()
-    // MoltenVK requires portability enumeration flag
-    // Reference: https://vulkan.lunarg.com/doc/view/1.3.236.0/mac/getting_started.html
+    // When using the Vulkan Loader on Apple, portability enumeration is required
+    // so the loader includes MoltenVK (a portability driver) in device enumeration.
+    // Not needed when MoltenVK is linked statically (no loader in the path).
     createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 #endif
 
@@ -1309,26 +1412,42 @@ void Device::initInstance(std::span<const char* const> additionalInstanceExtensi
     // ==========================================================================
 
     result = vkCreateInstance(&createInfo, nullptr, &instance);
-    SNAP_RHI_VALIDATE(validationLayer,
-                      result == VK_SUCCESS,
-                      snap::rhi::ReportLevel::CriticalError,
-                      snap::rhi::ValidationTag::CreateOp,
-                      "[Vulkan::Device] cannot create instance");
+    if (result != VK_SUCCESS) {
+        snap::rhi::common::throwException(
+            "[Vulkan::Device] vkCreateInstance failed (VkResult=" + std::to_string(static_cast<int>(result)) +
+            "). On Apple platforms, ensure the MoltenVK ICD is discoverable "
+            "by the Vulkan Loader (set VK_ICD_FILENAMES or VK_DRIVER_FILES).");
+    }
 
     SNAP_RHI_LOGI("[Vulkan][Device] Instance created with %zu extensions enabled",
                   this->enabledInstanceExtensions.size());
 }
 
 void Device::initValidationLayerMessages() {
+    VkResult result = VK_ERROR_UNKNOWN;
+    SNAP_RHI_ON_SCOPE_EXIT {
+        SNAP_RHI_LOGI("[Vulkan][Device] Vulkan validation layers: %s", result == VK_SUCCESS ? "ENABLED" : "DISABLED");
+    };
+
     bool debugUtilsEnabled = false;
+#if SNAP_RHI_VULKAN_NATIVE_VALIDATION_LAYERS
     for (const auto extName : enabledInstanceExtensions) {
         if (std::string_view(VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == std::string_view(extName)) {
             debugUtilsEnabled = true;
             break;
         }
     }
+#endif
 
     if (!debugUtilsEnabled) {
+        return;
+    }
+
+    // Guard against null function pointers — the Vulkan Loader on some
+    // platforms (e.g. Android) may not resolve the debug-utils entry points
+    // even when the extension name is reported as available.
+    if (!vkCreateDebugUtilsMessengerEXT) {
+        SNAP_RHI_LOGI("[Vulkan][Device] vkCreateDebugUtilsMessengerEXT not loaded — skipping");
         return;
     }
 
@@ -1338,7 +1457,10 @@ void Device::initValidationLayerMessages() {
                 return;
             }
 
-            vkDestroyDebugUtilsMessengerEXT(instance, *ptr, nullptr);
+            if (vkDestroyDebugUtilsMessengerEXT) {
+                vkDestroyDebugUtilsMessengerEXT(instance, *ptr, nullptr);
+            }
+
             delete ptr;
         });
 
@@ -1354,8 +1476,7 @@ void Device::initValidationLayerMessages() {
         .pfnUserCallback = mainDebugMessageCallback,
         .pUserData = &validationLayer};
 
-    VkResult result =
-        vkCreateDebugUtilsMessengerEXT(instance, &debugUtilsMessengerCreateInfo, nullptr, mainMessenger.get());
+    result = vkCreateDebugUtilsMessengerEXT(instance, &debugUtilsMessengerCreateInfo, nullptr, mainMessenger.get());
     SNAP_RHI_VALIDATE(validationLayer,
                       result == VK_SUCCESS,
                       snap::rhi::ReportLevel::Error,

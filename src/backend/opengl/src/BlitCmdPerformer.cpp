@@ -555,8 +555,9 @@ void copy(snap::rhi::backend::opengl::Device* device,
     };
     for (uint32_t i = 0; i < cmd.infoCount; ++i) {
         const auto& copyInfo = cmd.infos[i];
-        dstBuffer->uploadData(
-            copyInfo.dstOffset, std::span<const std::byte>{ptr + copyInfo.srcOffset, copyInfo.size}, dc);
+        dstBuffer->uploadData(copyInfo.dstOffset,
+                              std::span<const std::byte>{ptr + copyInfo.srcOffset, static_cast<size_t>(copyInfo.size)},
+                              dc);
     }
 }
 } // unnamed namespace

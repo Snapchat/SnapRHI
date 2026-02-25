@@ -17,7 +17,7 @@ class Texture;
 class CommandBuffer final : public snap::rhi::backend::common::CommandBuffer {
 public:
     CommandBuffer(snap::rhi::backend::vulkan::Device* vkDevice, const snap::rhi::CommandBufferCreateInfo& info);
-    ~CommandBuffer() override = default;
+    ~CommandBuffer() override;
 
     void setDebugLabel(std::string_view label) override;
 

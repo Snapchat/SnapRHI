@@ -57,6 +57,13 @@ CommandBuffer::CommandBuffer(snap::rhi::backend::vulkan::Device* device, const s
     activeCommandBufferIndex = syncCommandBufferIndex = 0;
 }
 
+CommandBuffer::~CommandBuffer() {
+    if (!commandBuffers.empty() && pool) {
+        vkFreeCommandBuffers(vkDevice, *pool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+        commandBuffers.clear();
+    }
+}
+
 void CommandBuffer::resetQueryPool(snap::rhi::QueryPool* queryPool, uint32_t firstQuery, uint32_t queryCount) {
     vulkan::QueryPool* vulkanQueryPool =
         snap::rhi::backend::common::smart_cast<snap::rhi::backend::vulkan::QueryPool>(queryPool);

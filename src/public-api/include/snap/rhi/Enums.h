@@ -294,36 +294,36 @@ inline std::string getAccessFlagsToStr(const AccessFlags accessFlags) {
 }
 
 #undef SNAP_RHI_MEMORY_PROPERTY_BITS
-#define SNAP_RHI_MEMORY_PROPERTY_BITS(X)                                                       \
-    /**                                                                                        \
-     * @brief The memory is allocated in the most efficient location for device (GPU) access.  \
-     * @details                                                                                \
-     * Typically resides in dedicated VRAM on discrete GPUs. CPU access to this memory         \
-     * is often impossible unless combined with `HostVisible`.                                 \
-     * @note This memory type is guaranteed to exist.                                          \
-     */                                                                                        \
-    X(DeviceLocal)                                                                             \
-    /**                                                                                        \
-     * @brief The memory can be mapped for host (CPU) access using `snap::rhi::Buffer::map()`. \
-     * @details                                                                                \
-     * If this bit is not set, the memory cannot be accessed directly by the host.             \
-     */                                                                                        \
-    X(HostVisible)                                                                             \
-    /**                                                                                        \
-     * @brief The host and device caches are automatically synchronized.                       \
-     * @details                                                                                \
-     * If set, `flushMappedMemoryRanges` and `invalidateMappedMemoryRanges` are not required   \
-     * to make writes visible to the GPU or CPU.                                               \
-     * @note The combination `HostVisible | HostCoherent` is guaranteed to exist.              \
-     */                                                                                        \
-    X(HostCoherent)                                                                            \
-    /**                                                                                        \
-     * @brief The memory is cached on the host (CPU).                                          \
-     * @details                                                                                \
-     * Host memory accesses to cached memory are significantly faster than to uncached memory, \
-     * particularly for reads. However, cached memory is usually not `HostCoherent`, requiring \
-     * explicit cache management (flush/invalidate) to synchronize with the device.            \
-     */                                                                                        \
+#define SNAP_RHI_MEMORY_PROPERTY_BITS(X)                                                                               \
+    /**                                                                                                                \
+     * @brief The memory is allocated in the most efficient location for device (GPU) access.                          \
+     * @details                                                                                                        \
+     * Typically resides in dedicated VRAM on discrete GPUs. CPU access to this memory                                 \
+     * is often impossible unless combined with `HostVisible`.                                                         \
+     * @note This memory type is guaranteed to exist.                                                                  \
+     */                                                                                                                \
+    X(DeviceLocal)                                                                                                     \
+    /**                                                                                                                \
+     * @brief The memory can be mapped for host (CPU) access using `snap::rhi::Buffer::map()`.                         \
+     * @details                                                                                                        \
+     * If this bit is not set, the memory cannot be accessed directly by the host.                                     \
+     */                                                                                                                \
+    X(HostVisible)                                                                                                     \
+    /**                                                                                                                \
+     * @brief The host and device caches are automatically synchronized.                                               \
+     * @details                                                                                                        \
+     * If set, `flushMappedMemoryRanges` and `invalidateMappedMemoryRanges` are not required                           \
+     * to make writes visible to the GPU or CPU.                                                                       \
+     * @note The combination `HostVisible | HostCoherent` is guaranteed to exist.                                      \
+     */                                                                                                                \
+    X(HostCoherent)                                                                                                    \
+    /**                                                                                                                \
+     * @brief The memory is cached on the host (CPU).                                                                  \
+     * @details                                                                                                        \
+     * Host memory accesses to cached memory are significantly faster than to uncached memory,                         \
+     * particularly for reads. However, cached memory is usually not `HostCoherent`, requiring                         \
+     * explicit cache management (flush/invalidate) to synchronize with the device.                                    \
+     */                                                                                                                \
     X(HostCached)
 
 #define SNAP_RHI_MEMORY_PROPERTY_BITS_INDEX_ENTRY(NAME) NAME,
@@ -332,7 +332,7 @@ enum class MemoryPropertyBitsIndex : uint32_t {
 };
 #undef SNAP_RHI_MEMORY_PROPERTY_BITS_INDEX_ENTRY
 
-#define SNAP_RHI_MEMORY_PROPERTY_BITS_ENUM_ENTRY(NAME) \
+#define SNAP_RHI_MEMORY_PROPERTY_BITS_ENUM_ENTRY(NAME)                                                                 \
     NAME = 1u << static_cast<uint32_t>(MemoryPropertyBitsIndex::NAME),
 
 /**
@@ -937,10 +937,10 @@ struct NDCLayout {
  * @brief Runtime resource type identifier (used for validation/reporting).
  */
 #undef SNAP_RHI_RESOURCE_TYPES
-#define SNAP_RHI_RESOURCE_TYPES(X)                                                                                  \
-    X(Undefined), X(Texture), X(Buffer), X(CommandBuffer), X(CommandQueue), X(Fence), X(Semaphore), X(Framebuffer), \
-        X(RenderPass), X(ComputePipeline), X(RenderPipeline), X(Sampler), X(ShaderLibrary), X(ShaderModule),        \
-        X(DescriptorSet), X(DescriptorSetLayout), X(DescriptorPool), X(PipelineCache), X(DeviceContext),            \
+#define SNAP_RHI_RESOURCE_TYPES(X)                                                                                     \
+    X(Undefined), X(Texture), X(Buffer), X(CommandBuffer), X(CommandQueue), X(Fence), X(Semaphore), X(Framebuffer),    \
+        X(RenderPass), X(ComputePipeline), X(RenderPipeline), X(Sampler), X(ShaderLibrary), X(ShaderModule),           \
+        X(DescriptorSet), X(DescriptorSetLayout), X(DescriptorPool), X(PipelineCache), X(DeviceContext),               \
         X(PipelineLayout), X(DebugMessenger), X(ComputeCommandEncoder), X(RenderCommandEncoder), X(QueryPool)
 
 #define SNAP_RHI_RESOURCE_TYPE_ENUM(name) name
@@ -1009,68 +1009,68 @@ constexpr std::string_view getReportLevelStr(const ReportLevel level) {
 }
 
 #undef SNAP_RHI_VALIDATION_TAGS
-#define SNAP_RHI_VALIDATION_TAGS(X)                                                                        \
-    /*!! @brief Resource creation and initialization operations. */                                        \
-    X(CreateOp)                                                                                            \
-    /*!! @brief Resource destruction and teardown operations. */                                           \
-    X(DestroyOp)                                                                                           \
-    /*!! @brief Device/context creation, configuration, and API-level capability/feature setup. */         \
-    X(DeviceContextOp)                                                                                     \
-    /*!! @brief Command queue operations such as submit/present/signal/wait (API-agnostic). */             \
-    X(CommandQueueOp)                                                                                      \
-    /*!! @brief Command buffer lifecycle and recording/submit-related validations (API-agnostic). */       \
-    X(CommandBufferOp)                                                                                     \
-    /*!! @brief Render command encoder operations (recording render commands). */                          \
-    X(RenderCommandEncoderOp)                                                                              \
-    /*!! @brief Compute command encoder operations (recording compute commands). */                        \
-    X(ComputeCommandEncoderOp)                                                                             \
-    /*!! @brief Blit/copy command encoder operations (copy/resolve/transfer commands). */                  \
-    X(BlitCommandEncoderOp)                                                                                \
-    /*!! @brief Render pass operations (begin/end pass, attachments, load/store semantics). */             \
-    X(RenderPassOp)                                                                                        \
-    /*!! @brief Framebuffer object and attachment configuration/compatibility validations. */              \
-    X(FramebufferOp)                                                                                       \
-    /*!! @brief Graphics/render pipeline operations (creation/binding/compatibility). */                   \
-    X(RenderPipelineOp)                                                                                    \
-    /*!! @brief Compute pipeline operations (creation/binding/compatibility). */                           \
-    X(ComputePipelineOp)                                                                                   \
-    /*!! @brief Shader module operations (compilation, reflection, backend module creation). */            \
-    X(ShaderModuleOp)                                                                                      \
-    /*!! @brief Shader library operations (collections of shader functions/modules). */                    \
-    X(ShaderLibraryOp)                                                                                     \
-    /*!! @brief Sampler operations and state validation (filtering, addressing, comparison, etc.). */      \
-    X(SamplerOp)                                                                                           \
-    /*!! @brief Texture operations and state validation (creation, views, layout/state tracking). */       \
-    X(TextureOp)                                                                                           \
-    /*!! @brief Buffer operations and state validation (creation, mapping, upload/copy, usage flags). */   \
-    X(BufferOp)                                                                                            \
-    /*!! @brief Descriptor set layout operations (bindings, types, visibility, compatibility rules). */    \
-    X(DescriptorSetLayoutOp)                                                                               \
-    /*!! @brief Pipeline layout operations (descriptor set layouts, push constants, compatibility). */     \
-    X(PipelineLayoutOp)                                                                                    \
-    /*!! @brief Descriptor pool allocation/free/reset operations and capacity validation. */               \
-    X(DescriptorPoolOp)                                                                                    \
-    /*!! @brief Descriptor set allocation/update/bind operations and validation. */                        \
-    X(DescriptorSetOp)                                                                                     \
-    /*!! @brief Fence operations (creation, reset, wait, signal, export/import). */                        \
-    X(FenceOp)                                                                                             \
-    /*!! @brief Semaphore operations (signal/wait, timeline/binary semantics, export/import). */           \
-    X(SemaphoreOp)                                                                                         \
-    /*!! @brief Device-level operations not covered by DeviceContextOp. */                                 \
-    X(DeviceOp)                                                                                            \
-    /*!! @brief Pipeline cache operations (load/store/merge/cache-miss behavior). */                       \
-    X(PipelineCacheOp)                                                                                     \
-    /*!! @brief Query pool operations (timestamp/occlusion/statistics queries). */                         \
-    X(QueryPoolOp)                                                                                         \
-    /*!! @brief OpenGL queue: errors triggered by external system/driver state (mapped from GL errors). */ \
-    X(GLCommandQueueExternalError)                                                                         \
-    /*!! @brief OpenGL queue: internal SnapRHI invariant violations leading to GL errors. */               \
-    X(GLCommandQueueInternalError)                                                                         \
-    /*!! @brief OpenGL state cache validations (cached GL state vs driver state). */                       \
-    X(GLStateCacheOp)                                                                                      \
-    /*!! @brief OpenGL program validation (link/validate checks and diagnostics). */                       \
-    X(GLProgramValidationOp)                                                                               \
-    /*!! @brief OpenGL native calls validation through glGetError. */                                      \
+#define SNAP_RHI_VALIDATION_TAGS(X)                                                                                    \
+    /*!! @brief Resource creation and initialization operations. */                                                    \
+    X(CreateOp)                                                                                                        \
+    /*!! @brief Resource destruction and teardown operations. */                                                       \
+    X(DestroyOp)                                                                                                       \
+    /*!! @brief Device/context creation, configuration, and API-level capability/feature setup. */                     \
+    X(DeviceContextOp)                                                                                                 \
+    /*!! @brief Command queue operations such as submit/present/signal/wait (API-agnostic). */                         \
+    X(CommandQueueOp)                                                                                                  \
+    /*!! @brief Command buffer lifecycle and recording/submit-related validations (API-agnostic). */                   \
+    X(CommandBufferOp)                                                                                                 \
+    /*!! @brief Render command encoder operations (recording render commands). */                                      \
+    X(RenderCommandEncoderOp)                                                                                          \
+    /*!! @brief Compute command encoder operations (recording compute commands). */                                    \
+    X(ComputeCommandEncoderOp)                                                                                         \
+    /*!! @brief Blit/copy command encoder operations (copy/resolve/transfer commands). */                              \
+    X(BlitCommandEncoderOp)                                                                                            \
+    /*!! @brief Render pass operations (begin/end pass, attachments, load/store semantics). */                         \
+    X(RenderPassOp)                                                                                                    \
+    /*!! @brief Framebuffer object and attachment configuration/compatibility validations. */                          \
+    X(FramebufferOp)                                                                                                   \
+    /*!! @brief Graphics/render pipeline operations (creation/binding/compatibility). */                               \
+    X(RenderPipelineOp)                                                                                                \
+    /*!! @brief Compute pipeline operations (creation/binding/compatibility). */                                       \
+    X(ComputePipelineOp)                                                                                               \
+    /*!! @brief Shader module operations (compilation, reflection, backend module creation). */                        \
+    X(ShaderModuleOp)                                                                                                  \
+    /*!! @brief Shader library operations (collections of shader functions/modules). */                                \
+    X(ShaderLibraryOp)                                                                                                 \
+    /*!! @brief Sampler operations and state validation (filtering, addressing, comparison, etc.). */                  \
+    X(SamplerOp)                                                                                                       \
+    /*!! @brief Texture operations and state validation (creation, views, layout/state tracking). */                   \
+    X(TextureOp)                                                                                                       \
+    /*!! @brief Buffer operations and state validation (creation, mapping, upload/copy, usage flags). */               \
+    X(BufferOp)                                                                                                        \
+    /*!! @brief Descriptor set layout operations (bindings, types, visibility, compatibility rules). */                \
+    X(DescriptorSetLayoutOp)                                                                                           \
+    /*!! @brief Pipeline layout operations (descriptor set layouts, push constants, compatibility). */                 \
+    X(PipelineLayoutOp)                                                                                                \
+    /*!! @brief Descriptor pool allocation/free/reset operations and capacity validation. */                           \
+    X(DescriptorPoolOp)                                                                                                \
+    /*!! @brief Descriptor set allocation/update/bind operations and validation. */                                    \
+    X(DescriptorSetOp)                                                                                                 \
+    /*!! @brief Fence operations (creation, reset, wait, signal, export/import). */                                    \
+    X(FenceOp)                                                                                                         \
+    /*!! @brief Semaphore operations (signal/wait, timeline/binary semantics, export/import). */                       \
+    X(SemaphoreOp)                                                                                                     \
+    /*!! @brief Device-level operations not covered by DeviceContextOp. */                                             \
+    X(DeviceOp)                                                                                                        \
+    /*!! @brief Pipeline cache operations (load/store/merge/cache-miss behavior). */                                   \
+    X(PipelineCacheOp)                                                                                                 \
+    /*!! @brief Query pool operations (timestamp/occlusion/statistics queries). */                                     \
+    X(QueryPoolOp)                                                                                                     \
+    /*!! @brief OpenGL queue: errors triggered by external system/driver state (mapped from GL errors). */             \
+    X(GLCommandQueueExternalError)                                                                                     \
+    /*!! @brief OpenGL queue: internal SnapRHI invariant violations leading to GL errors. */                           \
+    X(GLCommandQueueInternalError)                                                                                     \
+    /*!! @brief OpenGL state cache validations (cached GL state vs driver state). */                                   \
+    X(GLStateCacheOp)                                                                                                  \
+    /*!! @brief OpenGL program validation (link/validate checks and diagnostics). */                                   \
+    X(GLProgramValidationOp)                                                                                           \
+    /*!! @brief OpenGL native calls validation through glGetError. */                                                  \
     X(GLProfileOp)
 
 // 1) Shadow indices (CreateOp_i, DestroyOp_i, ...) used to derive bit shifts.
@@ -1115,13 +1115,13 @@ SNAP_RHI_DEFINE_ENUM_OPS(ValidationTag);
 // so we don't have to duplicate tag names here.
 
 #ifndef SNAP_RHI_ENABLED_VALIDATION_TAGS
-#define SNAP_RHI_VALIDATION_TAG_OR_ENABLED(NAME)                                                     \
-    static_cast<uint64_t>((SNAP_RHI_ENABLE_VALIDATION_TAG_##NAME) ? snap::rhi::ValidationTag::NAME : \
+#define SNAP_RHI_VALIDATION_TAG_OR_ENABLED(NAME)                                                                       \
+    static_cast<uint64_t>((SNAP_RHI_ENABLE_VALIDATION_TAG_##NAME) ? snap::rhi::ValidationTag::NAME :                   \
                                                                     snap::rhi::ValidationTag::None) |
 
-#define SNAP_RHI_ENABLED_VALIDATION_TAGS                                                                      \
-    static_cast<uint64_t>(static_cast<uint64_t>(snap::rhi::ValidationTag::None) |                             \
-                          SNAP_RHI_VALIDATION_TAGS(SNAP_RHI_VALIDATION_TAG_OR_ENABLED) static_cast<uint64_t>( \
+#define SNAP_RHI_ENABLED_VALIDATION_TAGS                                                                               \
+    static_cast<uint64_t>(static_cast<uint64_t>(snap::rhi::ValidationTag::None) |                                      \
+                          SNAP_RHI_VALIDATION_TAGS(SNAP_RHI_VALIDATION_TAG_OR_ENABLED) static_cast<uint64_t>(          \
                               snap::rhi::ValidationTag::None))
 
 static constexpr uint64_t EnabledValidationTags = (static_cast<uint64_t>(SNAP_RHI_ENABLED_VALIDATION_TAGS));

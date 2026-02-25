@@ -717,7 +717,7 @@ bool isMapUnmapAvailable() {
 #endif // SNAP_RHI_PLATFORM_WEBASSEMBLY()
 }
 
-#if SNAP_RHI_OS_ANDROID()
+#if SNAP_RHI_GL_ES && SNAP_RHI_OS_LINUX_BASED()
 
 struct DrawBufferGuard {
     std::vector<GLint> drawBuffers{};
@@ -818,7 +818,7 @@ bool supportsDepthStencilAttachmentsOVR() {
 
     return isComplete;
 }
-#endif // SNAP_RHI_OS_ANDROID()
+#endif // SNAP_RHI_GL_ES && SNAP_RHI_OS_LINUX_BASED()
 
 void initClipCullDistanceExt(const std::string& glExtensionsList, snap::rhi::backend::opengl::Features& features) {
     GLint maxClipDistances = 0;
@@ -855,7 +855,7 @@ void initOVRExt(const std::string& glExtensionsList,
     features.isOVRDepthStencilSupported = false;
     features.isOVRMultiviewSupported = false;
     features.isOVRMultiviewMultisampledSupported = false;
-#if SNAP_RHI_OS_ANDROID()
+#if SNAP_RHI_GL_ES && SNAP_RHI_OS_LINUX_BASED()
     {
         // We consider OVR supported if all three extensions are present and function addresses were found.
         features.isOVRMultiviewSupported = nullptr != glFramebufferTextureMultiviewOVR;
@@ -893,7 +893,7 @@ void initOVRExt(const std::string& glExtensionsList,
         features.isOVRMultiviewMultisampledSupported = false;
         features.isOVRDepthStencilSupported = false;
     }
-#endif // SNAP_RHI_OS_ANDROID()
+#endif // SNAP_RHI_GL_ES && SNAP_RHI_OS_LINUX_BASED()
 }
 } // unnamed namespace
 
@@ -1194,7 +1194,7 @@ void Instance::framebufferTextureMultiviewOVR(snap::rhi::backend::opengl::Frameb
                                               int32_t level,
                                               int32_t baseViewIndex,
                                               int32_t numViews) {
-#if SNAP_RHI_OS_ANDROID()
+#if SNAP_RHI_GL_ES && SNAP_RHI_OS_LINUX_BASED()
     glFramebufferTextureMultiviewOVR(static_cast<GLenum>(target),
                                      static_cast<GLenum>(attachment),
                                      static_cast<GLuint>(texture),
@@ -1214,7 +1214,7 @@ void Instance::framebufferTextureMultisampleMultiviewOVR(
     int32_t samples,
     int32_t baseViewIndex,
     int32_t numViews) {
-#if SNAP_RHI_OS_ANDROID()
+#if SNAP_RHI_GL_ES && SNAP_RHI_OS_LINUX_BASED()
     glFramebufferTextureMultisampleMultiviewOVR(static_cast<GLenum>(target),
                                                 static_cast<GLenum>(attachment),
                                                 static_cast<GLuint>(texture),

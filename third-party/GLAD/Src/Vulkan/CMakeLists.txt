@@ -14,17 +14,15 @@ set(GLAD_VULKAN_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/GLAD/vk_platform.h
 )
 
-add_library(glad-vulkan STATIC ${GLAD_VULKAN_SOURCES} ${GLAD_VULKAN_HEADERS})
-add_library(glad::glad-vulkan ALIAS glad-vulkan)
+snap_rhi_add_library(glad-vulkan STATIC ${GLAD_VULKAN_SOURCES} ${GLAD_VULKAN_HEADERS})
 
 target_include_directories(glad-vulkan
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 # Link to glad-platform for common utilities
-target_link_libraries(glad-vulkan PUBLIC glad::glad-platform)
+snap_rhi_target_link_libraries(glad-vulkan glad::glad-platform)
 
 # Platform-specific definitions
 if(ANDROID)
@@ -39,24 +37,24 @@ endif()
 # ============================================================================
 # Platform-specific Vulkan library linking
 # ============================================================================
+# Search for locally-installed Vulkan SDK libraries.
+# ============================================================================
+
 if(IOS)
-    # iOS has two Vulkan linking modes:
+    # ========================================================================
+    # iOS Vulkan (Vulkan SDK)
+    # ========================================================================
+    # Two modes:
+    #   A) Framework mode (SNAP_RHI_VULKAN_ENABLE_LAYERS=ON) —
+    #      dlopen vulkan.framework, which dispatches through the Vulkan Loader.
+    #   B) Static mode (default) — link libMoltenVK.a directly,
+    #      GLAD resolves symbols via RTLD_DEFAULT.
     #
-    # 1. STATIC (default): Link libMoltenVK.a directly. No Vulkan Loader, no
-    #    validation layers. GLAD resolves symbols via RTLD_DEFAULT from the
-    #    process image. Suitable for release builds.
-    #
-    # 2. FRAMEWORKS (when SNAP_RHI_VULKAN_ENABLE_LAYERS is ON): Use the Vulkan
-    #    SDK's dynamic frameworks — vulkan.framework (Loader), MoltenVK.framework
-    #    (ICD), and VkLayer_*.framework (layers). These are embedded in the app
-    #    bundle's Frameworks/ directory. GLAD dlopen's the Vulkan Loader framework.
-    #    Suitable for development/debugging. Not allowed in App Store submissions.
-    #
-    # The compile definition SNAP_RHI_IOS_VULKAN_USE_FRAMEWORKS controls which
-    # mode GLAD's runtime dlopen uses.
+    # The compile definition SNAP_RHI_IOS_VULKAN_USE_FRAMEWORKS controls
+    # which runtime dlopen path GLAD uses (A → 1, B → 0).
 
     if(SNAP_RHI_VULKAN_ENABLE_LAYERS)
-        # ---- Framework mode (with Vulkan Loader + validation layers) ----
+        # ---- Mode A: Framework mode (with Vulkan Loader + validation layers) ----
         message(STATUS "[GLAD] iOS Vulkan: Framework mode (validation layers enabled)")
         target_compile_definitions(glad-vulkan PUBLIC SNAP_RHI_IOS_VULKAN_USE_FRAMEWORKS=1)
 
@@ -102,7 +100,7 @@ if(IOS)
         message(STATUS "[GLAD] Found iOS Vulkan SDK: ${_VULKAN_SDK_IOS_LIB}")
 
         # Link the Vulkan Loader framework
-        target_link_libraries(glad-vulkan PUBLIC "${_VULKAN_FRAMEWORK}")
+        snap_rhi_target_link_libraries(glad-vulkan "${_VULKAN_FRAMEWORK}")
 
         # Determine MoltenVK.framework path from xcframework
         if(CMAKE_OSX_SYSROOT MATCHES "[Ss]imulator")
@@ -124,7 +122,7 @@ if(IOS)
         set(SNAP_RHI_IOS_VULKAN_USE_FRAMEWORKS ON CACHE INTERNAL "")
 
     else()
-        # ---- Static mode (MoltenVK linked directly, no layers) ----
+        # ---- Mode B: Static mode (MoltenVK linked directly, no layers) ----
         message(STATUS "[GLAD] iOS Vulkan: Static mode (no validation layers)")
         target_compile_definitions(glad-vulkan PUBLIC SNAP_RHI_IOS_VULKAN_USE_FRAMEWORKS=0)
         set(SNAP_RHI_IOS_VULKAN_USE_FRAMEWORKS OFF CACHE INTERNAL "")
@@ -153,7 +151,7 @@ if(IOS)
         endforeach()
 
         if(MOLTENVK_LIBRARY)
-            target_link_libraries(glad-vulkan PUBLIC "${MOLTENVK_LIBRARY}")
+            snap_rhi_target_link_libraries(glad-vulkan "${MOLTENVK_LIBRARY}")
             message(STATUS "[GLAD] Found MoltenVK for iOS: ${MOLTENVK_LIBRARY}")
         else()
             message(FATAL_ERROR
@@ -165,13 +163,23 @@ if(IOS)
         endif()
 
         # MoltenVK depends on these Apple frameworks
-        target_link_libraries(glad-vulkan PUBLIC
+        snap_rhi_target_link_libraries(glad-vulkan
             "-framework Metal"
             "-framework IOSurface"
             "-framework QuartzCore"
             "-framework Foundation"
         )
     endif()
+
 elseif(UNIX AND NOT APPLE AND NOT ANDROID)
-    target_link_libraries(glad-vulkan PRIVATE ${CMAKE_DL_LIBS})
+    # Linux: link libdl so GLAD can dlopen the Vulkan loader at runtime.
+    snap_rhi_target_link_libraries(glad-vulkan ${CMAKE_DL_LIBS})
 endif()
+
+# Add glad:: alias for consistent target naming
+if(NOT TARGET glad::glad-vulkan)
+    add_library(glad::glad-vulkan ALIAS glad-vulkan)
+endif()
+
+# Export target for packaging
+snap_rhi_export(glad-vulkan)

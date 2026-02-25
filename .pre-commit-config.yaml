@@ -34,7 +34,7 @@ repos:
           (?x)^(
               src|
               examples
-          )/.*$
+          ).*$
         types_or: [c, c++, objective-c, objective-c++]
 
   # ── Python formatting ───────────────────────────────────────────────

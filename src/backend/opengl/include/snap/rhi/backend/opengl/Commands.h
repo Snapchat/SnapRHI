@@ -100,8 +100,8 @@ enum class Command : uint32_t {
  *
  * @see std::is_trivially_destructible
  */
-#define SNAP_RHI_BACKEND_OPENGL_COMMANDS_TRIVIALLY_DESTRUCTIBLE_CHECK(Type) \
-    static_assert(std::is_trivially_destructible_v<Type>,                   \
+#define SNAP_RHI_BACKEND_OPENGL_COMMANDS_TRIVIALLY_DESTRUCTIBLE_CHECK(Type)                                            \
+    static_assert(std::is_trivially_destructible_v<Type>,                                                              \
                   #Type " must be trivially destructible! Do not add members that require cleanup.");
 
 struct BeginRenderPassCmd {

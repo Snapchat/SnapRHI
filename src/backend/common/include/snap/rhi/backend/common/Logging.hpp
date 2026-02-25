@@ -43,13 +43,13 @@ inline void log(Level level, const char* fmt, ...) {
 } // namespace snap::rhi::logging
 
 #define SNAP_RHI_LOG_TAG "[SnapRHI]"
-#define SNAP_RHI_LOGV(format, ...) \
+#define SNAP_RHI_LOGV(format, ...)                                                                                     \
     ::snap::rhi::logging::log(::snap::rhi::logging::Level::Verbose, SNAP_RHI_LOG_TAG " " format, ##__VA_ARGS__)
-#define SNAP_RHI_LOGD(format, ...) \
+#define SNAP_RHI_LOGD(format, ...)                                                                                     \
     ::snap::rhi::logging::log(::snap::rhi::logging::Level::Debug, SNAP_RHI_LOG_TAG " " format, ##__VA_ARGS__)
-#define SNAP_RHI_LOGI(format, ...) \
+#define SNAP_RHI_LOGI(format, ...)                                                                                     \
     ::snap::rhi::logging::log(::snap::rhi::logging::Level::Info, SNAP_RHI_LOG_TAG " " format, ##__VA_ARGS__)
-#define SNAP_RHI_LOGW(format, ...) \
+#define SNAP_RHI_LOGW(format, ...)                                                                                     \
     ::snap::rhi::logging::log(::snap::rhi::logging::Level::Warn, SNAP_RHI_LOG_TAG " " format, ##__VA_ARGS__)
-#define SNAP_RHI_LOGE(format, ...) \
+#define SNAP_RHI_LOGE(format, ...)                                                                                     \
     ::snap::rhi::logging::log(::snap::rhi::logging::Level::Error, SNAP_RHI_LOG_TAG " " format, ##__VA_ARGS__)

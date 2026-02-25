@@ -1,17 +1,10 @@
 ---
-# SnapRHI clang-format configuration
-# Based on LLVM style with project-specific overrides.
-# Compatible with clang-format 16+.
-#
-# Usage:
-#   clang-format -i src/**/*.cpp src/**/*.h
-#   pre-commit run clang-format --all-files
-#
+# BasedOnStyle:  LLVM
 AccessModifierOffset: -4
 AlignAfterOpenBracket: Align
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
-AlignEscapedNewlines: Left
+AlignEscapedNewlinesLeft: false
 AlignOperands:   true
 AlignTrailingComments: true
 AllowAllParametersOfDeclarationOnNextLine: true
@@ -80,8 +73,8 @@ SpacesInContainerLiterals: true
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
-Standard:        c++20
+Standard:        Cpp11
 TabWidth:        4
 UseTab:          Never
-FixNamespaceComments: true
+FixNamespaceComments:   true
 ...

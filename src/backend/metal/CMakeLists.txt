@@ -13,34 +13,13 @@ file(GLOB SNAP_RHI_METAL_SOURCES
 snap_rhi_add_library(backend-metal STATIC ${SNAP_RHI_METAL_SOURCES})
 
 # Public include directories
-target_include_directories(backend-metal
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
-)
+target_include_directories(backend-metal PUBLIC include)
 
 # Link to public-api and backend-common
-target_link_libraries(backend-metal
-    PUBLIC
-        snap-rhi::public-api
-        snap-rhi::backend-common
-)
+snap_rhi_target_link_libraries(backend-metal snap-rhi::public-api snap-rhi::backend-common)
 
-# ============================================================================
 # Apple Framework Dependencies
-# ============================================================================
-# Use find_library for cleaner CMake and better IDE integration
-
-find_library(FOUNDATION_FRAMEWORK Foundation REQUIRED)
-find_library(METAL_FRAMEWORK Metal REQUIRED)
-find_library(QUARTZCORE_FRAMEWORK QuartzCore REQUIRED)
-
-target_link_libraries(backend-metal
-    PRIVATE
-        ${FOUNDATION_FRAMEWORK}
-        ${METAL_FRAMEWORK}
-        ${QUARTZCORE_FRAMEWORK}
-)
+snap_rhi_target_link_libraries(backend-metal "-framework Foundation" "-framework Metal" "-framework QuartzCore")
 
 # ============================================================================
 # Objective-C++ Compiler Settings
@@ -52,3 +31,6 @@ set_source_files_properties(${SNAP_RHI_METAL_SOURCES} PROPERTIES
 
 # Compiler warnings
 snap_rhi_setup_compiler_warnings(backend-metal)
+
+# Export target for packaging
+snap_rhi_export(backend-metal)

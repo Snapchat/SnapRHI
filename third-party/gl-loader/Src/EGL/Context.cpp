@@ -26,7 +26,7 @@ namespace {
 class ThreadCleanupGuard {
 public:
     ThreadCleanupGuard() {
-#if !defined(GLAD_PLATFORM_OPENGL_ES) || !GLAD_PLATFORM_OPENGL_ES
+#if !GLAD_PLATFORM_OPENGL_ES()
         eglBindAPI(EGL_OPENGL_API);
 #endif
     }
@@ -39,7 +39,7 @@ public:
 };
 
 void ensureContextReleaseForThread() {
-#if !defined(GLAD_PLATFORM_OPENGL_ES) || !GLAD_PLATFORM_OPENGL_ES
+#if !GLAD_PLATFORM_OPENGL_ES()
     eglBindAPI(EGL_OPENGL_API);
 #endif
     thread_local ThreadCleanupGuard guard;

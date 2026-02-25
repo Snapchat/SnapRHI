@@ -2,6 +2,8 @@
 
 #include "OpenGL/runtime.h"
 
+#include <string_view>
+
 namespace gl {
 #if GLAD_PLATFORM_EMSCRIPTEN
 Context createContext(std::string_view canvasTarget);

@@ -28,14 +28,14 @@
 #define SNAP_RHI_GLES30 (0)
 #endif
 
-#if SNAP_RHI_GL_ES && \
+#if SNAP_RHI_GL_ES &&                                                                                                  \
     !(SNAP_RHI_OS_MACOS() || SNAP_RHI_OS_IOS() || SNAP_RHI_OS_IOS_SIMULATOR() || SNAP_RHI_PLATFORM_WEBASSEMBLY())
 #define SNAP_RHI_GLES31 (1)
 #else
 #define SNAP_RHI_GLES31 (0)
 #endif
 
-#if SNAP_RHI_GL_ES && \
+#if SNAP_RHI_GL_ES &&                                                                                                  \
     !(SNAP_RHI_OS_MACOS() || SNAP_RHI_OS_IOS() || SNAP_RHI_OS_IOS_SIMULATOR() || SNAP_RHI_PLATFORM_WEBASSEMBLY())
 #define SNAP_RHI_GLES32 (1)
 #else
@@ -54,7 +54,7 @@
 #define SNAP_RHI_GL41 (0)
 #endif
 
-#if !SNAP_RHI_GL_ES && \
+#if !SNAP_RHI_GL_ES &&                                                                                                 \
     !(SNAP_RHI_OS_MACOS() || SNAP_RHI_OS_IOS() || SNAP_RHI_OS_IOS_SIMULATOR() || SNAP_RHI_PLATFORM_WEBASSEMBLY())
 #define SNAP_RHI_GL45 (1)
 #else

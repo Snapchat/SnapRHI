@@ -205,7 +205,7 @@ void NativeBuffer::tryAllocateWithData(DeviceContext* dc, const std::span<const 
 }
 
 void NativeBuffer::tryAllocate(DeviceContext* dc) {
-    tryAllocateWithData(dc, {data.get(), info.size});
+    tryAllocateWithData(dc, {data.get(), static_cast<size_t>(info.size)});
 }
 
 void NativeBuffer::destroyGLBuffer() {

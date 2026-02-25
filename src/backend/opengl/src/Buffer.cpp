@@ -151,8 +151,8 @@ GLuint Buffer::getOrAllocateGLBuffer(DeviceContext* dc) {
     if (!nativeBuffer) {
         assert(logicalBuffer);
 
-        nativeBuffer =
-            std::make_unique<NativeBuffer>(device, info, std::span<const std::byte>{logicalBuffer->map(), info.size});
+        nativeBuffer = std::make_unique<NativeBuffer>(
+            device, info, std::span<const std::byte>{logicalBuffer->map(), static_cast<size_t>(info.size)});
 
         logicalBuffer->unmap();
         logicalBuffer.reset();

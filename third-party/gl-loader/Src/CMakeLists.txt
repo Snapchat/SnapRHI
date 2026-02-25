@@ -16,7 +16,7 @@ elseif(IOS)
         ${CMAKE_CURRENT_SOURCE_DIR}/iOS/*.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/iOS/*.mm
     )
-elseif(ANDROID)
+elseif(ANDROID OR SNAP_RHI_OPENGL_ES)
     file(GLOB_RECURSE GL_LOADER_PLATFORM_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/EGL/*.cpp
     )
@@ -48,16 +48,12 @@ endif()
 list(APPEND GL_LOADER_SOURCES ${GL_LOADER_PLATFORM_SOURCES})
 
 # Create library
-add_library(gl-loader STATIC ${GL_LOADER_SOURCES})
-add_library(gl-loader::gl-loader ALIAS gl-loader)
+snap_rhi_add_library(gl-loader STATIC ${GL_LOADER_SOURCES})
 
-target_include_directories(gl-loader PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-)
+target_include_directories(gl-loader PUBLIC include)
 
 # Link to GLAD
-target_link_libraries(gl-loader PUBLIC glad::glad-gl)
+snap_rhi_target_link_libraries(gl-loader glad::glad-gl)
 
 # Platform-specific settings
 if(APPLE)
@@ -73,24 +69,39 @@ if(APPLE)
     endif()
 
     if(NOT IOS)
-        find_library(OPENGL_FRAMEWORK OpenGL REQUIRED)
-        find_library(APPKIT_FRAMEWORK AppKit REQUIRED)
-        target_link_libraries(gl-loader PRIVATE ${OPENGL_FRAMEWORK} ${APPKIT_FRAMEWORK})
+        snap_rhi_target_link_libraries(gl-loader "-framework OpenGL" "-framework AppKit")
     else()
-        find_library(OPENGLES_FRAMEWORK OpenGLES REQUIRED)
-        target_link_libraries(gl-loader PRIVATE ${OPENGLES_FRAMEWORK})
+        snap_rhi_target_link_libraries(gl-loader "-framework OpenGLES")
     endif()
 elseif(WIN32)
-    target_link_libraries(gl-loader PRIVATE opengl32)
+    snap_rhi_target_link_libraries(gl-loader opengl32)
+elseif(SNAP_RHI_GL_LOADER_LIBRARIES)
+    # Cross-compilation: link libraries provided by the build system
+    snap_rhi_target_link_libraries(gl-loader ${SNAP_RHI_GL_LOADER_LIBRARIES})
 elseif(ANDROID)
-    target_link_libraries(gl-loader PRIVATE EGL GLESv2)
+    snap_rhi_target_link_libraries(gl-loader EGL GLESv2)
 elseif(UNIX AND NOT EMSCRIPTEN)
     if(GL_LOADER_LINUX_BACKEND STREQUAL "egl")
-        target_link_libraries(gl-loader PRIVATE EGL GL)
+        snap_rhi_target_link_libraries(gl-loader EGL GL)
     elseif(GL_LOADER_LINUX_BACKEND STREQUAL "osmesa")
-        target_link_libraries(gl-loader PRIVATE OSMesa)
+        snap_rhi_target_link_libraries(gl-loader OSMesa)
     else()
-        find_package(X11 REQUIRED)
-        target_link_libraries(gl-loader PRIVATE ${X11_LIBRARIES} GL)
+        find_package(X11)
+        if(X11_FOUND)
+            snap_rhi_target_link_libraries(gl-loader ${X11_LIBRARIES} GL)
+        else()
+            # Cross-compilation: FindX11 cannot locate X11 in the sysroot.
+            # Use explicit linker flags so the toolchain resolves them.
+            message(STATUS "gl-loader: X11 not found via FindX11 — linking directly (cross-compilation)")
+            snap_rhi_target_link_libraries(gl-loader -lX11 -lGLX -lGL)
+        endif()
     endif()
 endif()
+
+# Add gl-loader:: alias for consistent target naming across build configurations
+if(NOT TARGET gl-loader::gl-loader)
+    add_library(gl-loader::gl-loader ALIAS gl-loader)
+endif()
+
+# Export target for packaging
+snap_rhi_export(gl-loader)

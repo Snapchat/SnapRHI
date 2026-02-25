@@ -5,7 +5,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     http://www.apache.org/licenses/.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -75,10 +75,10 @@ private:
     std::vector<uint8_t> data{};
 };
 
-#define SNAP_RHI_DECLARE_COMMAND(CommandName)                                                         \
-    template<>                                                                                        \
-    inline CommandName##Cmd* CommandAllocator::allocateCommand<CommandName##Cmd>() {                  \
-        return allocate<CommandName##Cmd, snap::rhi::backend::opengl::Command>(Command::CommandName); \
+#define SNAP_RHI_DECLARE_COMMAND(CommandName)                                                                          \
+    template<>                                                                                                         \
+    inline CommandName##Cmd* CommandAllocator::allocateCommand<CommandName##Cmd>() {                                   \
+        return allocate<CommandName##Cmd, snap::rhi::backend::opengl::Command>(Command::CommandName);                  \
     }
 
 SNAP_RHI_DECLARE_COMMAND(BeginComputePass)

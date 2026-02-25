@@ -13,14 +13,13 @@ file(GLOB SNAP_RHI_BACKEND_COMMON_SOURCES
 snap_rhi_add_library(backend-common STATIC ${SNAP_RHI_BACKEND_COMMON_SOURCES})
 
 # Public include directories
-target_include_directories(backend-common
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
-)
+target_include_directories(backend-common PUBLIC include)
 
 # Link to public-api
-target_link_libraries(backend-common PUBLIC snap-rhi::public-api)
+snap_rhi_target_link_libraries(backend-common snap-rhi::public-api)
 
 # Compiler warnings
 snap_rhi_setup_compiler_warnings(backend-common)
+
+# Export target for packaging
+snap_rhi_export(backend-common)

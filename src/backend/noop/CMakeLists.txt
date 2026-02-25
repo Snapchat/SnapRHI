@@ -13,18 +13,13 @@ file(GLOB SNAP_RHI_NOOP_SOURCES
 snap_rhi_add_library(backend-noop STATIC ${SNAP_RHI_NOOP_SOURCES})
 
 # Public include directories
-target_include_directories(backend-noop
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
-)
+target_include_directories(backend-noop PUBLIC include)
 
 # Link to public-api and backend-common
-target_link_libraries(backend-noop
-    PUBLIC
-        snap-rhi::public-api
-        snap-rhi::backend-common
-)
+snap_rhi_target_link_libraries(backend-noop snap-rhi::public-api snap-rhi::backend-common)
 
 # Compiler warnings
 snap_rhi_setup_compiler_warnings(backend-noop)
+
+# Export target for packaging
+snap_rhi_export(backend-noop)

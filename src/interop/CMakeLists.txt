@@ -42,36 +42,24 @@ message(STATUS "Building snap-rhi interop module: ${SNAP_RHI_INTEROP_PLATFORM_SO
 snap_rhi_add_library(interop STATIC ${SNAP_RHI_INTEROP_SOURCES})
 
 # Public include directories
-target_include_directories(interop
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
-)
+target_include_directories(interop PUBLIC include)
 
 # Link to core libraries
-target_link_libraries(interop
-    PUBLIC
-        snap-rhi::public-api
-        snap-rhi::backend-common
-)
+snap_rhi_target_link_libraries(interop snap-rhi::public-api snap-rhi::backend-common)
 
 # ============================================================================
 # Backend-specific Dependencies
 # ============================================================================
 if(SNAP_RHI_ENABLE_VULKAN)
-    target_link_libraries(interop PUBLIC snap-rhi::backend-vulkan)
+    snap_rhi_target_link_libraries(interop snap-rhi::backend-vulkan)
 endif()
 
 if(SNAP_RHI_ENABLE_METAL)
-    target_link_libraries(interop PUBLIC snap-rhi::backend-metal)
-
-    # CoreFoundation for Metal interop
-    find_library(COREFOUNDATION_FRAMEWORK CoreFoundation REQUIRED)
-    target_link_libraries(interop PRIVATE ${COREFOUNDATION_FRAMEWORK})
+    snap_rhi_target_link_libraries(interop snap-rhi::backend-metal "-framework CoreFoundation")
 endif()
 
 if(SNAP_RHI_ENABLE_OPENGL)
-    target_link_libraries(interop PUBLIC snap-rhi::backend-opengl)
+    snap_rhi_target_link_libraries(interop snap-rhi::backend-opengl)
 endif()
 
 # ============================================================================
@@ -89,3 +77,6 @@ endif()
 
 # Compiler warnings
 snap_rhi_setup_compiler_warnings(interop)
+
+# Export target for packaging
+snap_rhi_export(interop)

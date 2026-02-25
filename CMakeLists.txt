@@ -31,6 +31,9 @@ include(SnapRHIOptions)
 include(SnapRHIHelpers)
 include(SnapRHICompileDefinitions)
 
+# Optional packaging hook (no-op when SnapRHIPackaging module is absent)
+include(SnapRHIPackaging OPTIONAL)
+
 # Apply all validation settings if master validation option is enabled
 # This must be called early, before other options are used
 snap_rhi_apply_all_validation()
@@ -73,13 +76,35 @@ snap_rhi_print_config()
 # ============================================================================
 # Third-Party Dependencies
 # ============================================================================
-# GLAD provides loaders for both OpenGL and Vulkan
+# GLAD, gl-loader and spirv-reflect are built from the local third-party
+# sources for standalone / public CMake builds.  When pre-built targets are
+# already available (packaged builds), the local sources are skipped.
+# ============================================================================
+
+# GLAD — OpenGL / Vulkan loaders
 if(SNAP_RHI_ENABLE_OPENGL OR SNAP_RHI_ENABLE_VULKAN)
-    add_subdirectory(third-party/GLAD)
+    if(NOT TARGET glad::glad-platform)
+        if(DEFINED SNAP_RHI_OPENGL_BACKEND_LINUX)
+            set(GLAD_OPENGL_BACKEND_LINUX "${SNAP_RHI_OPENGL_BACKEND_LINUX}" CACHE STRING
+                "Linux OpenGL backend (glx, egl, osmesa)" FORCE)
+        endif()
+        add_subdirectory(third-party/GLAD)
+    else()
+        message(STATUS "[SnapRHI] Using pre-built GLAD targets")
+    endif()
 endif()
 
+# gl-loader — OpenGL context management
 if(SNAP_RHI_ENABLE_OPENGL)
-    add_subdirectory(third-party/gl-loader)
+    if(NOT TARGET gl-loader::gl-loader)
+        if(DEFINED SNAP_RHI_OPENGL_BACKEND_LINUX)
+            set(GL_LOADER_LINUX_BACKEND "${SNAP_RHI_OPENGL_BACKEND_LINUX}" CACHE STRING
+                "Linux OpenGL backend (glx, egl, osmesa)" FORCE)
+        endif()
+        add_subdirectory(third-party/gl-loader)
+    else()
+        message(STATUS "[SnapRHI] Using pre-built gl-loader target")
+    endif()
 endif()
 
 # ============================================================================
@@ -118,8 +143,20 @@ if(SNAP_RHI_WITH_INTEROP)
 endif()
 
 # ============================================================================
+# Packaging-specific Modules
+# ============================================================================
+# Hook for additional packaging targets. No-op in standalone builds.
+snap_rhi_add_packaging_modules()
+
+# ============================================================================
 # Examples
 # ============================================================================
 if(SNAP_RHI_BUILD_EXAMPLES)
     add_subdirectory(examples/triangle-demo-app)
 endif()
+
+# ============================================================================
+# Packaging Export Complete
+# ============================================================================
+# Finalize packaging exports. No-op in standalone builds.
+snap_rhi_export_complete()

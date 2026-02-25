@@ -23,8 +23,8 @@
 #include <span>
 
 #if SNAP_RHI_ENABLE_CUSTOM_PROFILING_LABELS
-#define SNAP_RHI_DECLARE_CUSTOM_PROFILING_LABEL(device, labelName)                                    \
-    [[maybe_unused]] snap::rhi::backend::common::ProfilingScope SNAP_RHI_CONCAT(rhiInternalPerfEvent, \
+#define SNAP_RHI_DECLARE_CUSTOM_PROFILING_LABEL(device, labelName)                                                     \
+    [[maybe_unused]] snap::rhi::backend::common::ProfilingScope SNAP_RHI_CONCAT(rhiInternalPerfEvent,                  \
                                                                                 __LINE__)(device, labelName)
 #else
 #define SNAP_RHI_DECLARE_CUSTOM_PROFILING_LABEL(device, labelName)

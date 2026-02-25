@@ -58,7 +58,7 @@ void getBlendFuncSeparate(const snap::rhi::Capabilities& capabilities,
     }
 }
 
-#define initGetType(container, type, value) \
+#define initGetType(container, type, value)                                                                            \
     container[static_cast<uint32_t>(snap::rhi::backend::opengl::GLStateCache::type)] = value
 
 using FramebufferGetType =
