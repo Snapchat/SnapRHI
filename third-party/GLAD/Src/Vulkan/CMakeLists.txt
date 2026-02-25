@@ -16,10 +16,7 @@ set(GLAD_VULKAN_HEADERS
 
 snap_rhi_add_library(glad-vulkan STATIC ${GLAD_VULKAN_SOURCES} ${GLAD_VULKAN_HEADERS})
 
-target_include_directories(glad-vulkan
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
-)
+snap_rhi_target_include_directories(glad-vulkan .)
 
 # Link to glad-platform for common utilities
 snap_rhi_target_link_libraries(glad-vulkan glad::glad-platform)

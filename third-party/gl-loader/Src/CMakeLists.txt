@@ -50,7 +50,7 @@ list(APPEND GL_LOADER_SOURCES ${GL_LOADER_PLATFORM_SOURCES})
 # Create library
 snap_rhi_add_library(gl-loader STATIC ${GL_LOADER_SOURCES})
 
-target_include_directories(gl-loader PUBLIC include)
+snap_rhi_target_include_directories(gl-loader include)
 
 # Link to GLAD
 snap_rhi_target_link_libraries(gl-loader glad::glad-gl)

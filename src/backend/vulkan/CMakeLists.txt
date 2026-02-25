@@ -29,6 +29,13 @@ elseif(NOT TARGET spirv-reflect-static)
     set(SPIRV_REFLECT_EXECUTABLE OFF CACHE BOOL "" FORCE)
     set(SPIRV_REFLECT_STATIC_LIB ON CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(spirv-reflect)
+
+    # Patch spirv-reflect include directories for install compatibility.
+    # The upstream CMakeLists sets absolute source paths as PUBLIC includes,
+    # which CMake rejects during install(EXPORT). Replace with generator
+    # expressions so both build-tree and install-tree consumers work.
+    snap_rhi_patch_target_includes(spirv-reflect-static)
+
     snap_rhi_export(spirv-reflect-static)
 endif()
 
@@ -43,7 +50,7 @@ file(GLOB_RECURSE SNAP_RHI_VULKAN_SOURCES
 snap_rhi_add_library(backend-vulkan STATIC ${SNAP_RHI_VULKAN_SOURCES})
 
 # Public include directories
-target_include_directories(backend-vulkan PUBLIC include)
+snap_rhi_target_include_directories(backend-vulkan include)
 
 # Link to public-api, backend-common, glad-vulkan, and spirv-reflect
 snap_rhi_target_link_libraries(backend-vulkan snap-rhi::public-api snap-rhi::backend-common glad::glad-vulkan spirv-reflect-static)

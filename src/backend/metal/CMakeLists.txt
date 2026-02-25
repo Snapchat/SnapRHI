@@ -13,7 +13,7 @@ file(GLOB SNAP_RHI_METAL_SOURCES
 snap_rhi_add_library(backend-metal STATIC ${SNAP_RHI_METAL_SOURCES})
 
 # Public include directories
-target_include_directories(backend-metal PUBLIC include)
+snap_rhi_target_include_directories(backend-metal include)
 
 # Link to public-api and backend-common
 snap_rhi_target_link_libraries(backend-metal snap-rhi::public-api snap-rhi::backend-common)

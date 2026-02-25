@@ -14,7 +14,7 @@ file(GLOB_RECURSE SNAP_RHI_PUBLIC_API_SOURCES
 snap_rhi_add_library(public-api STATIC ${SNAP_RHI_PUBLIC_API_SOURCES})
 
 # Public include directories
-target_include_directories(public-api PUBLIC include)
+snap_rhi_target_include_directories(public-api include)
 
 # C++20 required
 target_compile_features(public-api PUBLIC cxx_std_20)

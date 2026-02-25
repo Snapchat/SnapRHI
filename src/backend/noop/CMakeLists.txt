@@ -13,7 +13,7 @@ file(GLOB SNAP_RHI_NOOP_SOURCES
 snap_rhi_add_library(backend-noop STATIC ${SNAP_RHI_NOOP_SOURCES})
 
 # Public include directories
-target_include_directories(backend-noop PUBLIC include)
+snap_rhi_target_include_directories(backend-noop include)
 
 # Link to public-api and backend-common
 snap_rhi_target_link_libraries(backend-noop snap-rhi::public-api snap-rhi::backend-common)

@@ -5,7 +5,7 @@
 file(GLOB GLAD_LOADER_OPENGL_SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 snap_rhi_add_library(glad-gl STATIC ${GLAD_LOADER_OPENGL_SRC})
 
-target_include_directories(glad-gl PUBLIC include)
+snap_rhi_target_include_directories(glad-gl include)
 
 # Determine desktop vs mobile OpenGL
 set(GLAD_DESKTOP 0)

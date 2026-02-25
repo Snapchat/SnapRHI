@@ -15,7 +15,7 @@ file(GLOB_RECURSE SNAP_RHI_OPENGL_SOURCES
 snap_rhi_add_library(backend-opengl STATIC ${SNAP_RHI_OPENGL_SOURCES})
 
 # Public include directories
-target_include_directories(backend-opengl PUBLIC include)
+snap_rhi_target_include_directories(backend-opengl include)
 
 # Link to public-api, backend-common, and gl-loader
 snap_rhi_target_link_libraries(backend-opengl snap-rhi::public-api snap-rhi::backend-common gl-loader::gl-loader)

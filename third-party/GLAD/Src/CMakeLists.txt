@@ -4,7 +4,7 @@
 
 # Platform library (common)
 snap_rhi_add_library(glad-platform STATIC gladPlatfrom.cpp)
-target_include_directories(glad-platform PUBLIC include)
+snap_rhi_target_include_directories(glad-platform include)
 
 # Add glad:: alias for consistent target naming across build configurations
 if(NOT TARGET glad::glad-platform)
