@@ -69,6 +69,38 @@
             }
         },
         {
+            "name": "macos-vulkan-release",
+            "displayName": "macOS Vulkan (Release)",
+            "description": "Build for macOS with Vulkan backend (optimized)",
+            "inherits": ["base", "release"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "OFF",
+                "SNAP_RHI_ENABLE_LOGS": "OFF"
+            }
+        },
+        {
+            "name": "macos-opengl-release",
+            "displayName": "macOS OpenGL (Release)",
+            "description": "Build for macOS with OpenGL backend (optimized)",
+            "inherits": ["base", "release"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "OFF",
+                "SNAP_RHI_ENABLE_LOGS": "OFF"
+            }
+        },
+        {
             "name": "macos-metal-demo",
             "displayName": "macOS Metal with Demo App",
             "description": "Build for macOS with Metal backend and example app",
@@ -134,6 +166,38 @@
                 "SNAP_RHI_ENABLE_OPENGL": "ON",
                 "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
                 "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "linux-vulkan-release",
+            "displayName": "Linux Vulkan (Release)",
+            "description": "Build for Linux with Vulkan backend (optimized)",
+            "inherits": ["base", "release"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "OFF",
+                "SNAP_RHI_ENABLE_LOGS": "OFF"
+            }
+        },
+        {
+            "name": "linux-opengl-release",
+            "displayName": "Linux OpenGL (Release)",
+            "description": "Build for Linux with OpenGL backend (optimized)",
+            "inherits": ["base", "release"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "OFF",
+                "SNAP_RHI_ENABLE_LOGS": "OFF"
             }
         },
         {
@@ -238,6 +302,38 @@
                 "SNAP_RHI_ENABLE_OPENGL": "ON",
                 "SNAP_RHI_ENABLE_DEBUG_LABELS": "ON",
                 "SNAP_RHI_ENABLE_LOGS": "ON"
+            }
+        },
+        {
+            "name": "windows-vulkan-release",
+            "displayName": "Windows Vulkan (Release)",
+            "description": "Build for Windows with Vulkan backend (optimized)",
+            "inherits": ["base", "release"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_VULKAN": "ON",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "OFF",
+                "SNAP_RHI_ENABLE_LOGS": "OFF"
+            }
+        },
+        {
+            "name": "windows-opengl-release",
+            "displayName": "Windows OpenGL (Release)",
+            "description": "Build for Windows with OpenGL backend (optimized)",
+            "inherits": ["base", "release"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "cacheVariables": {
+                "SNAP_RHI_ENABLE_OPENGL": "ON",
+                "SNAP_RHI_ENABLE_DEBUG_LABELS": "OFF",
+                "SNAP_RHI_ENABLE_LOGS": "OFF"
             }
         },
         {

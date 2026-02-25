@@ -42,7 +42,7 @@ message(STATUS "Building snap-rhi interop module: ${SNAP_RHI_INTEROP_PLATFORM_SO
 snap_rhi_add_library(interop STATIC ${SNAP_RHI_INTEROP_SOURCES})
 
 # Public include directories
-target_include_directories(interop PUBLIC include)
+snap_rhi_target_include_directories(interop include)
 
 # Link to core libraries
 snap_rhi_target_link_libraries(interop snap-rhi::public-api snap-rhi::backend-common)

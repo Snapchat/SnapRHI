@@ -17,6 +17,42 @@ function(snap_rhi_target_link_libraries TARGET_NAME)
     target_link_libraries(${TARGET_NAME} PUBLIC ${ARGN})
 endfunction()
 
+# Sets up public include directories for a SnapRHI target.
+# INCLUDE_DIR is a relative path from the calling CMakeLists.txt directory.
+# Use "." for the current source directory, or "include" for a subdirectory.
+# Overridden by the packaging module when present.
+function(snap_rhi_target_include_directories TARGET_NAME INCLUDE_DIR)
+    if(INCLUDE_DIR STREQUAL ".")
+        set(_abs_dir "${CMAKE_CURRENT_SOURCE_DIR}")
+    else()
+        set(_abs_dir "${CMAKE_CURRENT_SOURCE_DIR}/${INCLUDE_DIR}")
+    endif()
+    target_include_directories(${TARGET_NAME} PUBLIC
+        $<BUILD_INTERFACE:${_abs_dir}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    )
+endfunction()
+
+# Rewrites a target's INTERFACE_INCLUDE_DIRECTORIES to use generator
+# expressions for install-tree compatibility.  Used to patch third-party
+# targets (e.g. spirv-reflect) whose upstream CMakeLists set absolute source
+# paths as PUBLIC includes.  Overridden by the packaging module when present.
+function(snap_rhi_patch_target_includes TARGET_NAME)
+    get_target_property(_inc ${TARGET_NAME} INTERFACE_INCLUDE_DIRECTORIES)
+    if(_inc)
+        set(_patched "")
+        foreach(_dir IN LISTS _inc)
+            list(APPEND _patched
+                $<BUILD_INTERFACE:${_dir}>
+                $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+            )
+        endforeach()
+        set_target_properties(${TARGET_NAME} PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${_patched}"
+        )
+    endif()
+endfunction()
+
 # Export helper — call after a target is fully configured.
 # No-op by default; overridden by packaging module when present.
 function(snap_rhi_export)

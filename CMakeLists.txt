@@ -65,8 +65,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # ============================================================================
 # Build Options
 # ============================================================================
+include(GNUInstallDirs)
 option(SNAP_RHI_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 option(SNAP_RHI_BUILD_EXAMPLES "Build example applications" OFF)
+option(SNAP_RHI_INSTALL "Generate CMake install rules" OFF)
 
 # ============================================================================
 # Print Configuration Summary
@@ -160,3 +162,10 @@ endif()
 # ============================================================================
 # Finalize packaging exports. No-op in standalone builds.
 snap_rhi_export_complete()
+
+# ============================================================================
+# Install Rules
+# ============================================================================
+if(SNAP_RHI_INSTALL)
+    include(SnapRHIInstall)
+endif()

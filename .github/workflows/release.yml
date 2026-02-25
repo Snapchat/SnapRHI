@@ -1,0 +1,318 @@
+# ============================================================================
+# SnapRHI — Release Packaging
+# ============================================================================
+# Triggered when a version tag (v*) is pushed.
+# Builds release libraries for every platform × backend, packages them as
+# tarballs/zips with headers + CMake config, and publishes a GitHub Release.
+#
+# Usage:
+#   git tag v1.0.0
+#   git push origin v1.0.0
+#
+# This will:
+#   1. Build Release libraries for macOS (Metal/Vulkan/OpenGL), Linux
+#      (Vulkan/OpenGL), Windows (Vulkan/OpenGL), iOS (Metal/Vulkan/OpenGL ES),
+#      and Android (Vulkan/OpenGL ES).
+#   2. Run `cmake --install` to produce a clean prefix with libs + headers.
+#   3. Package each into a .tar.gz (Unix) or .zip (Windows).
+#   4. Create a GitHub Release with auto-generated release notes and all
+#      artifacts attached.
+# ============================================================================
+
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Desktop builds (macOS, Linux, Windows)
+  # ---------------------------------------------------------------------------
+  desktop:
+    name: "${{ matrix.artifact }}"
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # ── macOS (Apple Silicon) ──────────────────────────────
+          - runner: macos-14
+            backend: Metal
+            cmake_flags: -DSNAP_RHI_ENABLE_METAL=ON
+            artifact: snap-rhi-macos-arm64-metal
+          - runner: macos-14
+            backend: Vulkan
+            cmake_flags: -DSNAP_RHI_ENABLE_VULKAN=ON
+            artifact: snap-rhi-macos-arm64-vulkan
+            install_vulkan_sdk: true
+          - runner: macos-14
+            backend: OpenGL
+            cmake_flags: -DSNAP_RHI_ENABLE_OPENGL=ON
+            artifact: snap-rhi-macos-arm64-opengl
+
+          # ── Linux (x86_64) ────────────────────────────────────
+          - runner: ubuntu-24.04
+            backend: Vulkan
+            cmake_flags: -DSNAP_RHI_ENABLE_VULKAN=ON
+            artifact: snap-rhi-linux-x64-vulkan
+          - runner: ubuntu-24.04
+            backend: OpenGL
+            cmake_flags: -DSNAP_RHI_ENABLE_OPENGL=ON
+            artifact: snap-rhi-linux-x64-opengl
+
+          # ── Windows (x86_64) ──────────────────────────────────
+          - runner: windows-latest
+            backend: Vulkan
+            cmake_flags: -DSNAP_RHI_ENABLE_VULKAN=ON
+            artifact: snap-rhi-windows-x64-vulkan
+            install_vulkan_sdk: true
+          - runner: windows-latest
+            backend: OpenGL
+            cmake_flags: -DSNAP_RHI_ENABLE_OPENGL=ON
+            artifact: snap-rhi-windows-x64-opengl
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── Linux dependencies ────────────────────────────────────
+      - name: Install Linux packages
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake ninja-build \
+            libvulkan-dev libgl1-mesa-dev libx11-dev \
+            libxext-dev libxrandr-dev libxcursor-dev \
+            libxi-dev libxinerama-dev libxkbcommon-dev \
+            libwayland-dev
+
+      # ── MSVC (Windows) ────────────────────────────────────────
+      - name: Set up MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      # ── Vulkan SDK ────────────────────────────────────────────
+      - name: Install Vulkan SDK
+        if: matrix.install_vulkan_sdk == true
+        uses: humbletim/setup-vulkan-sdk@v1.2.1
+        with:
+          vulkan-query-version: 1.3.296.0
+          vulkan-components: Vulkan-Headers, Vulkan-Loader, SPIRV-Headers
+          vulkan-use-cache: true
+
+      # ── Configure ─────────────────────────────────────────────
+      - name: Configure
+        run: >
+          cmake -B build -S . -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DSNAP_RHI_INSTALL=ON
+          -DSNAP_RHI_ENABLE_DEBUG_LABELS=OFF
+          -DSNAP_RHI_ENABLE_LOGS=OFF
+          ${{ matrix.cmake_flags }}
+
+      # ── Build ─────────────────────────────────────────────────
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      # ── Install to staging prefix ─────────────────────────────
+      - name: Install
+        run: cmake --install build --prefix staging/${{ matrix.artifact }}
+
+      # ── Package (tar.gz on Unix, zip on Windows) ──────────────
+      - name: Package (Unix)
+        if: runner.os != 'Windows'
+        run: tar -czf ${{ matrix.artifact }}.tar.gz -C staging ${{ matrix.artifact }}
+
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        run: Compress-Archive -Path staging/${{ matrix.artifact }} -DestinationPath ${{ matrix.artifact }}.zip
+
+      # ── Upload artifact ───────────────────────────────────────
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}.*
+          if-no-files-found: error
+
+  # ---------------------------------------------------------------------------
+  # iOS builds (Xcode cross-compile)
+  # ---------------------------------------------------------------------------
+  ios:
+    name: "${{ matrix.artifact }}"
+    runs-on: macos-14
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - backend: Metal
+            cmake_flags: -DSNAP_RHI_ENABLE_METAL=ON
+            artifact: snap-rhi-ios-arm64-metal
+          - backend: Vulkan
+            cmake_flags: -DSNAP_RHI_ENABLE_VULKAN=ON
+            artifact: snap-rhi-ios-arm64-vulkan
+            install_vulkan_sdk: true
+          - backend: OpenGL ES
+            cmake_flags: -DSNAP_RHI_ENABLE_OPENGL=ON
+            artifact: snap-rhi-ios-arm64-opengles
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── Vulkan SDK (for MoltenVK.xcframework) ─────────────────
+      - name: Install Vulkan SDK
+        if: matrix.install_vulkan_sdk == true
+        run: |
+          VULKAN_SDK_VERSION="1.3.296.0"
+          VULKAN_SDK_ZIP="vulkansdk-macos-$VULKAN_SDK_VERSION.zip"
+          curl -fsSL -o "$VULKAN_SDK_ZIP" \
+            "https://sdk.lunarg.com/sdk/download/$VULKAN_SDK_VERSION/mac/$VULKAN_SDK_ZIP"
+          unzip -q "$VULKAN_SDK_ZIP" -d vulkan-sdk-extract
+          INSTALLER=$(find vulkan-sdk-extract -name InstallVulkan -path "*/Contents/MacOS/*" | head -1)
+          "$INSTALLER" \
+            --root "$HOME/VulkanSDK/$VULKAN_SDK_VERSION" \
+            --accept-licenses --default-answer --confirm-command install
+          echo "VULKAN_SDK=$HOME/VulkanSDK/$VULKAN_SDK_VERSION/macOS" >> "$GITHUB_ENV"
+
+      # ── Configure (Xcode + iOS) ───────────────────────────────
+      - name: Configure
+        run: >
+          cmake -B build -S . -G Xcode
+          -DCMAKE_SYSTEM_NAME=iOS
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0
+          -DSNAP_RHI_INSTALL=ON
+          -DSNAP_RHI_ENABLE_DEBUG_LABELS=OFF
+          -DSNAP_RHI_ENABLE_LOGS=OFF
+          ${{ matrix.cmake_flags }}
+
+      # ── Build ─────────────────────────────────────────────────
+      - name: Build
+        run: >
+          cmake --build build
+          --config Release
+          -- -sdk iphoneos
+          -destination "generic/platform=iOS"
+          CODE_SIGNING_ALLOWED=NO
+
+      # ── Install to staging prefix ─────────────────────────────
+      - name: Install
+        run: cmake --install build --prefix staging/${{ matrix.artifact }} --config Release
+
+      # ── Package ───────────────────────────────────────────────
+      - name: Package
+        run: tar -czf ${{ matrix.artifact }}.tar.gz -C staging ${{ matrix.artifact }}
+
+      # ── Upload artifact ───────────────────────────────────────
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}.tar.gz
+          if-no-files-found: error
+
+  # ---------------------------------------------------------------------------
+  # Android builds (NDK cross-compile, arm64-v8a)
+  # ---------------------------------------------------------------------------
+  android:
+    name: "${{ matrix.artifact }}"
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - backend: Vulkan
+            cmake_flags: -DSNAP_RHI_ENABLE_VULKAN=ON
+            artifact: snap-rhi-android-arm64-vulkan
+          - backend: OpenGL ES
+            cmake_flags: -DSNAP_RHI_ENABLE_OPENGL=ON
+            artifact: snap-rhi-android-arm64-opengles
+    env:
+      ANDROID_NDK_VERSION: "28.2.13676358"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── NDK setup ─────────────────────────────────────────────
+      - name: Set up Android NDK
+        run: |
+          ANDROID_HOME="${ANDROID_HOME:-$HOME/Android/Sdk}"
+          NDK_ROOT="$ANDROID_HOME/ndk/${{ env.ANDROID_NDK_VERSION }}"
+          if [ ! -d "$NDK_ROOT" ]; then
+            echo "Installing NDK ${{ env.ANDROID_NDK_VERSION }}..."
+            $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager \
+              "ndk;${{ env.ANDROID_NDK_VERSION }}"
+          fi
+          echo "NDK_ROOT=$NDK_ROOT" >> "$GITHUB_ENV"
+
+      # ── Configure ─────────────────────────────────────────────
+      - name: Configure
+        run: >
+          cmake -B build -S .
+          -DCMAKE_TOOLCHAIN_FILE="$NDK_ROOT/build/cmake/android.toolchain.cmake"
+          -DANDROID_ABI=arm64-v8a
+          -DANDROID_PLATFORM=android-26
+          -DCMAKE_BUILD_TYPE=Release
+          -DSNAP_RHI_INSTALL=ON
+          -DSNAP_RHI_ENABLE_DEBUG_LABELS=OFF
+          -DSNAP_RHI_ENABLE_LOGS=OFF
+          ${{ matrix.cmake_flags }}
+
+      # ── Build ─────────────────────────────────────────────────
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      # ── Install to staging prefix ─────────────────────────────
+      - name: Install
+        run: cmake --install build --prefix staging/${{ matrix.artifact }}
+
+      # ── Package ───────────────────────────────────────────────
+      - name: Package
+        run: tar -czf ${{ matrix.artifact }}.tar.gz -C staging ${{ matrix.artifact }}
+
+      # ── Upload artifact ───────────────────────────────────────
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}.tar.gz
+          if-no-files-found: error
+
+  # ---------------------------------------------------------------------------
+  # Create GitHub Release with all artifacts
+  # ---------------------------------------------------------------------------
+  release:
+    name: Publish GitHub Release
+    needs: [desktop, ios, android]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout (for release notes context)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: List artifacts
+        run: find artifacts -type f | sort
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            artifacts/*.tar.gz
+            artifacts/*.zip
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

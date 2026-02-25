@@ -13,7 +13,7 @@ file(GLOB SNAP_RHI_BACKEND_COMMON_SOURCES
 snap_rhi_add_library(backend-common STATIC ${SNAP_RHI_BACKEND_COMMON_SOURCES})
 
 # Public include directories
-target_include_directories(backend-common PUBLIC include)
+snap_rhi_target_include_directories(backend-common include)
 
 # Link to public-api
 snap_rhi_target_link_libraries(backend-common snap-rhi::public-api)

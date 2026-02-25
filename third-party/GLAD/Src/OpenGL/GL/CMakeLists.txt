@@ -5,9 +5,7 @@
 file(GLOB_RECURSE GLAD_GL_SRC ${CMAKE_CURRENT_SOURCE_DIR}/GLAD/*.c ${CMAKE_CURRENT_SOURCE_DIR}/GLAD/*.cpp)
 snap_rhi_add_library(glad-platform-gl STATIC ${GLAD_GL_SRC})
 
-target_include_directories(glad-platform-gl PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
-)
+snap_rhi_target_include_directories(glad-platform-gl .)
 
 snap_rhi_target_link_libraries(glad-platform-gl glad::glad-platform)
 
