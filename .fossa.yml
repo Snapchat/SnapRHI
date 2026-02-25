@@ -1,0 +1,39 @@
+# ============================================================================
+# FOSSA Configuration — License compliance & dependency analysis
+# ============================================================================
+# Docs: https://github.com/fossas/fossa-cli/blob/master/docs/references/files/fossa-yml.md
+#
+# FOSSA analyzes this project's dependencies for license compliance.
+# SnapRHI uses CMake with FetchContent — FOSSA's native CMake analysis
+# handles most detection automatically. This file provides overrides for
+# vendored third-party code and custom modules.
+# ============================================================================
+
+version: 3
+
+server: https://app.fossa.com
+
+project:
+  id: snap/SnapRHI
+  name: SnapRHI
+  url: https://github.com/Snapchat/SnapRHI
+
+# ---------------------------------------------------------------------------
+# Analysis targets
+# ---------------------------------------------------------------------------
+# FOSSA cannot auto-discover FetchContent deps without running cmake
+# configure (which requires platform SDKs).  All dependencies — both
+# FetchContent and vendored — are declared in fossa-deps.yml instead.
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# Paths to exclude from analysis
+# ---------------------------------------------------------------------------
+paths:
+  exclude:
+    - build/
+    - cmake-build-*/
+    - .github/
+    - docs/
+    - examples/triangle-demo-app/platforms/android/.gradle/
+    - examples/triangle-demo-app/platforms/android/app/build/

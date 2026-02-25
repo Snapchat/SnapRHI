@@ -1,0 +1,29 @@
+name: "Documentation Issue"
+description: "Report incorrect, missing, or unclear documentation."
+title: "[Docs]: "
+labels: ["documentation"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: "Page or section"
+      description: "Which doc page or README section is affected?"
+      placeholder: "e.g. docs/build.md, README.md#quick-start"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "What is wrong or missing?"
+      description: "Describe the inaccuracy, gap, or confusion."
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: "Suggested fix"
+      description: "If you know the correct information, please share it."
+    validations:
+      required: false

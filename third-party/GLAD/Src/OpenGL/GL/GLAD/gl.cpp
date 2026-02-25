@@ -1,0 +1,2733 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <mutex>
+
+#include "gl.h"
+
+#ifndef GLAD_IMPL_UTIL_C_
+#define GLAD_IMPL_UTIL_C_
+
+#ifdef _MSC_VER
+#define GLAD_IMPL_UTIL_SSCANF sscanf_s
+#else
+#define GLAD_IMPL_UTIL_SSCANF sscanf
+#endif
+
+#endif /* GLAD_IMPL_UTIL_C_ */
+
+#if GLAD_PLATFORM_WIN32 || (SNAP_GLAD_LINUX_BASED() && !GLAD_PLATFORM_ANDROID)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int GLAD_SNAP_RHI_GL_VERSION_1_0 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_1_1 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_1_2 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_1_3 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_1_4 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_1_5 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_2_0 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_2_1 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_3_0 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_3_1 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_3_2 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_3_3 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_4_0 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_4_1 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_4_2 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_4_3 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_4_4 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_4_5 = 0;
+int GLAD_SNAP_RHI_GL_VERSION_4_6 = 0;
+int GLAD_SNAP_RHI_GL_EXT_clip_cull_distance = 0;
+int GLAD_SNAP_RHI_GL_EXT_texture_rg = 0;
+int GLAD_SNAP_RHI_GL_EXT_color_buffer_half_float = 0;
+int GLAD_SNAP_RHI_GL_ARB_draw_instanced = 0;
+int GLAD_SNAP_RHI_GL_ARB_shader_texture_lod = 0;
+int GLAD_SNAP_RHI_GL_ARB_timer_query = 0;
+int GLAD_SNAP_RHI_GL_EXT_discard_framebuffer = 0;
+int GLAD_SNAP_RHI_GL_EXT_blend_minmax = 0;
+int GLAD_SNAP_RHI_GL_EXT_debug_marker = 0;
+int GLAD_SNAP_RHI_GL_EXT_draw_instanced = 0;
+int GLAD_SNAP_RHI_GL_EXT_disjoint_timer_query = 0;
+int GLAD_SNAP_RHI_GL_EXT_framebuffer_multisample = 0;
+int GLAD_SNAP_RHI_GL_EXT_framebuffer_multisample_blit_scaled = 0;
+int GLAD_SNAP_RHI_GL_EXT_shader_framebuffer_fetch = 0;
+int GLAD_SNAP_RHI_GL_EXT_shader_framebuffer_fetch_non_coherent = 0;
+int GLAD_SNAP_RHI_GL_EXT_texture_array = 0;
+int GLAD_SNAP_RHI_GL_KHR_debug = 0;
+int GLAD_SNAP_RHI_GL_EXT_shader_texture_lod = 0;
+int GLAD_SNAP_RHI_GL_EXT_texture_border_clamp = 0;
+int GLAD_SNAP_RHI_GL_EXT_multisampled_render_to_texture = 0;
+int GLAD_SNAP_RHI_GL_APPLE_sync = 0;
+int GLAD_SNAP_RHI_GL_APPLE_clip_distance = 0;
+int GLAD_SNAP_RHI_GL_APPLE_framebuffer_multisample = 0;
+int GLAD_SNAP_RHI_WGL_ARB_create_context = 0;
+int GLAD_SNAP_RHI_GL_EXT_texture_filter_anisotropic = 0;
+int GLAD_SNAP_RHI_GL_EXT_memory_object = 0;
+
+PFNGLACCUMPROC glad_snap_rhi_glAccum = NULL;
+PFNGLACTIVESHADERPROGRAMPROC glad_snap_rhi_glActiveShaderProgram = NULL;
+PFNGLACTIVETEXTUREPROC glad_snap_rhi_glActiveTexture = NULL;
+PFNGLALPHAFUNCPROC glad_snap_rhi_glAlphaFunc = NULL;
+PFNGLARETEXTURESRESIDENTPROC glad_snap_rhi_glAreTexturesResident = NULL;
+PFNGLARRAYELEMENTPROC glad_snap_rhi_glArrayElement = NULL;
+PFNGLATTACHSHADERPROC glad_snap_rhi_glAttachShader = NULL;
+PFNGLBEGINPROC glad_snap_rhi_glBegin = NULL;
+PFNGLBEGINCONDITIONALRENDERPROC glad_snap_rhi_glBeginConditionalRender = NULL;
+PFNGLBEGINQUERYPROC glad_snap_rhi_glBeginQuery = NULL;
+PFNGLBEGINQUERYINDEXEDPROC glad_snap_rhi_glBeginQueryIndexed = NULL;
+PFNGLBEGINTRANSFORMFEEDBACKPROC glad_snap_rhi_glBeginTransformFeedback = NULL;
+PFNGLBINDATTRIBLOCATIONPROC glad_snap_rhi_glBindAttribLocation = NULL;
+PFNGLBINDBUFFERPROC glad_snap_rhi_glBindBuffer = NULL;
+PFNGLBINDBUFFERBASEPROC glad_snap_rhi_glBindBufferBase = NULL;
+PFNGLBINDBUFFERRANGEPROC glad_snap_rhi_glBindBufferRange = NULL;
+PFNGLBINDBUFFERSBASEPROC glad_snap_rhi_glBindBuffersBase = NULL;
+PFNGLBINDBUFFERSRANGEPROC glad_snap_rhi_glBindBuffersRange = NULL;
+PFNGLBINDFRAGDATALOCATIONPROC glad_snap_rhi_glBindFragDataLocation = NULL;
+PFNGLBINDFRAGDATALOCATIONINDEXEDPROC glad_snap_rhi_glBindFragDataLocationIndexed = NULL;
+PFNGLBINDFRAMEBUFFERPROC glad_snap_rhi_glBindFramebuffer = NULL;
+PFNGLBINDIMAGETEXTUREPROC glad_snap_rhi_glBindImageTexture = NULL;
+PFNGLBINDIMAGETEXTURESPROC glad_snap_rhi_glBindImageTextures = NULL;
+PFNGLBINDPROGRAMPIPELINEPROC glad_snap_rhi_glBindProgramPipeline = NULL;
+PFNGLBINDRENDERBUFFERPROC glad_snap_rhi_glBindRenderbuffer = NULL;
+PFNGLBINDSAMPLERPROC glad_snap_rhi_glBindSampler = NULL;
+PFNGLBINDSAMPLERSPROC glad_snap_rhi_glBindSamplers = NULL;
+PFNGLBINDTEXTUREPROC glad_snap_rhi_glBindTexture = NULL;
+PFNGLBINDTEXTUREUNITPROC glad_snap_rhi_glBindTextureUnit = NULL;
+PFNGLBINDTEXTURESPROC glad_snap_rhi_glBindTextures = NULL;
+PFNGLBINDTRANSFORMFEEDBACKPROC glad_snap_rhi_glBindTransformFeedback = NULL;
+PFNGLBINDVERTEXARRAYPROC glad_snap_rhi_glBindVertexArray = NULL;
+PFNGLBINDVERTEXBUFFERPROC glad_snap_rhi_glBindVertexBuffer = NULL;
+PFNGLBINDVERTEXBUFFERSPROC glad_snap_rhi_glBindVertexBuffers = NULL;
+PFNGLBITMAPPROC glad_snap_rhi_glBitmap = NULL;
+PFNGLBLENDCOLORPROC glad_snap_rhi_glBlendColor = NULL;
+PFNGLBLENDEQUATIONPROC glad_snap_rhi_glBlendEquation = NULL;
+PFNGLBLENDEQUATIONEXTPROC glad_snap_rhi_glBlendEquationEXT = NULL;
+PFNGLBLENDEQUATIONSEPARATEPROC glad_snap_rhi_glBlendEquationSeparate = NULL;
+PFNGLBLENDEQUATIONSEPARATEIPROC glad_snap_rhi_glBlendEquationSeparatei = NULL;
+PFNGLBLENDEQUATIONIPROC glad_snap_rhi_glBlendEquationi = NULL;
+PFNGLBLENDFUNCPROC glad_snap_rhi_glBlendFunc = NULL;
+PFNGLBLENDFUNCSEPARATEPROC glad_snap_rhi_glBlendFuncSeparate = NULL;
+PFNGLBLENDFUNCSEPARATEIPROC glad_snap_rhi_glBlendFuncSeparatei = NULL;
+PFNGLBLENDFUNCIPROC glad_snap_rhi_glBlendFunci = NULL;
+PFNGLBLITFRAMEBUFFERPROC glad_snap_rhi_glBlitFramebuffer = NULL;
+PFNGLBLITNAMEDFRAMEBUFFERPROC glad_snap_rhi_glBlitNamedFramebuffer = NULL;
+PFNGLBUFFERDATAPROC glad_snap_rhi_glBufferData = NULL;
+PFNGLBUFFERSTORAGEPROC glad_snap_rhi_glBufferStorage = NULL;
+PFNGLBUFFERSUBDATAPROC glad_snap_rhi_glBufferSubData = NULL;
+PFNGLCALLLISTPROC glad_snap_rhi_glCallList = NULL;
+PFNGLCALLLISTSPROC glad_snap_rhi_glCallLists = NULL;
+PFNGLCHECKFRAMEBUFFERSTATUSPROC glad_snap_rhi_glCheckFramebufferStatus = NULL;
+PFNGLCHECKNAMEDFRAMEBUFFERSTATUSPROC glad_snap_rhi_glCheckNamedFramebufferStatus = NULL;
+PFNGLCLAMPCOLORPROC glad_snap_rhi_glClampColor = NULL;
+PFNGLCLEARPROC glad_snap_rhi_glClear = NULL;
+PFNGLCLEARACCUMPROC glad_snap_rhi_glClearAccum = NULL;
+PFNGLCLEARBUFFERDATAPROC glad_snap_rhi_glClearBufferData = NULL;
+PFNGLCLEARBUFFERSUBDATAPROC glad_snap_rhi_glClearBufferSubData = NULL;
+PFNGLCLEARBUFFERFIPROC glad_snap_rhi_glClearBufferfi = NULL;
+PFNGLCLEARBUFFERFVPROC glad_snap_rhi_glClearBufferfv = NULL;
+PFNGLCLEARBUFFERIVPROC glad_snap_rhi_glClearBufferiv = NULL;
+PFNGLCLEARBUFFERUIVPROC glad_snap_rhi_glClearBufferuiv = NULL;
+PFNGLCLEARCOLORPROC glad_snap_rhi_glClearColor = NULL;
+PFNGLCLEARDEPTHPROC glad_snap_rhi_glClearDepth = NULL;
+PFNGLCLEARDEPTHFPROC glad_snap_rhi_glClearDepthf = NULL;
+PFNGLCLEARINDEXPROC glad_snap_rhi_glClearIndex = NULL;
+PFNGLCLEARNAMEDBUFFERDATAPROC glad_snap_rhi_glClearNamedBufferData = NULL;
+PFNGLCLEARNAMEDBUFFERSUBDATAPROC glad_snap_rhi_glClearNamedBufferSubData = NULL;
+PFNGLCLEARNAMEDFRAMEBUFFERFIPROC glad_snap_rhi_glClearNamedFramebufferfi = NULL;
+PFNGLCLEARNAMEDFRAMEBUFFERFVPROC glad_snap_rhi_glClearNamedFramebufferfv = NULL;
+PFNGLCLEARNAMEDFRAMEBUFFERIVPROC glad_snap_rhi_glClearNamedFramebufferiv = NULL;
+PFNGLCLEARNAMEDFRAMEBUFFERUIVPROC glad_snap_rhi_glClearNamedFramebufferuiv = NULL;
+PFNGLCLEARSTENCILPROC glad_snap_rhi_glClearStencil = NULL;
+PFNGLCLEARTEXIMAGEPROC glad_snap_rhi_glClearTexImage = NULL;
+PFNGLCLEARTEXSUBIMAGEPROC glad_snap_rhi_glClearTexSubImage = NULL;
+PFNGLCLIENTACTIVETEXTUREPROC glad_snap_rhi_glClientActiveTexture = NULL;
+PFNGLCLIENTWAITSYNCPROC glad_snap_rhi_glClientWaitSync = NULL;
+PFNGLCLIPCONTROLPROC glad_snap_rhi_glClipControl = NULL;
+PFNGLCLIPPLANEPROC glad_snap_rhi_glClipPlane = NULL;
+PFNGLCOLOR3BPROC glad_snap_rhi_glColor3b = NULL;
+PFNGLCOLOR3BVPROC glad_snap_rhi_glColor3bv = NULL;
+PFNGLCOLOR3DPROC glad_snap_rhi_glColor3d = NULL;
+PFNGLCOLOR3DVPROC glad_snap_rhi_glColor3dv = NULL;
+PFNGLCOLOR3FPROC glad_snap_rhi_glColor3f = NULL;
+PFNGLCOLOR3FVPROC glad_snap_rhi_glColor3fv = NULL;
+PFNGLCOLOR3IPROC glad_snap_rhi_glColor3i = NULL;
+PFNGLCOLOR3IVPROC glad_snap_rhi_glColor3iv = NULL;
+PFNGLCOLOR3SPROC glad_snap_rhi_glColor3s = NULL;
+PFNGLCOLOR3SVPROC glad_snap_rhi_glColor3sv = NULL;
+PFNGLCOLOR3UBPROC glad_snap_rhi_glColor3ub = NULL;
+PFNGLCOLOR3UBVPROC glad_snap_rhi_glColor3ubv = NULL;
+PFNGLCOLOR3UIPROC glad_snap_rhi_glColor3ui = NULL;
+PFNGLCOLOR3UIVPROC glad_snap_rhi_glColor3uiv = NULL;
+PFNGLCOLOR3USPROC glad_snap_rhi_glColor3us = NULL;
+PFNGLCOLOR3USVPROC glad_snap_rhi_glColor3usv = NULL;
+PFNGLCOLOR4BPROC glad_snap_rhi_glColor4b = NULL;
+PFNGLCOLOR4BVPROC glad_snap_rhi_glColor4bv = NULL;
+PFNGLCOLOR4DPROC glad_snap_rhi_glColor4d = NULL;
+PFNGLCOLOR4DVPROC glad_snap_rhi_glColor4dv = NULL;
+PFNGLCOLOR4FPROC glad_snap_rhi_glColor4f = NULL;
+PFNGLCOLOR4FVPROC glad_snap_rhi_glColor4fv = NULL;
+PFNGLCOLOR4IPROC glad_snap_rhi_glColor4i = NULL;
+PFNGLCOLOR4IVPROC glad_snap_rhi_glColor4iv = NULL;
+PFNGLCOLOR4SPROC glad_snap_rhi_glColor4s = NULL;
+PFNGLCOLOR4SVPROC glad_snap_rhi_glColor4sv = NULL;
+PFNGLCOLOR4UBPROC glad_snap_rhi_glColor4ub = NULL;
+PFNGLCOLOR4UBVPROC glad_snap_rhi_glColor4ubv = NULL;
+PFNGLCOLOR4UIPROC glad_snap_rhi_glColor4ui = NULL;
+PFNGLCOLOR4UIVPROC glad_snap_rhi_glColor4uiv = NULL;
+PFNGLCOLOR4USPROC glad_snap_rhi_glColor4us = NULL;
+PFNGLCOLOR4USVPROC glad_snap_rhi_glColor4usv = NULL;
+PFNGLCOLORMASKPROC glad_snap_rhi_glColorMask = NULL;
+PFNGLCOLORMASKIPROC glad_snap_rhi_glColorMaski = NULL;
+PFNGLCOLORMATERIALPROC glad_snap_rhi_glColorMaterial = NULL;
+PFNGLCOLORP3UIPROC glad_snap_rhi_glColorP3ui = NULL;
+PFNGLCOLORP3UIVPROC glad_snap_rhi_glColorP3uiv = NULL;
+PFNGLCOLORP4UIPROC glad_snap_rhi_glColorP4ui = NULL;
+PFNGLCOLORP4UIVPROC glad_snap_rhi_glColorP4uiv = NULL;
+PFNGLCOLORPOINTERPROC glad_snap_rhi_glColorPointer = NULL;
+PFNGLCOMPILESHADERPROC glad_snap_rhi_glCompileShader = NULL;
+PFNGLCOMPRESSEDTEXIMAGE1DPROC glad_snap_rhi_glCompressedTexImage1D = NULL;
+PFNGLCOMPRESSEDTEXIMAGE2DPROC glad_snap_rhi_glCompressedTexImage2D = NULL;
+PFNGLCOMPRESSEDTEXIMAGE3DPROC glad_snap_rhi_glCompressedTexImage3D = NULL;
+PFNGLCOMPRESSEDTEXSUBIMAGE1DPROC glad_snap_rhi_glCompressedTexSubImage1D = NULL;
+PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC glad_snap_rhi_glCompressedTexSubImage2D = NULL;
+PFNGLCOMPRESSEDTEXSUBIMAGE3DPROC glad_snap_rhi_glCompressedTexSubImage3D = NULL;
+PFNGLCOMPRESSEDTEXTURESUBIMAGE1DPROC glad_snap_rhi_glCompressedTextureSubImage1D = NULL;
+PFNGLCOMPRESSEDTEXTURESUBIMAGE2DPROC glad_snap_rhi_glCompressedTextureSubImage2D = NULL;
+PFNGLCOMPRESSEDTEXTURESUBIMAGE3DPROC glad_snap_rhi_glCompressedTextureSubImage3D = NULL;
+PFNGLCOPYBUFFERSUBDATAPROC glad_snap_rhi_glCopyBufferSubData = NULL;
+PFNGLCOPYIMAGESUBDATAPROC glad_snap_rhi_glCopyImageSubData = NULL;
+PFNGLCOPYNAMEDBUFFERSUBDATAPROC glad_snap_rhi_glCopyNamedBufferSubData = NULL;
+PFNGLCOPYPIXELSPROC glad_snap_rhi_glCopyPixels = NULL;
+PFNGLCOPYTEXIMAGE1DPROC glad_snap_rhi_glCopyTexImage1D = NULL;
+PFNGLCOPYTEXIMAGE2DPROC glad_snap_rhi_glCopyTexImage2D = NULL;
+PFNGLCOPYTEXSUBIMAGE1DPROC glad_snap_rhi_glCopyTexSubImage1D = NULL;
+PFNGLCOPYTEXSUBIMAGE2DPROC glad_snap_rhi_glCopyTexSubImage2D = NULL;
+PFNGLCOPYTEXSUBIMAGE3DPROC glad_snap_rhi_glCopyTexSubImage3D = NULL;
+PFNGLCOPYTEXTURESUBIMAGE1DPROC glad_snap_rhi_glCopyTextureSubImage1D = NULL;
+PFNGLCOPYTEXTURESUBIMAGE2DPROC glad_snap_rhi_glCopyTextureSubImage2D = NULL;
+PFNGLCOPYTEXTURESUBIMAGE3DPROC glad_snap_rhi_glCopyTextureSubImage3D = NULL;
+PFNGLCREATEBUFFERSPROC glad_snap_rhi_glCreateBuffers = NULL;
+PFNGLCREATEFRAMEBUFFERSPROC glad_snap_rhi_glCreateFramebuffers = NULL;
+PFNGLCREATEPROGRAMPROC glad_snap_rhi_glCreateProgram = NULL;
+PFNGLCREATEPROGRAMPIPELINESPROC glad_snap_rhi_glCreateProgramPipelines = NULL;
+PFNGLCREATEQUERIESPROC glad_snap_rhi_glCreateQueries = NULL;
+PFNGLCREATERENDERBUFFERSPROC glad_snap_rhi_glCreateRenderbuffers = NULL;
+PFNGLCREATESAMPLERSPROC glad_snap_rhi_glCreateSamplers = NULL;
+PFNGLCREATESHADERPROC glad_snap_rhi_glCreateShader = NULL;
+PFNGLCREATESHADERPROGRAMVPROC glad_snap_rhi_glCreateShaderProgramv = NULL;
+PFNGLCREATETEXTURESPROC glad_snap_rhi_glCreateTextures = NULL;
+PFNGLCREATETRANSFORMFEEDBACKSPROC glad_snap_rhi_glCreateTransformFeedbacks = NULL;
+PFNGLCREATEVERTEXARRAYSPROC glad_snap_rhi_glCreateVertexArrays = NULL;
+PFNGLCULLFACEPROC glad_snap_rhi_glCullFace = NULL;
+PFNGLDEBUGMESSAGECALLBACKPROC glad_snap_rhi_glDebugMessageCallback = NULL;
+PFNGLDEBUGMESSAGECONTROLPROC glad_snap_rhi_glDebugMessageControl = NULL;
+PFNGLDEBUGMESSAGEINSERTPROC glad_snap_rhi_glDebugMessageInsert = NULL;
+PFNGLDELETEBUFFERSPROC glad_snap_rhi_glDeleteBuffers = NULL;
+PFNGLDELETEFRAMEBUFFERSPROC glad_snap_rhi_glDeleteFramebuffers = NULL;
+PFNGLDELETELISTSPROC glad_snap_rhi_glDeleteLists = NULL;
+PFNGLDELETEPROGRAMPROC glad_snap_rhi_glDeleteProgram = NULL;
+PFNGLDELETEPROGRAMPIPELINESPROC glad_snap_rhi_glDeleteProgramPipelines = NULL;
+PFNGLDELETEQUERIESPROC glad_snap_rhi_glDeleteQueries = NULL;
+PFNGLDELETERENDERBUFFERSPROC glad_snap_rhi_glDeleteRenderbuffers = NULL;
+PFNGLDELETESAMPLERSPROC glad_snap_rhi_glDeleteSamplers = NULL;
+PFNGLDELETESHADERPROC glad_snap_rhi_glDeleteShader = NULL;
+PFNGLDELETESYNCPROC glad_snap_rhi_glDeleteSync = NULL;
+PFNGLDELETETEXTURESPROC glad_snap_rhi_glDeleteTextures = NULL;
+PFNGLDELETETRANSFORMFEEDBACKSPROC glad_snap_rhi_glDeleteTransformFeedbacks = NULL;
+PFNGLDELETEVERTEXARRAYSPROC glad_snap_rhi_glDeleteVertexArrays = NULL;
+PFNGLDEPTHFUNCPROC glad_snap_rhi_glDepthFunc = NULL;
+PFNGLDEPTHMASKPROC glad_snap_rhi_glDepthMask = NULL;
+PFNGLDEPTHRANGEPROC glad_snap_rhi_glDepthRange = NULL;
+PFNGLDEPTHRANGEARRAYVPROC glad_snap_rhi_glDepthRangeArrayv = NULL;
+PFNGLDEPTHRANGEINDEXEDPROC glad_snap_rhi_glDepthRangeIndexed = NULL;
+PFNGLDEPTHRANGEFPROC glad_snap_rhi_glDepthRangef = NULL;
+PFNGLDETACHSHADERPROC glad_snap_rhi_glDetachShader = NULL;
+PFNGLDISABLEPROC glad_snap_rhi_glDisable = NULL;
+PFNGLDISABLECLIENTSTATEPROC glad_snap_rhi_glDisableClientState = NULL;
+PFNGLDISABLEVERTEXARRAYATTRIBPROC glad_snap_rhi_glDisableVertexArrayAttrib = NULL;
+PFNGLDISABLEVERTEXATTRIBARRAYPROC glad_snap_rhi_glDisableVertexAttribArray = NULL;
+PFNGLDISABLEIPROC glad_snap_rhi_glDisablei = NULL;
+PFNGLDISPATCHCOMPUTEPROC glad_snap_rhi_glDispatchCompute = NULL;
+PFNGLDISPATCHCOMPUTEINDIRECTPROC glad_snap_rhi_glDispatchComputeIndirect = NULL;
+PFNGLDRAWARRAYSPROC glad_snap_rhi_glDrawArrays = NULL;
+PFNGLDRAWARRAYSINDIRECTPROC glad_snap_rhi_glDrawArraysIndirect = NULL;
+PFNGLDRAWARRAYSINSTANCEDPROC glad_snap_rhi_glDrawArraysInstanced = NULL;
+PFNGLDRAWARRAYSINSTANCEDARBPROC glad_snap_rhi_glDrawArraysInstancedARB = NULL;
+PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEPROC glad_snap_rhi_glDrawArraysInstancedBaseInstance = NULL;
+PFNGLDRAWARRAYSINSTANCEDEXTPROC glad_snap_rhi_glDrawArraysInstancedEXT = NULL;
+PFNGLDRAWBUFFERPROC glad_snap_rhi_glDrawBuffer = NULL;
+PFNGLDRAWBUFFERSPROC glad_snap_rhi_glDrawBuffers = NULL;
+PFNGLDRAWELEMENTSPROC glad_snap_rhi_glDrawElements = NULL;
+PFNGLDRAWELEMENTSBASEVERTEXPROC glad_snap_rhi_glDrawElementsBaseVertex = NULL;
+PFNGLDRAWELEMENTSINDIRECTPROC glad_snap_rhi_glDrawElementsIndirect = NULL;
+PFNGLDRAWELEMENTSINSTANCEDPROC glad_snap_rhi_glDrawElementsInstanced = NULL;
+PFNGLDRAWELEMENTSINSTANCEDARBPROC glad_snap_rhi_glDrawElementsInstancedARB = NULL;
+PFNGLDRAWELEMENTSINSTANCEDBASEINSTANCEPROC glad_snap_rhi_glDrawElementsInstancedBaseInstance = NULL;
+PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXPROC glad_snap_rhi_glDrawElementsInstancedBaseVertex = NULL;
+PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEPROC glad_snap_rhi_glDrawElementsInstancedBaseVertexBaseInstance = NULL;
+PFNGLDRAWELEMENTSINSTANCEDEXTPROC glad_snap_rhi_glDrawElementsInstancedEXT = NULL;
+PFNGLDRAWPIXELSPROC glad_snap_rhi_glDrawPixels = NULL;
+PFNGLDRAWRANGEELEMENTSPROC glad_snap_rhi_glDrawRangeElements = NULL;
+PFNGLDRAWRANGEELEMENTSBASEVERTEXPROC glad_snap_rhi_glDrawRangeElementsBaseVertex = NULL;
+PFNGLDRAWTRANSFORMFEEDBACKPROC glad_snap_rhi_glDrawTransformFeedback = NULL;
+PFNGLDRAWTRANSFORMFEEDBACKINSTANCEDPROC glad_snap_rhi_glDrawTransformFeedbackInstanced = NULL;
+PFNGLDRAWTRANSFORMFEEDBACKSTREAMPROC glad_snap_rhi_glDrawTransformFeedbackStream = NULL;
+PFNGLDRAWTRANSFORMFEEDBACKSTREAMINSTANCEDPROC glad_snap_rhi_glDrawTransformFeedbackStreamInstanced = NULL;
+PFNGLEDGEFLAGPROC glad_snap_rhi_glEdgeFlag = NULL;
+PFNGLEDGEFLAGPOINTERPROC glad_snap_rhi_glEdgeFlagPointer = NULL;
+PFNGLEDGEFLAGVPROC glad_snap_rhi_glEdgeFlagv = NULL;
+PFNGLENABLEPROC glad_snap_rhi_glEnable = NULL;
+PFNGLENABLECLIENTSTATEPROC glad_snap_rhi_glEnableClientState = NULL;
+PFNGLENABLEVERTEXARRAYATTRIBPROC glad_snap_rhi_glEnableVertexArrayAttrib = NULL;
+PFNGLENABLEVERTEXATTRIBARRAYPROC glad_snap_rhi_glEnableVertexAttribArray = NULL;
+PFNGLENABLEIPROC glad_snap_rhi_glEnablei = NULL;
+PFNGLENDPROC glad_snap_rhi_glEnd = NULL;
+PFNGLENDCONDITIONALRENDERPROC glad_snap_rhi_glEndConditionalRender = NULL;
+PFNGLENDLISTPROC glad_snap_rhi_glEndList = NULL;
+PFNGLENDQUERYPROC glad_snap_rhi_glEndQuery = NULL;
+PFNGLENDQUERYINDEXEDPROC glad_snap_rhi_glEndQueryIndexed = NULL;
+PFNGLENDTRANSFORMFEEDBACKPROC glad_snap_rhi_glEndTransformFeedback = NULL;
+PFNGLEVALCOORD1DPROC glad_snap_rhi_glEvalCoord1d = NULL;
+PFNGLEVALCOORD1DVPROC glad_snap_rhi_glEvalCoord1dv = NULL;
+PFNGLEVALCOORD1FPROC glad_snap_rhi_glEvalCoord1f = NULL;
+PFNGLEVALCOORD1FVPROC glad_snap_rhi_glEvalCoord1fv = NULL;
+PFNGLEVALCOORD2DPROC glad_snap_rhi_glEvalCoord2d = NULL;
+PFNGLEVALCOORD2DVPROC glad_snap_rhi_glEvalCoord2dv = NULL;
+PFNGLEVALCOORD2FPROC glad_snap_rhi_glEvalCoord2f = NULL;
+PFNGLEVALCOORD2FVPROC glad_snap_rhi_glEvalCoord2fv = NULL;
+PFNGLEVALMESH1PROC glad_snap_rhi_glEvalMesh1 = NULL;
+PFNGLEVALMESH2PROC glad_snap_rhi_glEvalMesh2 = NULL;
+PFNGLEVALPOINT1PROC glad_snap_rhi_glEvalPoint1 = NULL;
+PFNGLEVALPOINT2PROC glad_snap_rhi_glEvalPoint2 = NULL;
+PFNGLFEEDBACKBUFFERPROC glad_snap_rhi_glFeedbackBuffer = NULL;
+PFNGLFENCESYNCPROC glad_snap_rhi_glFenceSync = NULL;
+PFNGLFINISHPROC glad_snap_rhi_glFinish = NULL;
+PFNGLFLUSHPROC glad_snap_rhi_glFlush = NULL;
+PFNGLFLUSHMAPPEDBUFFERRANGEPROC glad_snap_rhi_glFlushMappedBufferRange = NULL;
+PFNGLFLUSHMAPPEDNAMEDBUFFERRANGEPROC glad_snap_rhi_glFlushMappedNamedBufferRange = NULL;
+PFNGLFOGCOORDPOINTERPROC glad_snap_rhi_glFogCoordPointer = NULL;
+PFNGLFOGCOORDDPROC glad_snap_rhi_glFogCoordd = NULL;
+PFNGLFOGCOORDDVPROC glad_snap_rhi_glFogCoorddv = NULL;
+PFNGLFOGCOORDFPROC glad_snap_rhi_glFogCoordf = NULL;
+PFNGLFOGCOORDFVPROC glad_snap_rhi_glFogCoordfv = NULL;
+PFNGLFOGFPROC glad_snap_rhi_glFogf = NULL;
+PFNGLFOGFVPROC glad_snap_rhi_glFogfv = NULL;
+PFNGLFOGIPROC glad_snap_rhi_glFogi = NULL;
+PFNGLFOGIVPROC glad_snap_rhi_glFogiv = NULL;
+PFNGLFRAMEBUFFERFETCHBARRIEREXTPROC glad_snap_rhi_glFramebufferFetchBarrierEXT = NULL;
+PFNGLFRAMEBUFFERPARAMETERIPROC glad_snap_rhi_glFramebufferParameteri = NULL;
+PFNGLFRAMEBUFFERRENDERBUFFERPROC glad_snap_rhi_glFramebufferRenderbuffer = NULL;
+PFNGLFRAMEBUFFERTEXTUREPROC glad_snap_rhi_glFramebufferTexture = NULL;
+PFNGLFRAMEBUFFERTEXTURE1DPROC glad_snap_rhi_glFramebufferTexture1D = NULL;
+PFNGLFRAMEBUFFERTEXTURE2DPROC glad_snap_rhi_glFramebufferTexture2D = NULL;
+PFNGLFRAMEBUFFERTEXTURE3DPROC glad_snap_rhi_glFramebufferTexture3D = NULL;
+PFNGLFRAMEBUFFERTEXTURELAYERPROC glad_snap_rhi_glFramebufferTextureLayer = NULL;
+PFNGLFRAMEBUFFERTEXTURELAYEREXTPROC glad_snap_rhi_glFramebufferTextureLayerEXT = NULL;
+PFNGLFRONTFACEPROC glad_snap_rhi_glFrontFace = NULL;
+PFNGLFRUSTUMPROC glad_snap_rhi_glFrustum = NULL;
+PFNGLGENBUFFERSPROC glad_snap_rhi_glGenBuffers = NULL;
+PFNGLGENFRAMEBUFFERSPROC glad_snap_rhi_glGenFramebuffers = NULL;
+PFNGLGENLISTSPROC glad_snap_rhi_glGenLists = NULL;
+PFNGLGENPROGRAMPIPELINESPROC glad_snap_rhi_glGenProgramPipelines = NULL;
+PFNGLGENQUERIESPROC glad_snap_rhi_glGenQueries = NULL;
+PFNGLGENRENDERBUFFERSPROC glad_snap_rhi_glGenRenderbuffers = NULL;
+PFNGLGENSAMPLERSPROC glad_snap_rhi_glGenSamplers = NULL;
+PFNGLGENTEXTURESPROC glad_snap_rhi_glGenTextures = NULL;
+PFNGLGENTRANSFORMFEEDBACKSPROC glad_snap_rhi_glGenTransformFeedbacks = NULL;
+PFNGLGENVERTEXARRAYSPROC glad_snap_rhi_glGenVertexArrays = NULL;
+PFNGLGENERATEMIPMAPPROC glad_snap_rhi_glGenerateMipmap = NULL;
+PFNGLGENERATETEXTUREMIPMAPPROC glad_snap_rhi_glGenerateTextureMipmap = NULL;
+PFNGLGETACTIVEATOMICCOUNTERBUFFERIVPROC glad_snap_rhi_glGetActiveAtomicCounterBufferiv = NULL;
+PFNGLGETACTIVEATTRIBPROC glad_snap_rhi_glGetActiveAttrib = NULL;
+PFNGLGETACTIVESUBROUTINENAMEPROC glad_snap_rhi_glGetActiveSubroutineName = NULL;
+PFNGLGETACTIVESUBROUTINEUNIFORMNAMEPROC glad_snap_rhi_glGetActiveSubroutineUniformName = NULL;
+PFNGLGETACTIVESUBROUTINEUNIFORMIVPROC glad_snap_rhi_glGetActiveSubroutineUniformiv = NULL;
+PFNGLGETACTIVEUNIFORMPROC glad_snap_rhi_glGetActiveUniform = NULL;
+PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC glad_snap_rhi_glGetActiveUniformBlockName = NULL;
+PFNGLGETACTIVEUNIFORMBLOCKIVPROC glad_snap_rhi_glGetActiveUniformBlockiv = NULL;
+PFNGLGETACTIVEUNIFORMNAMEPROC glad_snap_rhi_glGetActiveUniformName = NULL;
+PFNGLGETACTIVEUNIFORMSIVPROC glad_snap_rhi_glGetActiveUniformsiv = NULL;
+PFNGLGETATTACHEDSHADERSPROC glad_snap_rhi_glGetAttachedShaders = NULL;
+PFNGLGETATTRIBLOCATIONPROC glad_snap_rhi_glGetAttribLocation = NULL;
+PFNGLGETBOOLEANI_VPROC glad_snap_rhi_glGetBooleani_v = NULL;
+PFNGLGETBOOLEANVPROC glad_snap_rhi_glGetBooleanv = NULL;
+PFNGLGETBUFFERPARAMETERI64VPROC glad_snap_rhi_glGetBufferParameteri64v = NULL;
+PFNGLGETBUFFERPARAMETERIVPROC glad_snap_rhi_glGetBufferParameteriv = NULL;
+PFNGLGETBUFFERPOINTERVPROC glad_snap_rhi_glGetBufferPointerv = NULL;
+PFNGLGETBUFFERSUBDATAPROC glad_snap_rhi_glGetBufferSubData = NULL;
+PFNGLGETCLIPPLANEPROC glad_snap_rhi_glGetClipPlane = NULL;
+PFNGLGETCOMPRESSEDTEXIMAGEPROC glad_snap_rhi_glGetCompressedTexImage = NULL;
+PFNGLGETCOMPRESSEDTEXTUREIMAGEPROC glad_snap_rhi_glGetCompressedTextureImage = NULL;
+PFNGLGETCOMPRESSEDTEXTURESUBIMAGEPROC glad_snap_rhi_glGetCompressedTextureSubImage = NULL;
+PFNGLGETDEBUGMESSAGELOGPROC glad_snap_rhi_glGetDebugMessageLog = NULL;
+PFNGLGETDOUBLEI_VPROC glad_snap_rhi_glGetDoublei_v = NULL;
+PFNGLGETDOUBLEVPROC glad_snap_rhi_glGetDoublev = NULL;
+PFNGLGETERRORPROC glad_snap_rhi_glGetError = NULL;
+PFNGLGETFLOATI_VPROC glad_snap_rhi_glGetFloati_v = NULL;
+PFNGLGETFLOATVPROC glad_snap_rhi_glGetFloatv = NULL;
+PFNGLGETFRAGDATAINDEXPROC glad_snap_rhi_glGetFragDataIndex = NULL;
+PFNGLGETFRAGDATALOCATIONPROC glad_snap_rhi_glGetFragDataLocation = NULL;
+PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC glad_snap_rhi_glGetFramebufferAttachmentParameteriv = NULL;
+PFNGLGETFRAMEBUFFERPARAMETERIVPROC glad_snap_rhi_glGetFramebufferParameteriv = NULL;
+PFNGLGETGRAPHICSRESETSTATUSPROC glad_snap_rhi_glGetGraphicsResetStatus = NULL;
+PFNGLGETINTEGER64I_VPROC glad_snap_rhi_glGetInteger64i_v = NULL;
+PFNGLGETINTEGER64VPROC glad_snap_rhi_glGetInteger64v = NULL;
+PFNGLGETINTEGERI_VPROC glad_snap_rhi_glGetIntegeri_v = NULL;
+PFNGLGETINTEGERVPROC glad_snap_rhi_glGetIntegerv = NULL;
+PFNGLGETINTERNALFORMATI64VPROC glad_snap_rhi_glGetInternalformati64v = NULL;
+PFNGLGETINTERNALFORMATIVPROC glad_snap_rhi_glGetInternalformativ = NULL;
+PFNGLGETLIGHTFVPROC glad_snap_rhi_glGetLightfv = NULL;
+PFNGLGETLIGHTIVPROC glad_snap_rhi_glGetLightiv = NULL;
+PFNGLGETMAPDVPROC glad_snap_rhi_glGetMapdv = NULL;
+PFNGLGETMAPFVPROC glad_snap_rhi_glGetMapfv = NULL;
+PFNGLGETMAPIVPROC glad_snap_rhi_glGetMapiv = NULL;
+PFNGLGETMATERIALFVPROC glad_snap_rhi_glGetMaterialfv = NULL;
+PFNGLGETMATERIALIVPROC glad_snap_rhi_glGetMaterialiv = NULL;
+PFNGLGETMULTISAMPLEFVPROC glad_snap_rhi_glGetMultisamplefv = NULL;
+PFNGLGETNAMEDBUFFERPARAMETERI64VPROC glad_snap_rhi_glGetNamedBufferParameteri64v = NULL;
+PFNGLGETNAMEDBUFFERPARAMETERIVPROC glad_snap_rhi_glGetNamedBufferParameteriv = NULL;
+PFNGLGETNAMEDBUFFERPOINTERVPROC glad_snap_rhi_glGetNamedBufferPointerv = NULL;
+PFNGLGETNAMEDBUFFERSUBDATAPROC glad_snap_rhi_glGetNamedBufferSubData = NULL;
+PFNGLGETNAMEDFRAMEBUFFERATTACHMENTPARAMETERIVPROC glad_snap_rhi_glGetNamedFramebufferAttachmentParameteriv = NULL;
+PFNGLGETNAMEDFRAMEBUFFERPARAMETERIVPROC glad_snap_rhi_glGetNamedFramebufferParameteriv = NULL;
+PFNGLGETNAMEDRENDERBUFFERPARAMETERIVPROC glad_snap_rhi_glGetNamedRenderbufferParameteriv = NULL;
+PFNGLGETOBJECTLABELPROC glad_snap_rhi_glGetObjectLabel = NULL;
+PFNGLGETOBJECTPTRLABELPROC glad_snap_rhi_glGetObjectPtrLabel = NULL;
+PFNGLGETPIXELMAPFVPROC glad_snap_rhi_glGetPixelMapfv = NULL;
+PFNGLGETPIXELMAPUIVPROC glad_snap_rhi_glGetPixelMapuiv = NULL;
+PFNGLGETPIXELMAPUSVPROC glad_snap_rhi_glGetPixelMapusv = NULL;
+PFNGLGETPOINTERVPROC glad_snap_rhi_glGetPointerv = NULL;
+PFNGLGETPOLYGONSTIPPLEPROC glad_snap_rhi_glGetPolygonStipple = NULL;
+PFNGLGETPROGRAMBINARYPROC glad_snap_rhi_glGetProgramBinary = NULL;
+PFNGLGETPROGRAMINFOLOGPROC glad_snap_rhi_glGetProgramInfoLog = NULL;
+PFNGLGETPROGRAMINTERFACEIVPROC glad_snap_rhi_glGetProgramInterfaceiv = NULL;
+PFNGLGETPROGRAMPIPELINEINFOLOGPROC glad_snap_rhi_glGetProgramPipelineInfoLog = NULL;
+PFNGLGETPROGRAMPIPELINEIVPROC glad_snap_rhi_glGetProgramPipelineiv = NULL;
+PFNGLGETPROGRAMRESOURCEINDEXPROC glad_snap_rhi_glGetProgramResourceIndex = NULL;
+PFNGLGETPROGRAMRESOURCELOCATIONPROC glad_snap_rhi_glGetProgramResourceLocation = NULL;
+PFNGLGETPROGRAMRESOURCELOCATIONINDEXPROC glad_snap_rhi_glGetProgramResourceLocationIndex = NULL;
+PFNGLGETPROGRAMRESOURCENAMEPROC glad_snap_rhi_glGetProgramResourceName = NULL;
+PFNGLGETPROGRAMRESOURCEIVPROC glad_snap_rhi_glGetProgramResourceiv = NULL;
+PFNGLGETPROGRAMSTAGEIVPROC glad_snap_rhi_glGetProgramStageiv = NULL;
+PFNGLGETPROGRAMIVPROC glad_snap_rhi_glGetProgramiv = NULL;
+PFNGLGETQUERYBUFFEROBJECTI64VPROC glad_snap_rhi_glGetQueryBufferObjecti64v = NULL;
+PFNGLGETQUERYBUFFEROBJECTIVPROC glad_snap_rhi_glGetQueryBufferObjectiv = NULL;
+PFNGLGETQUERYBUFFEROBJECTUI64VPROC glad_snap_rhi_glGetQueryBufferObjectui64v = NULL;
+PFNGLGETQUERYBUFFEROBJECTUIVPROC glad_snap_rhi_glGetQueryBufferObjectuiv = NULL;
+PFNGLGETQUERYINDEXEDIVPROC glad_snap_rhi_glGetQueryIndexediv = NULL;
+PFNGLGETQUERYOBJECTI64VPROC glad_snap_rhi_glGetQueryObjecti64v = NULL;
+PFNGLGETQUERYOBJECTIVPROC glad_snap_rhi_glGetQueryObjectiv = NULL;
+PFNGLGETQUERYOBJECTUI64VPROC glad_snap_rhi_glGetQueryObjectui64v = NULL;
+PFNGLGETQUERYOBJECTUIVPROC glad_snap_rhi_glGetQueryObjectuiv = NULL;
+PFNGLGETQUERYIVPROC glad_snap_rhi_glGetQueryiv = NULL;
+PFNGLGETRENDERBUFFERPARAMETERIVPROC glad_snap_rhi_glGetRenderbufferParameteriv = NULL;
+PFNGLGETSAMPLERPARAMETERIIVPROC glad_snap_rhi_glGetSamplerParameterIiv = NULL;
+PFNGLGETSAMPLERPARAMETERIUIVPROC glad_snap_rhi_glGetSamplerParameterIuiv = NULL;
+PFNGLGETSAMPLERPARAMETERFVPROC glad_snap_rhi_glGetSamplerParameterfv = NULL;
+PFNGLGETSAMPLERPARAMETERIVPROC glad_snap_rhi_glGetSamplerParameteriv = NULL;
+PFNGLGETSHADERINFOLOGPROC glad_snap_rhi_glGetShaderInfoLog = NULL;
+PFNGLGETSHADERPRECISIONFORMATPROC glad_snap_rhi_glGetShaderPrecisionFormat = NULL;
+PFNGLGETSHADERSOURCEPROC glad_snap_rhi_glGetShaderSource = NULL;
+PFNGLGETSHADERIVPROC glad_snap_rhi_glGetShaderiv = NULL;
+PFNGLGETSTRINGPROC glad_snap_rhi_glGetString = NULL;
+PFNGLGETSTRINGIPROC glad_snap_rhi_glGetStringi = NULL;
+PFNGLGETSUBROUTINEINDEXPROC glad_snap_rhi_glGetSubroutineIndex = NULL;
+PFNGLGETSUBROUTINEUNIFORMLOCATIONPROC glad_snap_rhi_glGetSubroutineUniformLocation = NULL;
+PFNGLGETSYNCIVPROC glad_snap_rhi_glGetSynciv = NULL;
+PFNGLGETTEXENVFVPROC glad_snap_rhi_glGetTexEnvfv = NULL;
+PFNGLGETTEXENVIVPROC glad_snap_rhi_glGetTexEnviv = NULL;
+PFNGLGETTEXGENDVPROC glad_snap_rhi_glGetTexGendv = NULL;
+PFNGLGETTEXGENFVPROC glad_snap_rhi_glGetTexGenfv = NULL;
+PFNGLGETTEXGENIVPROC glad_snap_rhi_glGetTexGeniv = NULL;
+PFNGLGETTEXIMAGEPROC glad_snap_rhi_glGetTexImage = NULL;
+PFNGLGETTEXLEVELPARAMETERFVPROC glad_snap_rhi_glGetTexLevelParameterfv = NULL;
+PFNGLGETTEXLEVELPARAMETERIVPROC glad_snap_rhi_glGetTexLevelParameteriv = NULL;
+PFNGLGETTEXPARAMETERIIVPROC glad_snap_rhi_glGetTexParameterIiv = NULL;
+PFNGLGETTEXPARAMETERIUIVPROC glad_snap_rhi_glGetTexParameterIuiv = NULL;
+PFNGLGETTEXPARAMETERFVPROC glad_snap_rhi_glGetTexParameterfv = NULL;
+PFNGLGETTEXPARAMETERIVPROC glad_snap_rhi_glGetTexParameteriv = NULL;
+PFNGLGETTEXTUREIMAGEPROC glad_snap_rhi_glGetTextureImage = NULL;
+PFNGLGETTEXTURELEVELPARAMETERFVPROC glad_snap_rhi_glGetTextureLevelParameterfv = NULL;
+PFNGLGETTEXTURELEVELPARAMETERIVPROC glad_snap_rhi_glGetTextureLevelParameteriv = NULL;
+PFNGLGETTEXTUREPARAMETERIIVPROC glad_snap_rhi_glGetTextureParameterIiv = NULL;
+PFNGLGETTEXTUREPARAMETERIUIVPROC glad_snap_rhi_glGetTextureParameterIuiv = NULL;
+PFNGLGETTEXTUREPARAMETERFVPROC glad_snap_rhi_glGetTextureParameterfv = NULL;
+PFNGLGETTEXTUREPARAMETERIVPROC glad_snap_rhi_glGetTextureParameteriv = NULL;
+PFNGLGETTEXTURESUBIMAGEPROC glad_snap_rhi_glGetTextureSubImage = NULL;
+PFNGLGETTRANSFORMFEEDBACKVARYINGPROC glad_snap_rhi_glGetTransformFeedbackVarying = NULL;
+PFNGLGETTRANSFORMFEEDBACKI64_VPROC glad_snap_rhi_glGetTransformFeedbacki64_v = NULL;
+PFNGLGETTRANSFORMFEEDBACKI_VPROC glad_snap_rhi_glGetTransformFeedbacki_v = NULL;
+PFNGLGETTRANSFORMFEEDBACKIVPROC glad_snap_rhi_glGetTransformFeedbackiv = NULL;
+PFNGLGETUNIFORMBLOCKINDEXPROC glad_snap_rhi_glGetUniformBlockIndex = NULL;
+PFNGLGETUNIFORMINDICESPROC glad_snap_rhi_glGetUniformIndices = NULL;
+PFNGLGETUNIFORMLOCATIONPROC glad_snap_rhi_glGetUniformLocation = NULL;
+PFNGLGETUNIFORMSUBROUTINEUIVPROC glad_snap_rhi_glGetUniformSubroutineuiv = NULL;
+PFNGLGETUNIFORMDVPROC glad_snap_rhi_glGetUniformdv = NULL;
+PFNGLGETUNIFORMFVPROC glad_snap_rhi_glGetUniformfv = NULL;
+PFNGLGETUNIFORMIVPROC glad_snap_rhi_glGetUniformiv = NULL;
+PFNGLGETUNIFORMUIVPROC glad_snap_rhi_glGetUniformuiv = NULL;
+PFNGLGETVERTEXARRAYINDEXED64IVPROC glad_snap_rhi_glGetVertexArrayIndexed64iv = NULL;
+PFNGLGETVERTEXARRAYINDEXEDIVPROC glad_snap_rhi_glGetVertexArrayIndexediv = NULL;
+PFNGLGETVERTEXARRAYIVPROC glad_snap_rhi_glGetVertexArrayiv = NULL;
+PFNGLGETVERTEXATTRIBIIVPROC glad_snap_rhi_glGetVertexAttribIiv = NULL;
+PFNGLGETVERTEXATTRIBIUIVPROC glad_snap_rhi_glGetVertexAttribIuiv = NULL;
+PFNGLGETVERTEXATTRIBLDVPROC glad_snap_rhi_glGetVertexAttribLdv = NULL;
+PFNGLGETVERTEXATTRIBPOINTERVPROC glad_snap_rhi_glGetVertexAttribPointerv = NULL;
+PFNGLGETVERTEXATTRIBDVPROC glad_snap_rhi_glGetVertexAttribdv = NULL;
+PFNGLGETVERTEXATTRIBFVPROC glad_snap_rhi_glGetVertexAttribfv = NULL;
+PFNGLGETVERTEXATTRIBIVPROC glad_snap_rhi_glGetVertexAttribiv = NULL;
+PFNGLGETNCOLORTABLEPROC glad_snap_rhi_glGetnColorTable = NULL;
+PFNGLGETNCOMPRESSEDTEXIMAGEPROC glad_snap_rhi_glGetnCompressedTexImage = NULL;
+PFNGLGETNCONVOLUTIONFILTERPROC glad_snap_rhi_glGetnConvolutionFilter = NULL;
+PFNGLGETNHISTOGRAMPROC glad_snap_rhi_glGetnHistogram = NULL;
+PFNGLGETNMAPDVPROC glad_snap_rhi_glGetnMapdv = NULL;
+PFNGLGETNMAPFVPROC glad_snap_rhi_glGetnMapfv = NULL;
+PFNGLGETNMAPIVPROC glad_snap_rhi_glGetnMapiv = NULL;
+PFNGLGETNMINMAXPROC glad_snap_rhi_glGetnMinmax = NULL;
+PFNGLGETNPIXELMAPFVPROC glad_snap_rhi_glGetnPixelMapfv = NULL;
+PFNGLGETNPIXELMAPUIVPROC glad_snap_rhi_glGetnPixelMapuiv = NULL;
+PFNGLGETNPIXELMAPUSVPROC glad_snap_rhi_glGetnPixelMapusv = NULL;
+PFNGLGETNPOLYGONSTIPPLEPROC glad_snap_rhi_glGetnPolygonStipple = NULL;
+PFNGLGETNSEPARABLEFILTERPROC glad_snap_rhi_glGetnSeparableFilter = NULL;
+PFNGLGETNTEXIMAGEPROC glad_snap_rhi_glGetnTexImage = NULL;
+PFNGLGETNUNIFORMDVPROC glad_snap_rhi_glGetnUniformdv = NULL;
+PFNGLGETNUNIFORMFVPROC glad_snap_rhi_glGetnUniformfv = NULL;
+PFNGLGETNUNIFORMIVPROC glad_snap_rhi_glGetnUniformiv = NULL;
+PFNGLGETNUNIFORMUIVPROC glad_snap_rhi_glGetnUniformuiv = NULL;
+PFNGLHINTPROC glad_snap_rhi_glHint = NULL;
+PFNGLINDEXMASKPROC glad_snap_rhi_glIndexMask = NULL;
+PFNGLINDEXPOINTERPROC glad_snap_rhi_glIndexPointer = NULL;
+PFNGLINDEXDPROC glad_snap_rhi_glIndexd = NULL;
+PFNGLINDEXDVPROC glad_snap_rhi_glIndexdv = NULL;
+PFNGLINDEXFPROC glad_snap_rhi_glIndexf = NULL;
+PFNGLINDEXFVPROC glad_snap_rhi_glIndexfv = NULL;
+PFNGLINDEXIPROC glad_snap_rhi_glIndexi = NULL;
+PFNGLINDEXIVPROC glad_snap_rhi_glIndexiv = NULL;
+PFNGLINDEXSPROC glad_snap_rhi_glIndexs = NULL;
+PFNGLINDEXSVPROC glad_snap_rhi_glIndexsv = NULL;
+PFNGLINDEXUBPROC glad_snap_rhi_glIndexub = NULL;
+PFNGLINDEXUBVPROC glad_snap_rhi_glIndexubv = NULL;
+PFNGLINITNAMESPROC glad_snap_rhi_glInitNames = NULL;
+PFNGLINSERTEVENTMARKEREXTPROC glad_snap_rhi_glInsertEventMarkerEXT = NULL;
+PFNGLINTERLEAVEDARRAYSPROC glad_snap_rhi_glInterleavedArrays = NULL;
+PFNGLINVALIDATEBUFFERDATAPROC glad_snap_rhi_glInvalidateBufferData = NULL;
+PFNGLINVALIDATEBUFFERSUBDATAPROC glad_snap_rhi_glInvalidateBufferSubData = NULL;
+PFNGLINVALIDATEFRAMEBUFFERPROC glad_snap_rhi_glInvalidateFramebuffer = NULL;
+PFNGLINVALIDATENAMEDFRAMEBUFFERDATAPROC glad_snap_rhi_glInvalidateNamedFramebufferData = NULL;
+PFNGLINVALIDATENAMEDFRAMEBUFFERSUBDATAPROC glad_snap_rhi_glInvalidateNamedFramebufferSubData = NULL;
+PFNGLINVALIDATESUBFRAMEBUFFERPROC glad_snap_rhi_glInvalidateSubFramebuffer = NULL;
+PFNGLINVALIDATETEXIMAGEPROC glad_snap_rhi_glInvalidateTexImage = NULL;
+PFNGLINVALIDATETEXSUBIMAGEPROC glad_snap_rhi_glInvalidateTexSubImage = NULL;
+PFNGLISBUFFERPROC glad_snap_rhi_glIsBuffer = NULL;
+PFNGLISENABLEDPROC glad_snap_rhi_glIsEnabled = NULL;
+PFNGLISENABLEDIPROC glad_snap_rhi_glIsEnabledi = NULL;
+PFNGLISFRAMEBUFFERPROC glad_snap_rhi_glIsFramebuffer = NULL;
+PFNGLISLISTPROC glad_snap_rhi_glIsList = NULL;
+PFNGLISPROGRAMPROC glad_snap_rhi_glIsProgram = NULL;
+PFNGLISPROGRAMPIPELINEPROC glad_snap_rhi_glIsProgramPipeline = NULL;
+PFNGLISQUERYPROC glad_snap_rhi_glIsQuery = NULL;
+PFNGLISRENDERBUFFERPROC glad_snap_rhi_glIsRenderbuffer = NULL;
+PFNGLISSAMPLERPROC glad_snap_rhi_glIsSampler = NULL;
+PFNGLISSHADERPROC glad_snap_rhi_glIsShader = NULL;
+PFNGLISSYNCPROC glad_snap_rhi_glIsSync = NULL;
+PFNGLISTEXTUREPROC glad_snap_rhi_glIsTexture = NULL;
+PFNGLISTRANSFORMFEEDBACKPROC glad_snap_rhi_glIsTransformFeedback = NULL;
+PFNGLISVERTEXARRAYPROC glad_snap_rhi_glIsVertexArray = NULL;
+PFNGLLIGHTMODELFPROC glad_snap_rhi_glLightModelf = NULL;
+PFNGLLIGHTMODELFVPROC glad_snap_rhi_glLightModelfv = NULL;
+PFNGLLIGHTMODELIPROC glad_snap_rhi_glLightModeli = NULL;
+PFNGLLIGHTMODELIVPROC glad_snap_rhi_glLightModeliv = NULL;
+PFNGLLIGHTFPROC glad_snap_rhi_glLightf = NULL;
+PFNGLLIGHTFVPROC glad_snap_rhi_glLightfv = NULL;
+PFNGLLIGHTIPROC glad_snap_rhi_glLighti = NULL;
+PFNGLLIGHTIVPROC glad_snap_rhi_glLightiv = NULL;
+PFNGLLINESTIPPLEPROC glad_snap_rhi_glLineStipple = NULL;
+PFNGLLINEWIDTHPROC glad_snap_rhi_glLineWidth = NULL;
+PFNGLLINKPROGRAMPROC glad_snap_rhi_glLinkProgram = NULL;
+PFNGLLISTBASEPROC glad_snap_rhi_glListBase = NULL;
+PFNGLLOADIDENTITYPROC glad_snap_rhi_glLoadIdentity = NULL;
+PFNGLLOADMATRIXDPROC glad_snap_rhi_glLoadMatrixd = NULL;
+PFNGLLOADMATRIXFPROC glad_snap_rhi_glLoadMatrixf = NULL;
+PFNGLLOADNAMEPROC glad_snap_rhi_glLoadName = NULL;
+PFNGLLOADTRANSPOSEMATRIXDPROC glad_snap_rhi_glLoadTransposeMatrixd = NULL;
+PFNGLLOADTRANSPOSEMATRIXFPROC glad_snap_rhi_glLoadTransposeMatrixf = NULL;
+PFNGLLOGICOPPROC glad_snap_rhi_glLogicOp = NULL;
+PFNGLMAP1DPROC glad_snap_rhi_glMap1d = NULL;
+PFNGLMAP1FPROC glad_snap_rhi_glMap1f = NULL;
+PFNGLMAP2DPROC glad_snap_rhi_glMap2d = NULL;
+PFNGLMAP2FPROC glad_snap_rhi_glMap2f = NULL;
+PFNGLMAPBUFFERPROC glad_snap_rhi_glMapBuffer = NULL;
+PFNGLMAPBUFFERRANGEPROC glad_snap_rhi_glMapBufferRange = NULL;
+PFNGLMAPGRID1DPROC glad_snap_rhi_glMapGrid1d = NULL;
+PFNGLMAPGRID1FPROC glad_snap_rhi_glMapGrid1f = NULL;
+PFNGLMAPGRID2DPROC glad_snap_rhi_glMapGrid2d = NULL;
+PFNGLMAPGRID2FPROC glad_snap_rhi_glMapGrid2f = NULL;
+PFNGLMAPNAMEDBUFFERPROC glad_snap_rhi_glMapNamedBuffer = NULL;
+PFNGLMAPNAMEDBUFFERRANGEPROC glad_snap_rhi_glMapNamedBufferRange = NULL;
+PFNGLMATERIALFPROC glad_snap_rhi_glMaterialf = NULL;
+PFNGLMATERIALFVPROC glad_snap_rhi_glMaterialfv = NULL;
+PFNGLMATERIALIPROC glad_snap_rhi_glMateriali = NULL;
+PFNGLMATERIALIVPROC glad_snap_rhi_glMaterialiv = NULL;
+PFNGLMATRIXMODEPROC glad_snap_rhi_glMatrixMode = NULL;
+PFNGLMEMORYBARRIERPROC glad_snap_rhi_glMemoryBarrier = NULL;
+PFNGLMEMORYBARRIERBYREGIONPROC glad_snap_rhi_glMemoryBarrierByRegion = NULL;
+PFNGLMINSAMPLESHADINGPROC glad_snap_rhi_glMinSampleShading = NULL;
+PFNGLMULTMATRIXDPROC glad_snap_rhi_glMultMatrixd = NULL;
+PFNGLMULTMATRIXFPROC glad_snap_rhi_glMultMatrixf = NULL;
+PFNGLMULTTRANSPOSEMATRIXDPROC glad_snap_rhi_glMultTransposeMatrixd = NULL;
+PFNGLMULTTRANSPOSEMATRIXFPROC glad_snap_rhi_glMultTransposeMatrixf = NULL;
+PFNGLMULTIDRAWARRAYSPROC glad_snap_rhi_glMultiDrawArrays = NULL;
+PFNGLMULTIDRAWARRAYSINDIRECTPROC glad_snap_rhi_glMultiDrawArraysIndirect = NULL;
+PFNGLMULTIDRAWARRAYSINDIRECTCOUNTPROC glad_snap_rhi_glMultiDrawArraysIndirectCount = NULL;
+PFNGLMULTIDRAWELEMENTSPROC glad_snap_rhi_glMultiDrawElements = NULL;
+PFNGLMULTIDRAWELEMENTSBASEVERTEXPROC glad_snap_rhi_glMultiDrawElementsBaseVertex = NULL;
+PFNGLMULTIDRAWELEMENTSINDIRECTPROC glad_snap_rhi_glMultiDrawElementsIndirect = NULL;
+PFNGLMULTIDRAWELEMENTSINDIRECTCOUNTPROC glad_snap_rhi_glMultiDrawElementsIndirectCount = NULL;
+PFNGLMULTITEXCOORD1DPROC glad_snap_rhi_glMultiTexCoord1d = NULL;
+PFNGLMULTITEXCOORD1DVPROC glad_snap_rhi_glMultiTexCoord1dv = NULL;
+PFNGLMULTITEXCOORD1FPROC glad_snap_rhi_glMultiTexCoord1f = NULL;
+PFNGLMULTITEXCOORD1FVPROC glad_snap_rhi_glMultiTexCoord1fv = NULL;
+PFNGLMULTITEXCOORD1IPROC glad_snap_rhi_glMultiTexCoord1i = NULL;
+PFNGLMULTITEXCOORD1IVPROC glad_snap_rhi_glMultiTexCoord1iv = NULL;
+PFNGLMULTITEXCOORD1SPROC glad_snap_rhi_glMultiTexCoord1s = NULL;
+PFNGLMULTITEXCOORD1SVPROC glad_snap_rhi_glMultiTexCoord1sv = NULL;
+PFNGLMULTITEXCOORD2DPROC glad_snap_rhi_glMultiTexCoord2d = NULL;
+PFNGLMULTITEXCOORD2DVPROC glad_snap_rhi_glMultiTexCoord2dv = NULL;
+PFNGLMULTITEXCOORD2FPROC glad_snap_rhi_glMultiTexCoord2f = NULL;
+PFNGLMULTITEXCOORD2FVPROC glad_snap_rhi_glMultiTexCoord2fv = NULL;
+PFNGLMULTITEXCOORD2IPROC glad_snap_rhi_glMultiTexCoord2i = NULL;
+PFNGLMULTITEXCOORD2IVPROC glad_snap_rhi_glMultiTexCoord2iv = NULL;
+PFNGLMULTITEXCOORD2SPROC glad_snap_rhi_glMultiTexCoord2s = NULL;
+PFNGLMULTITEXCOORD2SVPROC glad_snap_rhi_glMultiTexCoord2sv = NULL;
+PFNGLMULTITEXCOORD3DPROC glad_snap_rhi_glMultiTexCoord3d = NULL;
+PFNGLMULTITEXCOORD3DVPROC glad_snap_rhi_glMultiTexCoord3dv = NULL;
+PFNGLMULTITEXCOORD3FPROC glad_snap_rhi_glMultiTexCoord3f = NULL;
+PFNGLMULTITEXCOORD3FVPROC glad_snap_rhi_glMultiTexCoord3fv = NULL;
+PFNGLMULTITEXCOORD3IPROC glad_snap_rhi_glMultiTexCoord3i = NULL;
+PFNGLMULTITEXCOORD3IVPROC glad_snap_rhi_glMultiTexCoord3iv = NULL;
+PFNGLMULTITEXCOORD3SPROC glad_snap_rhi_glMultiTexCoord3s = NULL;
+PFNGLMULTITEXCOORD3SVPROC glad_snap_rhi_glMultiTexCoord3sv = NULL;
+PFNGLMULTITEXCOORD4DPROC glad_snap_rhi_glMultiTexCoord4d = NULL;
+PFNGLMULTITEXCOORD4DVPROC glad_snap_rhi_glMultiTexCoord4dv = NULL;
+PFNGLMULTITEXCOORD4FPROC glad_snap_rhi_glMultiTexCoord4f = NULL;
+PFNGLMULTITEXCOORD4FVPROC glad_snap_rhi_glMultiTexCoord4fv = NULL;
+PFNGLMULTITEXCOORD4IPROC glad_snap_rhi_glMultiTexCoord4i = NULL;
+PFNGLMULTITEXCOORD4IVPROC glad_snap_rhi_glMultiTexCoord4iv = NULL;
+PFNGLMULTITEXCOORD4SPROC glad_snap_rhi_glMultiTexCoord4s = NULL;
+PFNGLMULTITEXCOORD4SVPROC glad_snap_rhi_glMultiTexCoord4sv = NULL;
+PFNGLMULTITEXCOORDP1UIPROC glad_snap_rhi_glMultiTexCoordP1ui = NULL;
+PFNGLMULTITEXCOORDP1UIVPROC glad_snap_rhi_glMultiTexCoordP1uiv = NULL;
+PFNGLMULTITEXCOORDP2UIPROC glad_snap_rhi_glMultiTexCoordP2ui = NULL;
+PFNGLMULTITEXCOORDP2UIVPROC glad_snap_rhi_glMultiTexCoordP2uiv = NULL;
+PFNGLMULTITEXCOORDP3UIPROC glad_snap_rhi_glMultiTexCoordP3ui = NULL;
+PFNGLMULTITEXCOORDP3UIVPROC glad_snap_rhi_glMultiTexCoordP3uiv = NULL;
+PFNGLMULTITEXCOORDP4UIPROC glad_snap_rhi_glMultiTexCoordP4ui = NULL;
+PFNGLMULTITEXCOORDP4UIVPROC glad_snap_rhi_glMultiTexCoordP4uiv = NULL;
+PFNGLNAMEDBUFFERDATAPROC glad_snap_rhi_glNamedBufferData = NULL;
+PFNGLNAMEDBUFFERSTORAGEPROC glad_snap_rhi_glNamedBufferStorage = NULL;
+PFNGLNAMEDBUFFERSUBDATAPROC glad_snap_rhi_glNamedBufferSubData = NULL;
+PFNGLNAMEDFRAMEBUFFERDRAWBUFFERPROC glad_snap_rhi_glNamedFramebufferDrawBuffer = NULL;
+PFNGLNAMEDFRAMEBUFFERDRAWBUFFERSPROC glad_snap_rhi_glNamedFramebufferDrawBuffers = NULL;
+PFNGLNAMEDFRAMEBUFFERPARAMETERIPROC glad_snap_rhi_glNamedFramebufferParameteri = NULL;
+PFNGLNAMEDFRAMEBUFFERREADBUFFERPROC glad_snap_rhi_glNamedFramebufferReadBuffer = NULL;
+PFNGLNAMEDFRAMEBUFFERRENDERBUFFERPROC glad_snap_rhi_glNamedFramebufferRenderbuffer = NULL;
+PFNGLNAMEDFRAMEBUFFERTEXTUREPROC glad_snap_rhi_glNamedFramebufferTexture = NULL;
+PFNGLNAMEDFRAMEBUFFERTEXTURELAYERPROC glad_snap_rhi_glNamedFramebufferTextureLayer = NULL;
+PFNGLNAMEDRENDERBUFFERSTORAGEPROC glad_snap_rhi_glNamedRenderbufferStorage = NULL;
+PFNGLNAMEDRENDERBUFFERSTORAGEMULTISAMPLEPROC glad_snap_rhi_glNamedRenderbufferStorageMultisample = NULL;
+PFNGLNEWLISTPROC glad_snap_rhi_glNewList = NULL;
+PFNGLNORMAL3BPROC glad_snap_rhi_glNormal3b = NULL;
+PFNGLNORMAL3BVPROC glad_snap_rhi_glNormal3bv = NULL;
+PFNGLNORMAL3DPROC glad_snap_rhi_glNormal3d = NULL;
+PFNGLNORMAL3DVPROC glad_snap_rhi_glNormal3dv = NULL;
+PFNGLNORMAL3FPROC glad_snap_rhi_glNormal3f = NULL;
+PFNGLNORMAL3FVPROC glad_snap_rhi_glNormal3fv = NULL;
+PFNGLNORMAL3IPROC glad_snap_rhi_glNormal3i = NULL;
+PFNGLNORMAL3IVPROC glad_snap_rhi_glNormal3iv = NULL;
+PFNGLNORMAL3SPROC glad_snap_rhi_glNormal3s = NULL;
+PFNGLNORMAL3SVPROC glad_snap_rhi_glNormal3sv = NULL;
+PFNGLNORMALP3UIPROC glad_snap_rhi_glNormalP3ui = NULL;
+PFNGLNORMALP3UIVPROC glad_snap_rhi_glNormalP3uiv = NULL;
+PFNGLNORMALPOINTERPROC glad_snap_rhi_glNormalPointer = NULL;
+PFNGLOBJECTLABELPROC glad_snap_rhi_glObjectLabel = NULL;
+PFNGLOBJECTPTRLABELPROC glad_snap_rhi_glObjectPtrLabel = NULL;
+PFNGLORTHOPROC glad_snap_rhi_glOrtho = NULL;
+PFNGLPASSTHROUGHPROC glad_snap_rhi_glPassThrough = NULL;
+PFNGLPATCHPARAMETERFVPROC glad_snap_rhi_glPatchParameterfv = NULL;
+PFNGLPATCHPARAMETERIPROC glad_snap_rhi_glPatchParameteri = NULL;
+PFNGLPAUSETRANSFORMFEEDBACKPROC glad_snap_rhi_glPauseTransformFeedback = NULL;
+PFNGLPIXELMAPFVPROC glad_snap_rhi_glPixelMapfv = NULL;
+PFNGLPIXELMAPUIVPROC glad_snap_rhi_glPixelMapuiv = NULL;
+PFNGLPIXELMAPUSVPROC glad_snap_rhi_glPixelMapusv = NULL;
+PFNGLPIXELSTOREFPROC glad_snap_rhi_glPixelStoref = NULL;
+PFNGLPIXELSTOREIPROC glad_snap_rhi_glPixelStorei = NULL;
+PFNGLPIXELTRANSFERFPROC glad_snap_rhi_glPixelTransferf = NULL;
+PFNGLPIXELTRANSFERIPROC glad_snap_rhi_glPixelTransferi = NULL;
+PFNGLPIXELZOOMPROC glad_snap_rhi_glPixelZoom = NULL;
+PFNGLPOINTPARAMETERFPROC glad_snap_rhi_glPointParameterf = NULL;
+PFNGLPOINTPARAMETERFVPROC glad_snap_rhi_glPointParameterfv = NULL;
+PFNGLPOINTPARAMETERIPROC glad_snap_rhi_glPointParameteri = NULL;
+PFNGLPOINTPARAMETERIVPROC glad_snap_rhi_glPointParameteriv = NULL;
+PFNGLPOINTSIZEPROC glad_snap_rhi_glPointSize = NULL;
+PFNGLPOLYGONMODEPROC glad_snap_rhi_glPolygonMode = NULL;
+PFNGLPOLYGONOFFSETPROC glad_snap_rhi_glPolygonOffset = NULL;
+PFNGLPOLYGONOFFSETCLAMPPROC glad_snap_rhi_glPolygonOffsetClamp = NULL;
+PFNGLPOLYGONSTIPPLEPROC glad_snap_rhi_glPolygonStipple = NULL;
+PFNGLPOPATTRIBPROC glad_snap_rhi_glPopAttrib = NULL;
+PFNGLPOPCLIENTATTRIBPROC glad_snap_rhi_glPopClientAttrib = NULL;
+PFNGLPOPDEBUGGROUPPROC glad_snap_rhi_glPopDebugGroup = NULL;
+PFNGLPOPGROUPMARKEREXTPROC glad_snap_rhi_glPopGroupMarkerEXT = NULL;
+PFNGLPOPMATRIXPROC glad_snap_rhi_glPopMatrix = NULL;
+PFNGLPOPNAMEPROC glad_snap_rhi_glPopName = NULL;
+PFNGLDISCARDFRAMEBUFFEREXTPROC glad_snap_rhi_glDiscardFramebufferEXT = NULL;
+PFNGLPRIMITIVERESTARTINDEXPROC glad_snap_rhi_glPrimitiveRestartIndex = NULL;
+PFNGLPRIORITIZETEXTURESPROC glad_snap_rhi_glPrioritizeTextures = NULL;
+PFNGLPROGRAMBINARYPROC glad_snap_rhi_glProgramBinary = NULL;
+PFNGLPROGRAMPARAMETERIPROC glad_snap_rhi_glProgramParameteri = NULL;
+PFNGLPROGRAMUNIFORM1DPROC glad_snap_rhi_glProgramUniform1d = NULL;
+PFNGLPROGRAMUNIFORM1DVPROC glad_snap_rhi_glProgramUniform1dv = NULL;
+PFNGLPROGRAMUNIFORM1FPROC glad_snap_rhi_glProgramUniform1f = NULL;
+PFNGLPROGRAMUNIFORM1FVPROC glad_snap_rhi_glProgramUniform1fv = NULL;
+PFNGLPROGRAMUNIFORM1IPROC glad_snap_rhi_glProgramUniform1i = NULL;
+PFNGLPROGRAMUNIFORM1IVPROC glad_snap_rhi_glProgramUniform1iv = NULL;
+PFNGLPROGRAMUNIFORM1UIPROC glad_snap_rhi_glProgramUniform1ui = NULL;
+PFNGLPROGRAMUNIFORM1UIVPROC glad_snap_rhi_glProgramUniform1uiv = NULL;
+PFNGLPROGRAMUNIFORM2DPROC glad_snap_rhi_glProgramUniform2d = NULL;
+PFNGLPROGRAMUNIFORM2DVPROC glad_snap_rhi_glProgramUniform2dv = NULL;
+PFNGLPROGRAMUNIFORM2FPROC glad_snap_rhi_glProgramUniform2f = NULL;
+PFNGLPROGRAMUNIFORM2FVPROC glad_snap_rhi_glProgramUniform2fv = NULL;
+PFNGLPROGRAMUNIFORM2IPROC glad_snap_rhi_glProgramUniform2i = NULL;
+PFNGLPROGRAMUNIFORM2IVPROC glad_snap_rhi_glProgramUniform2iv = NULL;
+PFNGLPROGRAMUNIFORM2UIPROC glad_snap_rhi_glProgramUniform2ui = NULL;
+PFNGLPROGRAMUNIFORM2UIVPROC glad_snap_rhi_glProgramUniform2uiv = NULL;
+PFNGLPROGRAMUNIFORM3DPROC glad_snap_rhi_glProgramUniform3d = NULL;
+PFNGLPROGRAMUNIFORM3DVPROC glad_snap_rhi_glProgramUniform3dv = NULL;
+PFNGLPROGRAMUNIFORM3FPROC glad_snap_rhi_glProgramUniform3f = NULL;
+PFNGLPROGRAMUNIFORM3FVPROC glad_snap_rhi_glProgramUniform3fv = NULL;
+PFNGLPROGRAMUNIFORM3IPROC glad_snap_rhi_glProgramUniform3i = NULL;
+PFNGLPROGRAMUNIFORM3IVPROC glad_snap_rhi_glProgramUniform3iv = NULL;
+PFNGLPROGRAMUNIFORM3UIPROC glad_snap_rhi_glProgramUniform3ui = NULL;
+PFNGLPROGRAMUNIFORM3UIVPROC glad_snap_rhi_glProgramUniform3uiv = NULL;
+PFNGLPROGRAMUNIFORM4DPROC glad_snap_rhi_glProgramUniform4d = NULL;
+PFNGLPROGRAMUNIFORM4DVPROC glad_snap_rhi_glProgramUniform4dv = NULL;
+PFNGLPROGRAMUNIFORM4FPROC glad_snap_rhi_glProgramUniform4f = NULL;
+PFNGLPROGRAMUNIFORM4FVPROC glad_snap_rhi_glProgramUniform4fv = NULL;
+PFNGLPROGRAMUNIFORM4IPROC glad_snap_rhi_glProgramUniform4i = NULL;
+PFNGLPROGRAMUNIFORM4IVPROC glad_snap_rhi_glProgramUniform4iv = NULL;
+PFNGLPROGRAMUNIFORM4UIPROC glad_snap_rhi_glProgramUniform4ui = NULL;
+PFNGLPROGRAMUNIFORM4UIVPROC glad_snap_rhi_glProgramUniform4uiv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX2DVPROC glad_snap_rhi_glProgramUniformMatrix2dv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX2FVPROC glad_snap_rhi_glProgramUniformMatrix2fv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX2X3DVPROC glad_snap_rhi_glProgramUniformMatrix2x3dv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX2X3FVPROC glad_snap_rhi_glProgramUniformMatrix2x3fv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX2X4DVPROC glad_snap_rhi_glProgramUniformMatrix2x4dv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX2X4FVPROC glad_snap_rhi_glProgramUniformMatrix2x4fv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX3DVPROC glad_snap_rhi_glProgramUniformMatrix3dv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX3FVPROC glad_snap_rhi_glProgramUniformMatrix3fv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX3X2DVPROC glad_snap_rhi_glProgramUniformMatrix3x2dv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX3X2FVPROC glad_snap_rhi_glProgramUniformMatrix3x2fv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX3X4DVPROC glad_snap_rhi_glProgramUniformMatrix3x4dv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX3X4FVPROC glad_snap_rhi_glProgramUniformMatrix3x4fv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX4DVPROC glad_snap_rhi_glProgramUniformMatrix4dv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX4FVPROC glad_snap_rhi_glProgramUniformMatrix4fv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX4X2DVPROC glad_snap_rhi_glProgramUniformMatrix4x2dv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX4X2FVPROC glad_snap_rhi_glProgramUniformMatrix4x2fv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX4X3DVPROC glad_snap_rhi_glProgramUniformMatrix4x3dv = NULL;
+PFNGLPROGRAMUNIFORMMATRIX4X3FVPROC glad_snap_rhi_glProgramUniformMatrix4x3fv = NULL;
+PFNGLPROVOKINGVERTEXPROC glad_snap_rhi_glProvokingVertex = NULL;
+PFNGLPUSHATTRIBPROC glad_snap_rhi_glPushAttrib = NULL;
+PFNGLPUSHCLIENTATTRIBPROC glad_snap_rhi_glPushClientAttrib = NULL;
+PFNGLPUSHDEBUGGROUPPROC glad_snap_rhi_glPushDebugGroup = NULL;
+PFNGLPUSHGROUPMARKEREXTPROC glad_snap_rhi_glPushGroupMarkerEXT = NULL;
+PFNGLPUSHMATRIXPROC glad_snap_rhi_glPushMatrix = NULL;
+PFNGLPUSHNAMEPROC glad_snap_rhi_glPushName = NULL;
+PFNGLQUERYCOUNTERPROC glad_snap_rhi_glQueryCounter = NULL;
+PFNGLRASTERPOS2DPROC glad_snap_rhi_glRasterPos2d = NULL;
+PFNGLRASTERPOS2DVPROC glad_snap_rhi_glRasterPos2dv = NULL;
+PFNGLRASTERPOS2FPROC glad_snap_rhi_glRasterPos2f = NULL;
+PFNGLRASTERPOS2FVPROC glad_snap_rhi_glRasterPos2fv = NULL;
+PFNGLRASTERPOS2IPROC glad_snap_rhi_glRasterPos2i = NULL;
+PFNGLRASTERPOS2IVPROC glad_snap_rhi_glRasterPos2iv = NULL;
+PFNGLRASTERPOS2SPROC glad_snap_rhi_glRasterPos2s = NULL;
+PFNGLRASTERPOS2SVPROC glad_snap_rhi_glRasterPos2sv = NULL;
+PFNGLRASTERPOS3DPROC glad_snap_rhi_glRasterPos3d = NULL;
+PFNGLRASTERPOS3DVPROC glad_snap_rhi_glRasterPos3dv = NULL;
+PFNGLRASTERPOS3FPROC glad_snap_rhi_glRasterPos3f = NULL;
+PFNGLRASTERPOS3FVPROC glad_snap_rhi_glRasterPos3fv = NULL;
+PFNGLRASTERPOS3IPROC glad_snap_rhi_glRasterPos3i = NULL;
+PFNGLRASTERPOS3IVPROC glad_snap_rhi_glRasterPos3iv = NULL;
+PFNGLRASTERPOS3SPROC glad_snap_rhi_glRasterPos3s = NULL;
+PFNGLRASTERPOS3SVPROC glad_snap_rhi_glRasterPos3sv = NULL;
+PFNGLRASTERPOS4DPROC glad_snap_rhi_glRasterPos4d = NULL;
+PFNGLRASTERPOS4DVPROC glad_snap_rhi_glRasterPos4dv = NULL;
+PFNGLRASTERPOS4FPROC glad_snap_rhi_glRasterPos4f = NULL;
+PFNGLRASTERPOS4FVPROC glad_snap_rhi_glRasterPos4fv = NULL;
+PFNGLRASTERPOS4IPROC glad_snap_rhi_glRasterPos4i = NULL;
+PFNGLRASTERPOS4IVPROC glad_snap_rhi_glRasterPos4iv = NULL;
+PFNGLRASTERPOS4SPROC glad_snap_rhi_glRasterPos4s = NULL;
+PFNGLRASTERPOS4SVPROC glad_snap_rhi_glRasterPos4sv = NULL;
+PFNGLREADBUFFERPROC glad_snap_rhi_glReadBuffer = NULL;
+PFNGLREADPIXELSPROC glad_snap_rhi_glReadPixels = NULL;
+PFNGLREADNPIXELSPROC glad_snap_rhi_glReadnPixels = NULL;
+PFNGLRECTDPROC glad_snap_rhi_glRectd = NULL;
+PFNGLRECTDVPROC glad_snap_rhi_glRectdv = NULL;
+PFNGLRECTFPROC glad_snap_rhi_glRectf = NULL;
+PFNGLRECTFVPROC glad_snap_rhi_glRectfv = NULL;
+PFNGLRECTIPROC glad_snap_rhi_glRecti = NULL;
+PFNGLRECTIVPROC glad_snap_rhi_glRectiv = NULL;
+PFNGLRECTSPROC glad_snap_rhi_glRects = NULL;
+PFNGLRECTSVPROC glad_snap_rhi_glRectsv = NULL;
+PFNGLRELEASESHADERCOMPILERPROC glad_snap_rhi_glReleaseShaderCompiler = NULL;
+PFNGLRENDERMODEPROC glad_snap_rhi_glRenderMode = NULL;
+PFNGLRENDERBUFFERSTORAGEPROC glad_snap_rhi_glRenderbufferStorage = NULL;
+PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC glad_snap_rhi_glRenderbufferStorageMultisample = NULL;
+PFNGLRESUMETRANSFORMFEEDBACKPROC glad_snap_rhi_glResumeTransformFeedback = NULL;
+PFNGLROTATEDPROC glad_snap_rhi_glRotated = NULL;
+PFNGLROTATEFPROC glad_snap_rhi_glRotatef = NULL;
+PFNGLSAMPLECOVERAGEPROC glad_snap_rhi_glSampleCoverage = NULL;
+PFNGLSAMPLEMASKIPROC glad_snap_rhi_glSampleMaski = NULL;
+PFNGLSAMPLERPARAMETERIIVPROC glad_snap_rhi_glSamplerParameterIiv = NULL;
+PFNGLSAMPLERPARAMETERIUIVPROC glad_snap_rhi_glSamplerParameterIuiv = NULL;
+PFNGLSAMPLERPARAMETERFPROC glad_snap_rhi_glSamplerParameterf = NULL;
+PFNGLSAMPLERPARAMETERFVPROC glad_snap_rhi_glSamplerParameterfv = NULL;
+PFNGLSAMPLERPARAMETERIPROC glad_snap_rhi_glSamplerParameteri = NULL;
+PFNGLSAMPLERPARAMETERIVPROC glad_snap_rhi_glSamplerParameteriv = NULL;
+PFNGLSCALEDPROC glad_snap_rhi_glScaled = NULL;
+PFNGLSCALEFPROC glad_snap_rhi_glScalef = NULL;
+PFNGLSCISSORPROC glad_snap_rhi_glScissor = NULL;
+PFNGLSCISSORARRAYVPROC glad_snap_rhi_glScissorArrayv = NULL;
+PFNGLSCISSORINDEXEDPROC glad_snap_rhi_glScissorIndexed = NULL;
+PFNGLSCISSORINDEXEDVPROC glad_snap_rhi_glScissorIndexedv = NULL;
+PFNGLSECONDARYCOLOR3BPROC glad_snap_rhi_glSecondaryColor3b = NULL;
+PFNGLSECONDARYCOLOR3BVPROC glad_snap_rhi_glSecondaryColor3bv = NULL;
+PFNGLSECONDARYCOLOR3DPROC glad_snap_rhi_glSecondaryColor3d = NULL;
+PFNGLSECONDARYCOLOR3DVPROC glad_snap_rhi_glSecondaryColor3dv = NULL;
+PFNGLSECONDARYCOLOR3FPROC glad_snap_rhi_glSecondaryColor3f = NULL;
+PFNGLSECONDARYCOLOR3FVPROC glad_snap_rhi_glSecondaryColor3fv = NULL;
+PFNGLSECONDARYCOLOR3IPROC glad_snap_rhi_glSecondaryColor3i = NULL;
+PFNGLSECONDARYCOLOR3IVPROC glad_snap_rhi_glSecondaryColor3iv = NULL;
+PFNGLSECONDARYCOLOR3SPROC glad_snap_rhi_glSecondaryColor3s = NULL;
+PFNGLSECONDARYCOLOR3SVPROC glad_snap_rhi_glSecondaryColor3sv = NULL;
+PFNGLSECONDARYCOLOR3UBPROC glad_snap_rhi_glSecondaryColor3ub = NULL;
+PFNGLSECONDARYCOLOR3UBVPROC glad_snap_rhi_glSecondaryColor3ubv = NULL;
+PFNGLSECONDARYCOLOR3UIPROC glad_snap_rhi_glSecondaryColor3ui = NULL;
+PFNGLSECONDARYCOLOR3UIVPROC glad_snap_rhi_glSecondaryColor3uiv = NULL;
+PFNGLSECONDARYCOLOR3USPROC glad_snap_rhi_glSecondaryColor3us = NULL;
+PFNGLSECONDARYCOLOR3USVPROC glad_snap_rhi_glSecondaryColor3usv = NULL;
+PFNGLSECONDARYCOLORP3UIPROC glad_snap_rhi_glSecondaryColorP3ui = NULL;
+PFNGLSECONDARYCOLORP3UIVPROC glad_snap_rhi_glSecondaryColorP3uiv = NULL;
+PFNGLSECONDARYCOLORPOINTERPROC glad_snap_rhi_glSecondaryColorPointer = NULL;
+PFNGLSELECTBUFFERPROC glad_snap_rhi_glSelectBuffer = NULL;
+PFNGLSHADEMODELPROC glad_snap_rhi_glShadeModel = NULL;
+PFNGLSHADERBINARYPROC glad_snap_rhi_glShaderBinary = NULL;
+PFNGLSHADERSOURCEPROC glad_snap_rhi_glShaderSource = NULL;
+PFNGLSHADERSTORAGEBLOCKBINDINGPROC glad_snap_rhi_glShaderStorageBlockBinding = NULL;
+PFNGLSPECIALIZESHADERPROC glad_snap_rhi_glSpecializeShader = NULL;
+PFNGLSTENCILFUNCPROC glad_snap_rhi_glStencilFunc = NULL;
+PFNGLSTENCILFUNCSEPARATEPROC glad_snap_rhi_glStencilFuncSeparate = NULL;
+PFNGLSTENCILMASKPROC glad_snap_rhi_glStencilMask = NULL;
+PFNGLSTENCILMASKSEPARATEPROC glad_snap_rhi_glStencilMaskSeparate = NULL;
+PFNGLSTENCILOPPROC glad_snap_rhi_glStencilOp = NULL;
+PFNGLSTENCILOPSEPARATEPROC glad_snap_rhi_glStencilOpSeparate = NULL;
+PFNGLTEXBUFFERPROC glad_snap_rhi_glTexBuffer = NULL;
+PFNGLTEXBUFFERRANGEPROC glad_snap_rhi_glTexBufferRange = NULL;
+PFNGLTEXCOORD1DPROC glad_snap_rhi_glTexCoord1d = NULL;
+PFNGLTEXCOORD1DVPROC glad_snap_rhi_glTexCoord1dv = NULL;
+PFNGLTEXCOORD1FPROC glad_snap_rhi_glTexCoord1f = NULL;
+PFNGLTEXCOORD1FVPROC glad_snap_rhi_glTexCoord1fv = NULL;
+PFNGLTEXCOORD1IPROC glad_snap_rhi_glTexCoord1i = NULL;
+PFNGLTEXCOORD1IVPROC glad_snap_rhi_glTexCoord1iv = NULL;
+PFNGLTEXCOORD1SPROC glad_snap_rhi_glTexCoord1s = NULL;
+PFNGLTEXCOORD1SVPROC glad_snap_rhi_glTexCoord1sv = NULL;
+PFNGLTEXCOORD2DPROC glad_snap_rhi_glTexCoord2d = NULL;
+PFNGLTEXCOORD2DVPROC glad_snap_rhi_glTexCoord2dv = NULL;
+PFNGLTEXCOORD2FPROC glad_snap_rhi_glTexCoord2f = NULL;
+PFNGLTEXCOORD2FVPROC glad_snap_rhi_glTexCoord2fv = NULL;
+PFNGLTEXCOORD2IPROC glad_snap_rhi_glTexCoord2i = NULL;
+PFNGLTEXCOORD2IVPROC glad_snap_rhi_glTexCoord2iv = NULL;
+PFNGLTEXCOORD2SPROC glad_snap_rhi_glTexCoord2s = NULL;
+PFNGLTEXCOORD2SVPROC glad_snap_rhi_glTexCoord2sv = NULL;
+PFNGLTEXCOORD3DPROC glad_snap_rhi_glTexCoord3d = NULL;
+PFNGLTEXCOORD3DVPROC glad_snap_rhi_glTexCoord3dv = NULL;
+PFNGLTEXCOORD3FPROC glad_snap_rhi_glTexCoord3f = NULL;
+PFNGLTEXCOORD3FVPROC glad_snap_rhi_glTexCoord3fv = NULL;
+PFNGLTEXCOORD3IPROC glad_snap_rhi_glTexCoord3i = NULL;
+PFNGLTEXCOORD3IVPROC glad_snap_rhi_glTexCoord3iv = NULL;
+PFNGLTEXCOORD3SPROC glad_snap_rhi_glTexCoord3s = NULL;
+PFNGLTEXCOORD3SVPROC glad_snap_rhi_glTexCoord3sv = NULL;
+PFNGLTEXCOORD4DPROC glad_snap_rhi_glTexCoord4d = NULL;
+PFNGLTEXCOORD4DVPROC glad_snap_rhi_glTexCoord4dv = NULL;
+PFNGLTEXCOORD4FPROC glad_snap_rhi_glTexCoord4f = NULL;
+PFNGLTEXCOORD4FVPROC glad_snap_rhi_glTexCoord4fv = NULL;
+PFNGLTEXCOORD4IPROC glad_snap_rhi_glTexCoord4i = NULL;
+PFNGLTEXCOORD4IVPROC glad_snap_rhi_glTexCoord4iv = NULL;
+PFNGLTEXCOORD4SPROC glad_snap_rhi_glTexCoord4s = NULL;
+PFNGLTEXCOORD4SVPROC glad_snap_rhi_glTexCoord4sv = NULL;
+PFNGLTEXCOORDP1UIPROC glad_snap_rhi_glTexCoordP1ui = NULL;
+PFNGLTEXCOORDP1UIVPROC glad_snap_rhi_glTexCoordP1uiv = NULL;
+PFNGLTEXCOORDP2UIPROC glad_snap_rhi_glTexCoordP2ui = NULL;
+PFNGLTEXCOORDP2UIVPROC glad_snap_rhi_glTexCoordP2uiv = NULL;
+PFNGLTEXCOORDP3UIPROC glad_snap_rhi_glTexCoordP3ui = NULL;
+PFNGLTEXCOORDP3UIVPROC glad_snap_rhi_glTexCoordP3uiv = NULL;
+PFNGLTEXCOORDP4UIPROC glad_snap_rhi_glTexCoordP4ui = NULL;
+PFNGLTEXCOORDP4UIVPROC glad_snap_rhi_glTexCoordP4uiv = NULL;
+PFNGLTEXCOORDPOINTERPROC glad_snap_rhi_glTexCoordPointer = NULL;
+PFNGLTEXENVFPROC glad_snap_rhi_glTexEnvf = NULL;
+PFNGLTEXENVFVPROC glad_snap_rhi_glTexEnvfv = NULL;
+PFNGLTEXENVIPROC glad_snap_rhi_glTexEnvi = NULL;
+PFNGLTEXENVIVPROC glad_snap_rhi_glTexEnviv = NULL;
+PFNGLTEXGENDPROC glad_snap_rhi_glTexGend = NULL;
+PFNGLTEXGENDVPROC glad_snap_rhi_glTexGendv = NULL;
+PFNGLTEXGENFPROC glad_snap_rhi_glTexGenf = NULL;
+PFNGLTEXGENFVPROC glad_snap_rhi_glTexGenfv = NULL;
+PFNGLTEXGENIPROC glad_snap_rhi_glTexGeni = NULL;
+PFNGLTEXGENIVPROC glad_snap_rhi_glTexGeniv = NULL;
+PFNGLTEXIMAGE1DPROC glad_snap_rhi_glTexImage1D = NULL;
+PFNGLTEXIMAGE2DPROC glad_snap_rhi_glTexImage2D = NULL;
+PFNGLTEXIMAGE2DMULTISAMPLEPROC glad_snap_rhi_glTexImage2DMultisample = NULL;
+PFNGLTEXIMAGE3DPROC glad_snap_rhi_glTexImage3D = NULL;
+PFNGLTEXIMAGE3DMULTISAMPLEPROC glad_snap_rhi_glTexImage3DMultisample = NULL;
+PFNGLTEXPARAMETERIIVPROC glad_snap_rhi_glTexParameterIiv = NULL;
+PFNGLTEXPARAMETERIUIVPROC glad_snap_rhi_glTexParameterIuiv = NULL;
+PFNGLTEXPARAMETERFPROC glad_snap_rhi_glTexParameterf = NULL;
+PFNGLTEXPARAMETERFVPROC glad_snap_rhi_glTexParameterfv = NULL;
+PFNGLTEXPARAMETERIPROC glad_snap_rhi_glTexParameteri = NULL;
+PFNGLTEXPARAMETERIVPROC glad_snap_rhi_glTexParameteriv = NULL;
+PFNGLTEXSTORAGE1DPROC glad_snap_rhi_glTexStorage1D = NULL;
+PFNGLTEXSTORAGE2DPROC glad_snap_rhi_glTexStorage2D = NULL;
+PFNGLTEXSTORAGE2DMULTISAMPLEPROC glad_snap_rhi_glTexStorage2DMultisample = NULL;
+PFNGLTEXSTORAGE3DPROC glad_snap_rhi_glTexStorage3D = NULL;
+PFNGLTEXSTORAGE3DMULTISAMPLEPROC glad_snap_rhi_glTexStorage3DMultisample = NULL;
+PFNGLTEXSUBIMAGE1DPROC glad_snap_rhi_glTexSubImage1D = NULL;
+PFNGLTEXSUBIMAGE2DPROC glad_snap_rhi_glTexSubImage2D = NULL;
+PFNGLTEXSUBIMAGE3DPROC glad_snap_rhi_glTexSubImage3D = NULL;
+PFNGLTEXTUREBARRIERPROC glad_snap_rhi_glTextureBarrier = NULL;
+PFNGLTEXTUREBUFFERPROC glad_snap_rhi_glTextureBuffer = NULL;
+PFNGLTEXTUREBUFFERRANGEPROC glad_snap_rhi_glTextureBufferRange = NULL;
+PFNGLTEXTUREPARAMETERIIVPROC glad_snap_rhi_glTextureParameterIiv = NULL;
+PFNGLTEXTUREPARAMETERIUIVPROC glad_snap_rhi_glTextureParameterIuiv = NULL;
+PFNGLTEXTUREPARAMETERFPROC glad_snap_rhi_glTextureParameterf = NULL;
+PFNGLTEXTUREPARAMETERFVPROC glad_snap_rhi_glTextureParameterfv = NULL;
+PFNGLTEXTUREPARAMETERIPROC glad_snap_rhi_glTextureParameteri = NULL;
+PFNGLTEXTUREPARAMETERIVPROC glad_snap_rhi_glTextureParameteriv = NULL;
+PFNGLTEXTURESTORAGE1DPROC glad_snap_rhi_glTextureStorage1D = NULL;
+PFNGLTEXTURESTORAGE2DPROC glad_snap_rhi_glTextureStorage2D = NULL;
+PFNGLTEXTURESTORAGE2DMULTISAMPLEPROC glad_snap_rhi_glTextureStorage2DMultisample = NULL;
+PFNGLTEXTURESTORAGE3DPROC glad_snap_rhi_glTextureStorage3D = NULL;
+PFNGLTEXTURESTORAGE3DMULTISAMPLEPROC glad_snap_rhi_glTextureStorage3DMultisample = NULL;
+PFNGLTEXTURESUBIMAGE1DPROC glad_snap_rhi_glTextureSubImage1D = NULL;
+PFNGLTEXTURESUBIMAGE2DPROC glad_snap_rhi_glTextureSubImage2D = NULL;
+PFNGLTEXTURESUBIMAGE3DPROC glad_snap_rhi_glTextureSubImage3D = NULL;
+PFNGLTEXTUREVIEWPROC glad_snap_rhi_glTextureView = NULL;
+PFNGLTRANSFORMFEEDBACKBUFFERBASEPROC glad_snap_rhi_glTransformFeedbackBufferBase = NULL;
+PFNGLTRANSFORMFEEDBACKBUFFERRANGEPROC glad_snap_rhi_glTransformFeedbackBufferRange = NULL;
+PFNGLTRANSFORMFEEDBACKVARYINGSPROC glad_snap_rhi_glTransformFeedbackVaryings = NULL;
+PFNGLTRANSLATEDPROC glad_snap_rhi_glTranslated = NULL;
+PFNGLTRANSLATEFPROC glad_snap_rhi_glTranslatef = NULL;
+PFNGLUNIFORM1DPROC glad_snap_rhi_glUniform1d = NULL;
+PFNGLUNIFORM1DVPROC glad_snap_rhi_glUniform1dv = NULL;
+PFNGLUNIFORM1FPROC glad_snap_rhi_glUniform1f = NULL;
+PFNGLUNIFORM1FVPROC glad_snap_rhi_glUniform1fv = NULL;
+PFNGLUNIFORM1IPROC glad_snap_rhi_glUniform1i = NULL;
+PFNGLUNIFORM1IVPROC glad_snap_rhi_glUniform1iv = NULL;
+PFNGLUNIFORM1UIPROC glad_snap_rhi_glUniform1ui = NULL;
+PFNGLUNIFORM1UIVPROC glad_snap_rhi_glUniform1uiv = NULL;
+PFNGLUNIFORM2DPROC glad_snap_rhi_glUniform2d = NULL;
+PFNGLUNIFORM2DVPROC glad_snap_rhi_glUniform2dv = NULL;
+PFNGLUNIFORM2FPROC glad_snap_rhi_glUniform2f = NULL;
+PFNGLUNIFORM2FVPROC glad_snap_rhi_glUniform2fv = NULL;
+PFNGLUNIFORM2IPROC glad_snap_rhi_glUniform2i = NULL;
+PFNGLUNIFORM2IVPROC glad_snap_rhi_glUniform2iv = NULL;
+PFNGLUNIFORM2UIPROC glad_snap_rhi_glUniform2ui = NULL;
+PFNGLUNIFORM2UIVPROC glad_snap_rhi_glUniform2uiv = NULL;
+PFNGLUNIFORM3DPROC glad_snap_rhi_glUniform3d = NULL;
+PFNGLUNIFORM3DVPROC glad_snap_rhi_glUniform3dv = NULL;
+PFNGLUNIFORM3FPROC glad_snap_rhi_glUniform3f = NULL;
+PFNGLUNIFORM3FVPROC glad_snap_rhi_glUniform3fv = NULL;
+PFNGLUNIFORM3IPROC glad_snap_rhi_glUniform3i = NULL;
+PFNGLUNIFORM3IVPROC glad_snap_rhi_glUniform3iv = NULL;
+PFNGLUNIFORM3UIPROC glad_snap_rhi_glUniform3ui = NULL;
+PFNGLUNIFORM3UIVPROC glad_snap_rhi_glUniform3uiv = NULL;
+PFNGLUNIFORM4DPROC glad_snap_rhi_glUniform4d = NULL;
+PFNGLUNIFORM4DVPROC glad_snap_rhi_glUniform4dv = NULL;
+PFNGLUNIFORM4FPROC glad_snap_rhi_glUniform4f = NULL;
+PFNGLUNIFORM4FVPROC glad_snap_rhi_glUniform4fv = NULL;
+PFNGLUNIFORM4IPROC glad_snap_rhi_glUniform4i = NULL;
+PFNGLUNIFORM4IVPROC glad_snap_rhi_glUniform4iv = NULL;
+PFNGLUNIFORM4UIPROC glad_snap_rhi_glUniform4ui = NULL;
+PFNGLUNIFORM4UIVPROC glad_snap_rhi_glUniform4uiv = NULL;
+PFNGLUNIFORMBLOCKBINDINGPROC glad_snap_rhi_glUniformBlockBinding = NULL;
+PFNGLUNIFORMMATRIX2DVPROC glad_snap_rhi_glUniformMatrix2dv = NULL;
+PFNGLUNIFORMMATRIX2FVPROC glad_snap_rhi_glUniformMatrix2fv = NULL;
+PFNGLUNIFORMMATRIX2X3DVPROC glad_snap_rhi_glUniformMatrix2x3dv = NULL;
+PFNGLUNIFORMMATRIX2X3FVPROC glad_snap_rhi_glUniformMatrix2x3fv = NULL;
+PFNGLUNIFORMMATRIX2X4DVPROC glad_snap_rhi_glUniformMatrix2x4dv = NULL;
+PFNGLUNIFORMMATRIX2X4FVPROC glad_snap_rhi_glUniformMatrix2x4fv = NULL;
+PFNGLUNIFORMMATRIX3DVPROC glad_snap_rhi_glUniformMatrix3dv = NULL;
+PFNGLUNIFORMMATRIX3FVPROC glad_snap_rhi_glUniformMatrix3fv = NULL;
+PFNGLUNIFORMMATRIX3X2DVPROC glad_snap_rhi_glUniformMatrix3x2dv = NULL;
+PFNGLUNIFORMMATRIX3X2FVPROC glad_snap_rhi_glUniformMatrix3x2fv = NULL;
+PFNGLUNIFORMMATRIX3X4DVPROC glad_snap_rhi_glUniformMatrix3x4dv = NULL;
+PFNGLUNIFORMMATRIX3X4FVPROC glad_snap_rhi_glUniformMatrix3x4fv = NULL;
+PFNGLUNIFORMMATRIX4DVPROC glad_snap_rhi_glUniformMatrix4dv = NULL;
+PFNGLUNIFORMMATRIX4FVPROC glad_snap_rhi_glUniformMatrix4fv = NULL;
+PFNGLUNIFORMMATRIX4X2DVPROC glad_snap_rhi_glUniformMatrix4x2dv = NULL;
+PFNGLUNIFORMMATRIX4X2FVPROC glad_snap_rhi_glUniformMatrix4x2fv = NULL;
+PFNGLUNIFORMMATRIX4X3DVPROC glad_snap_rhi_glUniformMatrix4x3dv = NULL;
+PFNGLUNIFORMMATRIX4X3FVPROC glad_snap_rhi_glUniformMatrix4x3fv = NULL;
+PFNGLUNIFORMSUBROUTINESUIVPROC glad_snap_rhi_glUniformSubroutinesuiv = NULL;
+PFNGLUNMAPBUFFERPROC glad_snap_rhi_glUnmapBuffer = NULL;
+PFNGLUNMAPNAMEDBUFFERPROC glad_snap_rhi_glUnmapNamedBuffer = NULL;
+PFNGLUSEPROGRAMPROC glad_snap_rhi_glUseProgram = NULL;
+PFNGLUSEPROGRAMSTAGESPROC glad_snap_rhi_glUseProgramStages = NULL;
+PFNGLVALIDATEPROGRAMPROC glad_snap_rhi_glValidateProgram = NULL;
+PFNGLVALIDATEPROGRAMPIPELINEPROC glad_snap_rhi_glValidateProgramPipeline = NULL;
+PFNGLVERTEX2DPROC glad_snap_rhi_glVertex2d = NULL;
+PFNGLVERTEX2DVPROC glad_snap_rhi_glVertex2dv = NULL;
+PFNGLVERTEX2FPROC glad_snap_rhi_glVertex2f = NULL;
+PFNGLVERTEX2FVPROC glad_snap_rhi_glVertex2fv = NULL;
+PFNGLVERTEX2IPROC glad_snap_rhi_glVertex2i = NULL;
+PFNGLVERTEX2IVPROC glad_snap_rhi_glVertex2iv = NULL;
+PFNGLVERTEX2SPROC glad_snap_rhi_glVertex2s = NULL;
+PFNGLVERTEX2SVPROC glad_snap_rhi_glVertex2sv = NULL;
+PFNGLVERTEX3DPROC glad_snap_rhi_glVertex3d = NULL;
+PFNGLVERTEX3DVPROC glad_snap_rhi_glVertex3dv = NULL;
+PFNGLVERTEX3FPROC glad_snap_rhi_glVertex3f = NULL;
+PFNGLVERTEX3FVPROC glad_snap_rhi_glVertex3fv = NULL;
+PFNGLVERTEX3IPROC glad_snap_rhi_glVertex3i = NULL;
+PFNGLVERTEX3IVPROC glad_snap_rhi_glVertex3iv = NULL;
+PFNGLVERTEX3SPROC glad_snap_rhi_glVertex3s = NULL;
+PFNGLVERTEX3SVPROC glad_snap_rhi_glVertex3sv = NULL;
+PFNGLVERTEX4DPROC glad_snap_rhi_glVertex4d = NULL;
+PFNGLVERTEX4DVPROC glad_snap_rhi_glVertex4dv = NULL;
+PFNGLVERTEX4FPROC glad_snap_rhi_glVertex4f = NULL;
+PFNGLVERTEX4FVPROC glad_snap_rhi_glVertex4fv = NULL;
+PFNGLVERTEX4IPROC glad_snap_rhi_glVertex4i = NULL;
+PFNGLVERTEX4IVPROC glad_snap_rhi_glVertex4iv = NULL;
+PFNGLVERTEX4SPROC glad_snap_rhi_glVertex4s = NULL;
+PFNGLVERTEX4SVPROC glad_snap_rhi_glVertex4sv = NULL;
+PFNGLVERTEXARRAYATTRIBBINDINGPROC glad_snap_rhi_glVertexArrayAttribBinding = NULL;
+PFNGLVERTEXARRAYATTRIBFORMATPROC glad_snap_rhi_glVertexArrayAttribFormat = NULL;
+PFNGLVERTEXARRAYATTRIBIFORMATPROC glad_snap_rhi_glVertexArrayAttribIFormat = NULL;
+PFNGLVERTEXARRAYATTRIBLFORMATPROC glad_snap_rhi_glVertexArrayAttribLFormat = NULL;
+PFNGLVERTEXARRAYBINDINGDIVISORPROC glad_snap_rhi_glVertexArrayBindingDivisor = NULL;
+PFNGLVERTEXARRAYELEMENTBUFFERPROC glad_snap_rhi_glVertexArrayElementBuffer = NULL;
+PFNGLVERTEXARRAYVERTEXBUFFERPROC glad_snap_rhi_glVertexArrayVertexBuffer = NULL;
+PFNGLVERTEXARRAYVERTEXBUFFERSPROC glad_snap_rhi_glVertexArrayVertexBuffers = NULL;
+PFNGLVERTEXATTRIB1DPROC glad_snap_rhi_glVertexAttrib1d = NULL;
+PFNGLVERTEXATTRIB1DVPROC glad_snap_rhi_glVertexAttrib1dv = NULL;
+PFNGLVERTEXATTRIB1FPROC glad_snap_rhi_glVertexAttrib1f = NULL;
+PFNGLVERTEXATTRIB1FVPROC glad_snap_rhi_glVertexAttrib1fv = NULL;
+PFNGLVERTEXATTRIB1SPROC glad_snap_rhi_glVertexAttrib1s = NULL;
+PFNGLVERTEXATTRIB1SVPROC glad_snap_rhi_glVertexAttrib1sv = NULL;
+PFNGLVERTEXATTRIB2DPROC glad_snap_rhi_glVertexAttrib2d = NULL;
+PFNGLVERTEXATTRIB2DVPROC glad_snap_rhi_glVertexAttrib2dv = NULL;
+PFNGLVERTEXATTRIB2FPROC glad_snap_rhi_glVertexAttrib2f = NULL;
+PFNGLVERTEXATTRIB2FVPROC glad_snap_rhi_glVertexAttrib2fv = NULL;
+PFNGLVERTEXATTRIB2SPROC glad_snap_rhi_glVertexAttrib2s = NULL;
+PFNGLVERTEXATTRIB2SVPROC glad_snap_rhi_glVertexAttrib2sv = NULL;
+PFNGLVERTEXATTRIB3DPROC glad_snap_rhi_glVertexAttrib3d = NULL;
+PFNGLVERTEXATTRIB3DVPROC glad_snap_rhi_glVertexAttrib3dv = NULL;
+PFNGLVERTEXATTRIB3FPROC glad_snap_rhi_glVertexAttrib3f = NULL;
+PFNGLVERTEXATTRIB3FVPROC glad_snap_rhi_glVertexAttrib3fv = NULL;
+PFNGLVERTEXATTRIB3SPROC glad_snap_rhi_glVertexAttrib3s = NULL;
+PFNGLVERTEXATTRIB3SVPROC glad_snap_rhi_glVertexAttrib3sv = NULL;
+PFNGLVERTEXATTRIB4NBVPROC glad_snap_rhi_glVertexAttrib4Nbv = NULL;
+PFNGLVERTEXATTRIB4NIVPROC glad_snap_rhi_glVertexAttrib4Niv = NULL;
+PFNGLVERTEXATTRIB4NSVPROC glad_snap_rhi_glVertexAttrib4Nsv = NULL;
+PFNGLVERTEXATTRIB4NUBPROC glad_snap_rhi_glVertexAttrib4Nub = NULL;
+PFNGLVERTEXATTRIB4NUBVPROC glad_snap_rhi_glVertexAttrib4Nubv = NULL;
+PFNGLVERTEXATTRIB4NUIVPROC glad_snap_rhi_glVertexAttrib4Nuiv = NULL;
+PFNGLVERTEXATTRIB4NUSVPROC glad_snap_rhi_glVertexAttrib4Nusv = NULL;
+PFNGLVERTEXATTRIB4BVPROC glad_snap_rhi_glVertexAttrib4bv = NULL;
+PFNGLVERTEXATTRIB4DPROC glad_snap_rhi_glVertexAttrib4d = NULL;
+PFNGLVERTEXATTRIB4DVPROC glad_snap_rhi_glVertexAttrib4dv = NULL;
+PFNGLVERTEXATTRIB4FPROC glad_snap_rhi_glVertexAttrib4f = NULL;
+PFNGLVERTEXATTRIB4FVPROC glad_snap_rhi_glVertexAttrib4fv = NULL;
+PFNGLVERTEXATTRIB4IVPROC glad_snap_rhi_glVertexAttrib4iv = NULL;
+PFNGLVERTEXATTRIB4SPROC glad_snap_rhi_glVertexAttrib4s = NULL;
+PFNGLVERTEXATTRIB4SVPROC glad_snap_rhi_glVertexAttrib4sv = NULL;
+PFNGLVERTEXATTRIB4UBVPROC glad_snap_rhi_glVertexAttrib4ubv = NULL;
+PFNGLVERTEXATTRIB4UIVPROC glad_snap_rhi_glVertexAttrib4uiv = NULL;
+PFNGLVERTEXATTRIB4USVPROC glad_snap_rhi_glVertexAttrib4usv = NULL;
+PFNGLVERTEXATTRIBBINDINGPROC glad_snap_rhi_glVertexAttribBinding = NULL;
+PFNGLVERTEXATTRIBDIVISORPROC glad_snap_rhi_glVertexAttribDivisor = NULL;
+PFNGLVERTEXATTRIBFORMATPROC glad_snap_rhi_glVertexAttribFormat = NULL;
+PFNGLVERTEXATTRIBI1IPROC glad_snap_rhi_glVertexAttribI1i = NULL;
+PFNGLVERTEXATTRIBI1IVPROC glad_snap_rhi_glVertexAttribI1iv = NULL;
+PFNGLVERTEXATTRIBI1UIPROC glad_snap_rhi_glVertexAttribI1ui = NULL;
+PFNGLVERTEXATTRIBI1UIVPROC glad_snap_rhi_glVertexAttribI1uiv = NULL;
+PFNGLVERTEXATTRIBI2IPROC glad_snap_rhi_glVertexAttribI2i = NULL;
+PFNGLVERTEXATTRIBI2IVPROC glad_snap_rhi_glVertexAttribI2iv = NULL;
+PFNGLVERTEXATTRIBI2UIPROC glad_snap_rhi_glVertexAttribI2ui = NULL;
+PFNGLVERTEXATTRIBI2UIVPROC glad_snap_rhi_glVertexAttribI2uiv = NULL;
+PFNGLVERTEXATTRIBI3IPROC glad_snap_rhi_glVertexAttribI3i = NULL;
+PFNGLVERTEXATTRIBI3IVPROC glad_snap_rhi_glVertexAttribI3iv = NULL;
+PFNGLVERTEXATTRIBI3UIPROC glad_snap_rhi_glVertexAttribI3ui = NULL;
+PFNGLVERTEXATTRIBI3UIVPROC glad_snap_rhi_glVertexAttribI3uiv = NULL;
+PFNGLVERTEXATTRIBI4BVPROC glad_snap_rhi_glVertexAttribI4bv = NULL;
+PFNGLVERTEXATTRIBI4IPROC glad_snap_rhi_glVertexAttribI4i = NULL;
+PFNGLVERTEXATTRIBI4IVPROC glad_snap_rhi_glVertexAttribI4iv = NULL;
+PFNGLVERTEXATTRIBI4SVPROC glad_snap_rhi_glVertexAttribI4sv = NULL;
+PFNGLVERTEXATTRIBI4UBVPROC glad_snap_rhi_glVertexAttribI4ubv = NULL;
+PFNGLVERTEXATTRIBI4UIPROC glad_snap_rhi_glVertexAttribI4ui = NULL;
+PFNGLVERTEXATTRIBI4UIVPROC glad_snap_rhi_glVertexAttribI4uiv = NULL;
+PFNGLVERTEXATTRIBI4USVPROC glad_snap_rhi_glVertexAttribI4usv = NULL;
+PFNGLVERTEXATTRIBIFORMATPROC glad_snap_rhi_glVertexAttribIFormat = NULL;
+PFNGLVERTEXATTRIBIPOINTERPROC glad_snap_rhi_glVertexAttribIPointer = NULL;
+PFNGLVERTEXATTRIBL1DPROC glad_snap_rhi_glVertexAttribL1d = NULL;
+PFNGLVERTEXATTRIBL1DVPROC glad_snap_rhi_glVertexAttribL1dv = NULL;
+PFNGLVERTEXATTRIBL2DPROC glad_snap_rhi_glVertexAttribL2d = NULL;
+PFNGLVERTEXATTRIBL2DVPROC glad_snap_rhi_glVertexAttribL2dv = NULL;
+PFNGLVERTEXATTRIBL3DPROC glad_snap_rhi_glVertexAttribL3d = NULL;
+PFNGLVERTEXATTRIBL3DVPROC glad_snap_rhi_glVertexAttribL3dv = NULL;
+PFNGLVERTEXATTRIBL4DPROC glad_snap_rhi_glVertexAttribL4d = NULL;
+PFNGLVERTEXATTRIBL4DVPROC glad_snap_rhi_glVertexAttribL4dv = NULL;
+PFNGLVERTEXATTRIBLFORMATPROC glad_snap_rhi_glVertexAttribLFormat = NULL;
+PFNGLVERTEXATTRIBLPOINTERPROC glad_snap_rhi_glVertexAttribLPointer = NULL;
+PFNGLVERTEXATTRIBP1UIPROC glad_snap_rhi_glVertexAttribP1ui = NULL;
+PFNGLVERTEXATTRIBP1UIVPROC glad_snap_rhi_glVertexAttribP1uiv = NULL;
+PFNGLVERTEXATTRIBP2UIPROC glad_snap_rhi_glVertexAttribP2ui = NULL;
+PFNGLVERTEXATTRIBP2UIVPROC glad_snap_rhi_glVertexAttribP2uiv = NULL;
+PFNGLVERTEXATTRIBP3UIPROC glad_snap_rhi_glVertexAttribP3ui = NULL;
+PFNGLVERTEXATTRIBP3UIVPROC glad_snap_rhi_glVertexAttribP3uiv = NULL;
+PFNGLVERTEXATTRIBP4UIPROC glad_snap_rhi_glVertexAttribP4ui = NULL;
+PFNGLVERTEXATTRIBP4UIVPROC glad_snap_rhi_glVertexAttribP4uiv = NULL;
+PFNGLVERTEXATTRIBPOINTERPROC glad_snap_rhi_glVertexAttribPointer = NULL;
+PFNGLVERTEXBINDINGDIVISORPROC glad_snap_rhi_glVertexBindingDivisor = NULL;
+PFNGLVERTEXP2UIPROC glad_snap_rhi_glVertexP2ui = NULL;
+PFNGLVERTEXP2UIVPROC glad_snap_rhi_glVertexP2uiv = NULL;
+PFNGLVERTEXP3UIPROC glad_snap_rhi_glVertexP3ui = NULL;
+PFNGLVERTEXP3UIVPROC glad_snap_rhi_glVertexP3uiv = NULL;
+PFNGLVERTEXP4UIPROC glad_snap_rhi_glVertexP4ui = NULL;
+PFNGLVERTEXP4UIVPROC glad_snap_rhi_glVertexP4uiv = NULL;
+PFNGLVERTEXPOINTERPROC glad_snap_rhi_glVertexPointer = NULL;
+PFNGLVIEWPORTPROC glad_snap_rhi_glViewport = NULL;
+PFNGLVIEWPORTARRAYVPROC glad_snap_rhi_glViewportArrayv = NULL;
+PFNGLVIEWPORTINDEXEDFPROC glad_snap_rhi_glViewportIndexedf = NULL;
+PFNGLVIEWPORTINDEXEDFVPROC glad_snap_rhi_glViewportIndexedfv = NULL;
+PFNGLWAITSYNCPROC glad_snap_rhi_glWaitSync = NULL;
+PFNGLWINDOWPOS2DPROC glad_snap_rhi_glWindowPos2d = NULL;
+PFNGLWINDOWPOS2DVPROC glad_snap_rhi_glWindowPos2dv = NULL;
+PFNGLWINDOWPOS2FPROC glad_snap_rhi_glWindowPos2f = NULL;
+PFNGLWINDOWPOS2FVPROC glad_snap_rhi_glWindowPos2fv = NULL;
+PFNGLWINDOWPOS2IPROC glad_snap_rhi_glWindowPos2i = NULL;
+PFNGLWINDOWPOS2IVPROC glad_snap_rhi_glWindowPos2iv = NULL;
+PFNGLWINDOWPOS2SPROC glad_snap_rhi_glWindowPos2s = NULL;
+PFNGLWINDOWPOS2SVPROC glad_snap_rhi_glWindowPos2sv = NULL;
+PFNGLWINDOWPOS3DPROC glad_snap_rhi_glWindowPos3d = NULL;
+PFNGLWINDOWPOS3DVPROC glad_snap_rhi_glWindowPos3dv = NULL;
+PFNGLWINDOWPOS3FPROC glad_snap_rhi_glWindowPos3f = NULL;
+PFNGLWINDOWPOS3FVPROC glad_snap_rhi_glWindowPos3fv = NULL;
+PFNGLWINDOWPOS3IPROC glad_snap_rhi_glWindowPos3i = NULL;
+PFNGLWINDOWPOS3IVPROC glad_snap_rhi_glWindowPos3iv = NULL;
+PFNGLWINDOWPOS3SPROC glad_snap_rhi_glWindowPos3s = NULL;
+PFNGLWINDOWPOS3SVPROC glad_snap_rhi_glWindowPos3sv = NULL;
+PFNGLBEGINQUERYEXTPROC glad_snap_rhi_glBeginQueryEXT = NULL;
+PFNGLDELETEQUERIESEXTPROC glad_snap_rhi_glDeleteQueriesEXT = NULL;
+PFNGLENDQUERYEXTPROC glad_snap_rhi_glEndQueryEXT = NULL;
+PFNGLGENQUERIESEXTPROC glad_snap_rhi_glGenQueriesEXT = NULL;
+PFNGLGETINTEGER64VEXTPROC glad_snap_rhi_glGetInteger64vEXT = NULL;
+PFNGLGETQUERYOBJECTI64VEXTPROC glad_snap_rhi_glGetQueryObjecti64vEXT = NULL;
+PFNGLGETQUERYOBJECTIVEXTPROC glad_snap_rhi_glGetQueryObjectivEXT = NULL;
+PFNGLGETQUERYOBJECTUI64VEXTPROC glad_snap_rhi_glGetQueryObjectui64vEXT = NULL;
+PFNGLGETQUERYOBJECTUIVEXTPROC glad_snap_rhi_glGetQueryObjectuivEXT = NULL;
+PFNGLGETQUERYIVEXTPROC glad_snap_rhi_glGetQueryivEXT = NULL;
+PFNGLISQUERYEXTPROC glad_snap_rhi_glIsQueryEXT = NULL;
+PFNGLQUERYCOUNTEREXTPROC glad_snap_rhi_glQueryCounterEXT = NULL;
+PFNGLGETSAMPLERPARAMETERIIVEXTPROC glad_snap_rhi_glGetSamplerParameterIivEXT = NULL;
+PFNGLGETSAMPLERPARAMETERIUIVEXTPROC glad_snap_rhi_glGetSamplerParameterIuivEXT = NULL;
+PFNGLGETTEXPARAMETERIIVEXTPROC glad_snap_rhi_glGetTexParameterIivEXT = NULL;
+PFNGLGETTEXPARAMETERIUIVEXTPROC glad_snap_rhi_glGetTexParameterIuivEXT = NULL;
+PFNGLSAMPLERPARAMETERIIVEXTPROC glad_snap_rhi_glSamplerParameterIivEXT = NULL;
+PFNGLSAMPLERPARAMETERIUIVEXTPROC glad_snap_rhi_glSamplerParameterIuivEXT = NULL;
+PFNGLTEXPARAMETERIIVEXTPROC glad_snap_rhi_glTexParameterIivEXT = NULL;
+PFNGLTEXPARAMETERIUIVEXTPROC glad_snap_rhi_glTexParameterIuivEXT = NULL;
+PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC glad_snap_rhi_glFramebufferTexture2DMultisampleEXT = NULL;
+PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC glad_snap_rhi_glRenderbufferStorageMultisampleEXT = NULL;
+PFNGLCLIENTWAITSYNCAPPLEPROC glad_snap_rhi_glClientWaitSyncAPPLE = NULL;
+PFNGLDELETESYNCAPPLEPROC glad_snap_rhi_glDeleteSyncAPPLE = NULL;
+PFNGLFENCESYNCAPPLEPROC glad_snap_rhi_glFenceSyncAPPLE = NULL;
+PFNGLGETINTEGER64VAPPLEPROC glad_snap_rhi_glGetInteger64vAPPLE = NULL;
+PFNGLGETSYNCIVAPPLEPROC glad_snap_rhi_glGetSyncivAPPLE = NULL;
+PFNGLISSYNCAPPLEPROC glad_snap_rhi_glIsSyncAPPLE = NULL;
+PFNGLWAITSYNCAPPLEPROC glad_snap_rhi_glWaitSyncAPPLE = NULL;
+PFNGLRENDERBUFFERSTORAGEMULTISAMPLEAPPLEPROC glad_snap_rhi_glRenderbufferStorageMultisampleAPPLE = NULL;
+PFNGLRESOLVEMULTISAMPLEFRAMEBUFFERAPPLEPROC glad_snap_rhi_glResolveMultisampleFramebufferAPPLE = NULL;
+PFNGLCREATEMEMORYOBJECTSEXTPROC glad_snap_rhi_glCreateMemoryObjectsEXT = NULL;
+PFNGLDELETEMEMORYOBJECTSEXTPROC glad_snap_rhi_glDeleteMemoryObjectsEXT = NULL;
+PFNGLTEXSTORAGEMEM2DEXTPROC glad_snap_rhi_glTexStorageMem2DEXT = NULL;
+PFNGLTEXSTORAGEMEM3DEXTPROC glad_snap_rhi_glTexStorageMem3DEXT = NULL;
+PFNGLIMPORTMEMORYFDEXTPROC glad_snap_rhi_glImportMemoryFdEXT = NULL;
+PFNGLIMPORTMEMORYWIN32HANDLEEXTPROC glad_snap_rhi_glImportMemoryWin32HandleEXT = NULL;
+
+static void glad_snap_rhi_gl_load_GL_VERSION_1_0(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glAccum = (PFNGLACCUMPROC)load(userptr, "glAccum");
+    glad_snap_rhi_glAlphaFunc = (PFNGLALPHAFUNCPROC)load(userptr, "glAlphaFunc");
+    glad_snap_rhi_glBegin = (PFNGLBEGINPROC)load(userptr, "glBegin");
+    glad_snap_rhi_glBitmap = (PFNGLBITMAPPROC)load(userptr, "glBitmap");
+    glad_snap_rhi_glBlendFunc = (PFNGLBLENDFUNCPROC)load(userptr, "glBlendFunc");
+    glad_snap_rhi_glCallList = (PFNGLCALLLISTPROC)load(userptr, "glCallList");
+    glad_snap_rhi_glCallLists = (PFNGLCALLLISTSPROC)load(userptr, "glCallLists");
+    glad_snap_rhi_glClear = (PFNGLCLEARPROC)load(userptr, "glClear");
+    glad_snap_rhi_glClearAccum = (PFNGLCLEARACCUMPROC)load(userptr, "glClearAccum");
+    glad_snap_rhi_glClearColor = (PFNGLCLEARCOLORPROC)load(userptr, "glClearColor");
+    glad_snap_rhi_glClearDepth = (PFNGLCLEARDEPTHPROC)load(userptr, "glClearDepth");
+    glad_snap_rhi_glClearIndex = (PFNGLCLEARINDEXPROC)load(userptr, "glClearIndex");
+    glad_snap_rhi_glClearStencil = (PFNGLCLEARSTENCILPROC)load(userptr, "glClearStencil");
+    glad_snap_rhi_glClipPlane = (PFNGLCLIPPLANEPROC)load(userptr, "glClipPlane");
+    glad_snap_rhi_glColor3b = (PFNGLCOLOR3BPROC)load(userptr, "glColor3b");
+    glad_snap_rhi_glColor3bv = (PFNGLCOLOR3BVPROC)load(userptr, "glColor3bv");
+    glad_snap_rhi_glColor3d = (PFNGLCOLOR3DPROC)load(userptr, "glColor3d");
+    glad_snap_rhi_glColor3dv = (PFNGLCOLOR3DVPROC)load(userptr, "glColor3dv");
+    glad_snap_rhi_glColor3f = (PFNGLCOLOR3FPROC)load(userptr, "glColor3f");
+    glad_snap_rhi_glColor3fv = (PFNGLCOLOR3FVPROC)load(userptr, "glColor3fv");
+    glad_snap_rhi_glColor3i = (PFNGLCOLOR3IPROC)load(userptr, "glColor3i");
+    glad_snap_rhi_glColor3iv = (PFNGLCOLOR3IVPROC)load(userptr, "glColor3iv");
+    glad_snap_rhi_glColor3s = (PFNGLCOLOR3SPROC)load(userptr, "glColor3s");
+    glad_snap_rhi_glColor3sv = (PFNGLCOLOR3SVPROC)load(userptr, "glColor3sv");
+    glad_snap_rhi_glColor3ub = (PFNGLCOLOR3UBPROC)load(userptr, "glColor3ub");
+    glad_snap_rhi_glColor3ubv = (PFNGLCOLOR3UBVPROC)load(userptr, "glColor3ubv");
+    glad_snap_rhi_glColor3ui = (PFNGLCOLOR3UIPROC)load(userptr, "glColor3ui");
+    glad_snap_rhi_glColor3uiv = (PFNGLCOLOR3UIVPROC)load(userptr, "glColor3uiv");
+    glad_snap_rhi_glColor3us = (PFNGLCOLOR3USPROC)load(userptr, "glColor3us");
+    glad_snap_rhi_glColor3usv = (PFNGLCOLOR3USVPROC)load(userptr, "glColor3usv");
+    glad_snap_rhi_glColor4b = (PFNGLCOLOR4BPROC)load(userptr, "glColor4b");
+    glad_snap_rhi_glColor4bv = (PFNGLCOLOR4BVPROC)load(userptr, "glColor4bv");
+    glad_snap_rhi_glColor4d = (PFNGLCOLOR4DPROC)load(userptr, "glColor4d");
+    glad_snap_rhi_glColor4dv = (PFNGLCOLOR4DVPROC)load(userptr, "glColor4dv");
+    glad_snap_rhi_glColor4f = (PFNGLCOLOR4FPROC)load(userptr, "glColor4f");
+    glad_snap_rhi_glColor4fv = (PFNGLCOLOR4FVPROC)load(userptr, "glColor4fv");
+    glad_snap_rhi_glColor4i = (PFNGLCOLOR4IPROC)load(userptr, "glColor4i");
+    glad_snap_rhi_glColor4iv = (PFNGLCOLOR4IVPROC)load(userptr, "glColor4iv");
+    glad_snap_rhi_glColor4s = (PFNGLCOLOR4SPROC)load(userptr, "glColor4s");
+    glad_snap_rhi_glColor4sv = (PFNGLCOLOR4SVPROC)load(userptr, "glColor4sv");
+    glad_snap_rhi_glColor4ub = (PFNGLCOLOR4UBPROC)load(userptr, "glColor4ub");
+    glad_snap_rhi_glColor4ubv = (PFNGLCOLOR4UBVPROC)load(userptr, "glColor4ubv");
+    glad_snap_rhi_glColor4ui = (PFNGLCOLOR4UIPROC)load(userptr, "glColor4ui");
+    glad_snap_rhi_glColor4uiv = (PFNGLCOLOR4UIVPROC)load(userptr, "glColor4uiv");
+    glad_snap_rhi_glColor4us = (PFNGLCOLOR4USPROC)load(userptr, "glColor4us");
+    glad_snap_rhi_glColor4usv = (PFNGLCOLOR4USVPROC)load(userptr, "glColor4usv");
+    glad_snap_rhi_glColorMask = (PFNGLCOLORMASKPROC)load(userptr, "glColorMask");
+    glad_snap_rhi_glColorMaterial = (PFNGLCOLORMATERIALPROC)load(userptr, "glColorMaterial");
+    glad_snap_rhi_glCopyPixels = (PFNGLCOPYPIXELSPROC)load(userptr, "glCopyPixels");
+    glad_snap_rhi_glCullFace = (PFNGLCULLFACEPROC)load(userptr, "glCullFace");
+    glad_snap_rhi_glDeleteLists = (PFNGLDELETELISTSPROC)load(userptr, "glDeleteLists");
+    glad_snap_rhi_glDepthFunc = (PFNGLDEPTHFUNCPROC)load(userptr, "glDepthFunc");
+    glad_snap_rhi_glDepthMask = (PFNGLDEPTHMASKPROC)load(userptr, "glDepthMask");
+    glad_snap_rhi_glDepthRange = (PFNGLDEPTHRANGEPROC)load(userptr, "glDepthRange");
+    glad_snap_rhi_glDisable = (PFNGLDISABLEPROC)load(userptr, "glDisable");
+    glad_snap_rhi_glDrawBuffer = (PFNGLDRAWBUFFERPROC)load(userptr, "glDrawBuffer");
+    glad_snap_rhi_glDrawPixels = (PFNGLDRAWPIXELSPROC)load(userptr, "glDrawPixels");
+    glad_snap_rhi_glEdgeFlag = (PFNGLEDGEFLAGPROC)load(userptr, "glEdgeFlag");
+    glad_snap_rhi_glEdgeFlagv = (PFNGLEDGEFLAGVPROC)load(userptr, "glEdgeFlagv");
+    glad_snap_rhi_glEnable = (PFNGLENABLEPROC)load(userptr, "glEnable");
+    glad_snap_rhi_glEnd = (PFNGLENDPROC)load(userptr, "glEnd");
+    glad_snap_rhi_glEndList = (PFNGLENDLISTPROC)load(userptr, "glEndList");
+    glad_snap_rhi_glEvalCoord1d = (PFNGLEVALCOORD1DPROC)load(userptr, "glEvalCoord1d");
+    glad_snap_rhi_glEvalCoord1dv = (PFNGLEVALCOORD1DVPROC)load(userptr, "glEvalCoord1dv");
+    glad_snap_rhi_glEvalCoord1f = (PFNGLEVALCOORD1FPROC)load(userptr, "glEvalCoord1f");
+    glad_snap_rhi_glEvalCoord1fv = (PFNGLEVALCOORD1FVPROC)load(userptr, "glEvalCoord1fv");
+    glad_snap_rhi_glEvalCoord2d = (PFNGLEVALCOORD2DPROC)load(userptr, "glEvalCoord2d");
+    glad_snap_rhi_glEvalCoord2dv = (PFNGLEVALCOORD2DVPROC)load(userptr, "glEvalCoord2dv");
+    glad_snap_rhi_glEvalCoord2f = (PFNGLEVALCOORD2FPROC)load(userptr, "glEvalCoord2f");
+    glad_snap_rhi_glEvalCoord2fv = (PFNGLEVALCOORD2FVPROC)load(userptr, "glEvalCoord2fv");
+    glad_snap_rhi_glEvalMesh1 = (PFNGLEVALMESH1PROC)load(userptr, "glEvalMesh1");
+    glad_snap_rhi_glEvalMesh2 = (PFNGLEVALMESH2PROC)load(userptr, "glEvalMesh2");
+    glad_snap_rhi_glEvalPoint1 = (PFNGLEVALPOINT1PROC)load(userptr, "glEvalPoint1");
+    glad_snap_rhi_glEvalPoint2 = (PFNGLEVALPOINT2PROC)load(userptr, "glEvalPoint2");
+    glad_snap_rhi_glFeedbackBuffer = (PFNGLFEEDBACKBUFFERPROC)load(userptr, "glFeedbackBuffer");
+    glad_snap_rhi_glFinish = (PFNGLFINISHPROC)load(userptr, "glFinish");
+    glad_snap_rhi_glFlush = (PFNGLFLUSHPROC)load(userptr, "glFlush");
+    glad_snap_rhi_glFogf = (PFNGLFOGFPROC)load(userptr, "glFogf");
+    glad_snap_rhi_glFogfv = (PFNGLFOGFVPROC)load(userptr, "glFogfv");
+    glad_snap_rhi_glFogi = (PFNGLFOGIPROC)load(userptr, "glFogi");
+    glad_snap_rhi_glFogiv = (PFNGLFOGIVPROC)load(userptr, "glFogiv");
+    glad_snap_rhi_glFrontFace = (PFNGLFRONTFACEPROC)load(userptr, "glFrontFace");
+    glad_snap_rhi_glFrustum = (PFNGLFRUSTUMPROC)load(userptr, "glFrustum");
+    glad_snap_rhi_glGenLists = (PFNGLGENLISTSPROC)load(userptr, "glGenLists");
+    glad_snap_rhi_glGetBooleanv = (PFNGLGETBOOLEANVPROC)load(userptr, "glGetBooleanv");
+    glad_snap_rhi_glGetClipPlane = (PFNGLGETCLIPPLANEPROC)load(userptr, "glGetClipPlane");
+    glad_snap_rhi_glGetDoublev = (PFNGLGETDOUBLEVPROC)load(userptr, "glGetDoublev");
+    glad_snap_rhi_glGetError = (PFNGLGETERRORPROC)load(userptr, "glGetError");
+    glad_snap_rhi_glGetFloatv = (PFNGLGETFLOATVPROC)load(userptr, "glGetFloatv");
+    glad_snap_rhi_glGetIntegerv = (PFNGLGETINTEGERVPROC)load(userptr, "glGetIntegerv");
+    glad_snap_rhi_glGetLightfv = (PFNGLGETLIGHTFVPROC)load(userptr, "glGetLightfv");
+    glad_snap_rhi_glGetLightiv = (PFNGLGETLIGHTIVPROC)load(userptr, "glGetLightiv");
+    glad_snap_rhi_glGetMapdv = (PFNGLGETMAPDVPROC)load(userptr, "glGetMapdv");
+    glad_snap_rhi_glGetMapfv = (PFNGLGETMAPFVPROC)load(userptr, "glGetMapfv");
+    glad_snap_rhi_glGetMapiv = (PFNGLGETMAPIVPROC)load(userptr, "glGetMapiv");
+    glad_snap_rhi_glGetMaterialfv = (PFNGLGETMATERIALFVPROC)load(userptr, "glGetMaterialfv");
+    glad_snap_rhi_glGetMaterialiv = (PFNGLGETMATERIALIVPROC)load(userptr, "glGetMaterialiv");
+    glad_snap_rhi_glGetPixelMapfv = (PFNGLGETPIXELMAPFVPROC)load(userptr, "glGetPixelMapfv");
+    glad_snap_rhi_glGetPixelMapuiv = (PFNGLGETPIXELMAPUIVPROC)load(userptr, "glGetPixelMapuiv");
+    glad_snap_rhi_glGetPixelMapusv = (PFNGLGETPIXELMAPUSVPROC)load(userptr, "glGetPixelMapusv");
+    glad_snap_rhi_glGetPolygonStipple = (PFNGLGETPOLYGONSTIPPLEPROC)load(userptr, "glGetPolygonStipple");
+    glad_snap_rhi_glGetString = (PFNGLGETSTRINGPROC)load(userptr, "glGetString");
+    glad_snap_rhi_glGetTexEnvfv = (PFNGLGETTEXENVFVPROC)load(userptr, "glGetTexEnvfv");
+    glad_snap_rhi_glGetTexEnviv = (PFNGLGETTEXENVIVPROC)load(userptr, "glGetTexEnviv");
+    glad_snap_rhi_glGetTexGendv = (PFNGLGETTEXGENDVPROC)load(userptr, "glGetTexGendv");
+    glad_snap_rhi_glGetTexGenfv = (PFNGLGETTEXGENFVPROC)load(userptr, "glGetTexGenfv");
+    glad_snap_rhi_glGetTexGeniv = (PFNGLGETTEXGENIVPROC)load(userptr, "glGetTexGeniv");
+    glad_snap_rhi_glGetTexImage = (PFNGLGETTEXIMAGEPROC)load(userptr, "glGetTexImage");
+    glad_snap_rhi_glGetTexLevelParameterfv = (PFNGLGETTEXLEVELPARAMETERFVPROC)load(userptr, "glGetTexLevelParameterfv");
+    glad_snap_rhi_glGetTexLevelParameteriv = (PFNGLGETTEXLEVELPARAMETERIVPROC)load(userptr, "glGetTexLevelParameteriv");
+    glad_snap_rhi_glGetTexParameterfv = (PFNGLGETTEXPARAMETERFVPROC)load(userptr, "glGetTexParameterfv");
+    glad_snap_rhi_glGetTexParameteriv = (PFNGLGETTEXPARAMETERIVPROC)load(userptr, "glGetTexParameteriv");
+    glad_snap_rhi_glHint = (PFNGLHINTPROC)load(userptr, "glHint");
+    glad_snap_rhi_glIndexMask = (PFNGLINDEXMASKPROC)load(userptr, "glIndexMask");
+    glad_snap_rhi_glIndexd = (PFNGLINDEXDPROC)load(userptr, "glIndexd");
+    glad_snap_rhi_glIndexdv = (PFNGLINDEXDVPROC)load(userptr, "glIndexdv");
+    glad_snap_rhi_glIndexf = (PFNGLINDEXFPROC)load(userptr, "glIndexf");
+    glad_snap_rhi_glIndexfv = (PFNGLINDEXFVPROC)load(userptr, "glIndexfv");
+    glad_snap_rhi_glIndexi = (PFNGLINDEXIPROC)load(userptr, "glIndexi");
+    glad_snap_rhi_glIndexiv = (PFNGLINDEXIVPROC)load(userptr, "glIndexiv");
+    glad_snap_rhi_glIndexs = (PFNGLINDEXSPROC)load(userptr, "glIndexs");
+    glad_snap_rhi_glIndexsv = (PFNGLINDEXSVPROC)load(userptr, "glIndexsv");
+    glad_snap_rhi_glInitNames = (PFNGLINITNAMESPROC)load(userptr, "glInitNames");
+    glad_snap_rhi_glIsEnabled = (PFNGLISENABLEDPROC)load(userptr, "glIsEnabled");
+    glad_snap_rhi_glIsList = (PFNGLISLISTPROC)load(userptr, "glIsList");
+    glad_snap_rhi_glLightModelf = (PFNGLLIGHTMODELFPROC)load(userptr, "glLightModelf");
+    glad_snap_rhi_glLightModelfv = (PFNGLLIGHTMODELFVPROC)load(userptr, "glLightModelfv");
+    glad_snap_rhi_glLightModeli = (PFNGLLIGHTMODELIPROC)load(userptr, "glLightModeli");
+    glad_snap_rhi_glLightModeliv = (PFNGLLIGHTMODELIVPROC)load(userptr, "glLightModeliv");
+    glad_snap_rhi_glLightf = (PFNGLLIGHTFPROC)load(userptr, "glLightf");
+    glad_snap_rhi_glLightfv = (PFNGLLIGHTFVPROC)load(userptr, "glLightfv");
+    glad_snap_rhi_glLighti = (PFNGLLIGHTIPROC)load(userptr, "glLighti");
+    glad_snap_rhi_glLightiv = (PFNGLLIGHTIVPROC)load(userptr, "glLightiv");
+    glad_snap_rhi_glLineStipple = (PFNGLLINESTIPPLEPROC)load(userptr, "glLineStipple");
+    glad_snap_rhi_glLineWidth = (PFNGLLINEWIDTHPROC)load(userptr, "glLineWidth");
+    glad_snap_rhi_glListBase = (PFNGLLISTBASEPROC)load(userptr, "glListBase");
+    glad_snap_rhi_glLoadIdentity = (PFNGLLOADIDENTITYPROC)load(userptr, "glLoadIdentity");
+    glad_snap_rhi_glLoadMatrixd = (PFNGLLOADMATRIXDPROC)load(userptr, "glLoadMatrixd");
+    glad_snap_rhi_glLoadMatrixf = (PFNGLLOADMATRIXFPROC)load(userptr, "glLoadMatrixf");
+    glad_snap_rhi_glLoadName = (PFNGLLOADNAMEPROC)load(userptr, "glLoadName");
+    glad_snap_rhi_glLogicOp = (PFNGLLOGICOPPROC)load(userptr, "glLogicOp");
+    glad_snap_rhi_glMap1d = (PFNGLMAP1DPROC)load(userptr, "glMap1d");
+    glad_snap_rhi_glMap1f = (PFNGLMAP1FPROC)load(userptr, "glMap1f");
+    glad_snap_rhi_glMap2d = (PFNGLMAP2DPROC)load(userptr, "glMap2d");
+    glad_snap_rhi_glMap2f = (PFNGLMAP2FPROC)load(userptr, "glMap2f");
+    glad_snap_rhi_glMapGrid1d = (PFNGLMAPGRID1DPROC)load(userptr, "glMapGrid1d");
+    glad_snap_rhi_glMapGrid1f = (PFNGLMAPGRID1FPROC)load(userptr, "glMapGrid1f");
+    glad_snap_rhi_glMapGrid2d = (PFNGLMAPGRID2DPROC)load(userptr, "glMapGrid2d");
+    glad_snap_rhi_glMapGrid2f = (PFNGLMAPGRID2FPROC)load(userptr, "glMapGrid2f");
+    glad_snap_rhi_glMaterialf = (PFNGLMATERIALFPROC)load(userptr, "glMaterialf");
+    glad_snap_rhi_glMaterialfv = (PFNGLMATERIALFVPROC)load(userptr, "glMaterialfv");
+    glad_snap_rhi_glMateriali = (PFNGLMATERIALIPROC)load(userptr, "glMateriali");
+    glad_snap_rhi_glMaterialiv = (PFNGLMATERIALIVPROC)load(userptr, "glMaterialiv");
+    glad_snap_rhi_glMatrixMode = (PFNGLMATRIXMODEPROC)load(userptr, "glMatrixMode");
+    glad_snap_rhi_glMultMatrixd = (PFNGLMULTMATRIXDPROC)load(userptr, "glMultMatrixd");
+    glad_snap_rhi_glMultMatrixf = (PFNGLMULTMATRIXFPROC)load(userptr, "glMultMatrixf");
+    glad_snap_rhi_glNewList = (PFNGLNEWLISTPROC)load(userptr, "glNewList");
+    glad_snap_rhi_glNormal3b = (PFNGLNORMAL3BPROC)load(userptr, "glNormal3b");
+    glad_snap_rhi_glNormal3bv = (PFNGLNORMAL3BVPROC)load(userptr, "glNormal3bv");
+    glad_snap_rhi_glNormal3d = (PFNGLNORMAL3DPROC)load(userptr, "glNormal3d");
+    glad_snap_rhi_glNormal3dv = (PFNGLNORMAL3DVPROC)load(userptr, "glNormal3dv");
+    glad_snap_rhi_glNormal3f = (PFNGLNORMAL3FPROC)load(userptr, "glNormal3f");
+    glad_snap_rhi_glNormal3fv = (PFNGLNORMAL3FVPROC)load(userptr, "glNormal3fv");
+    glad_snap_rhi_glNormal3i = (PFNGLNORMAL3IPROC)load(userptr, "glNormal3i");
+    glad_snap_rhi_glNormal3iv = (PFNGLNORMAL3IVPROC)load(userptr, "glNormal3iv");
+    glad_snap_rhi_glNormal3s = (PFNGLNORMAL3SPROC)load(userptr, "glNormal3s");
+    glad_snap_rhi_glNormal3sv = (PFNGLNORMAL3SVPROC)load(userptr, "glNormal3sv");
+    glad_snap_rhi_glOrtho = (PFNGLORTHOPROC)load(userptr, "glOrtho");
+    glad_snap_rhi_glPassThrough = (PFNGLPASSTHROUGHPROC)load(userptr, "glPassThrough");
+    glad_snap_rhi_glPixelMapfv = (PFNGLPIXELMAPFVPROC)load(userptr, "glPixelMapfv");
+    glad_snap_rhi_glPixelMapuiv = (PFNGLPIXELMAPUIVPROC)load(userptr, "glPixelMapuiv");
+    glad_snap_rhi_glPixelMapusv = (PFNGLPIXELMAPUSVPROC)load(userptr, "glPixelMapusv");
+    glad_snap_rhi_glPixelStoref = (PFNGLPIXELSTOREFPROC)load(userptr, "glPixelStoref");
+    glad_snap_rhi_glPixelStorei = (PFNGLPIXELSTOREIPROC)load(userptr, "glPixelStorei");
+    glad_snap_rhi_glPixelTransferf = (PFNGLPIXELTRANSFERFPROC)load(userptr, "glPixelTransferf");
+    glad_snap_rhi_glPixelTransferi = (PFNGLPIXELTRANSFERIPROC)load(userptr, "glPixelTransferi");
+    glad_snap_rhi_glPixelZoom = (PFNGLPIXELZOOMPROC)load(userptr, "glPixelZoom");
+    glad_snap_rhi_glPointSize = (PFNGLPOINTSIZEPROC)load(userptr, "glPointSize");
+    glad_snap_rhi_glPolygonMode = (PFNGLPOLYGONMODEPROC)load(userptr, "glPolygonMode");
+    glad_snap_rhi_glPolygonStipple = (PFNGLPOLYGONSTIPPLEPROC)load(userptr, "glPolygonStipple");
+    glad_snap_rhi_glPopAttrib = (PFNGLPOPATTRIBPROC)load(userptr, "glPopAttrib");
+    glad_snap_rhi_glPopMatrix = (PFNGLPOPMATRIXPROC)load(userptr, "glPopMatrix");
+    glad_snap_rhi_glPopName = (PFNGLPOPNAMEPROC)load(userptr, "glPopName");
+    glad_snap_rhi_glPushAttrib = (PFNGLPUSHATTRIBPROC)load(userptr, "glPushAttrib");
+    glad_snap_rhi_glPushMatrix = (PFNGLPUSHMATRIXPROC)load(userptr, "glPushMatrix");
+    glad_snap_rhi_glPushName = (PFNGLPUSHNAMEPROC)load(userptr, "glPushName");
+    glad_snap_rhi_glRasterPos2d = (PFNGLRASTERPOS2DPROC)load(userptr, "glRasterPos2d");
+    glad_snap_rhi_glRasterPos2dv = (PFNGLRASTERPOS2DVPROC)load(userptr, "glRasterPos2dv");
+    glad_snap_rhi_glRasterPos2f = (PFNGLRASTERPOS2FPROC)load(userptr, "glRasterPos2f");
+    glad_snap_rhi_glRasterPos2fv = (PFNGLRASTERPOS2FVPROC)load(userptr, "glRasterPos2fv");
+    glad_snap_rhi_glRasterPos2i = (PFNGLRASTERPOS2IPROC)load(userptr, "glRasterPos2i");
+    glad_snap_rhi_glRasterPos2iv = (PFNGLRASTERPOS2IVPROC)load(userptr, "glRasterPos2iv");
+    glad_snap_rhi_glRasterPos2s = (PFNGLRASTERPOS2SPROC)load(userptr, "glRasterPos2s");
+    glad_snap_rhi_glRasterPos2sv = (PFNGLRASTERPOS2SVPROC)load(userptr, "glRasterPos2sv");
+    glad_snap_rhi_glRasterPos3d = (PFNGLRASTERPOS3DPROC)load(userptr, "glRasterPos3d");
+    glad_snap_rhi_glRasterPos3dv = (PFNGLRASTERPOS3DVPROC)load(userptr, "glRasterPos3dv");
+    glad_snap_rhi_glRasterPos3f = (PFNGLRASTERPOS3FPROC)load(userptr, "glRasterPos3f");
+    glad_snap_rhi_glRasterPos3fv = (PFNGLRASTERPOS3FVPROC)load(userptr, "glRasterPos3fv");
+    glad_snap_rhi_glRasterPos3i = (PFNGLRASTERPOS3IPROC)load(userptr, "glRasterPos3i");
+    glad_snap_rhi_glRasterPos3iv = (PFNGLRASTERPOS3IVPROC)load(userptr, "glRasterPos3iv");
+    glad_snap_rhi_glRasterPos3s = (PFNGLRASTERPOS3SPROC)load(userptr, "glRasterPos3s");
+    glad_snap_rhi_glRasterPos3sv = (PFNGLRASTERPOS3SVPROC)load(userptr, "glRasterPos3sv");
+    glad_snap_rhi_glRasterPos4d = (PFNGLRASTERPOS4DPROC)load(userptr, "glRasterPos4d");
+    glad_snap_rhi_glRasterPos4dv = (PFNGLRASTERPOS4DVPROC)load(userptr, "glRasterPos4dv");
+    glad_snap_rhi_glRasterPos4f = (PFNGLRASTERPOS4FPROC)load(userptr, "glRasterPos4f");
+    glad_snap_rhi_glRasterPos4fv = (PFNGLRASTERPOS4FVPROC)load(userptr, "glRasterPos4fv");
+    glad_snap_rhi_glRasterPos4i = (PFNGLRASTERPOS4IPROC)load(userptr, "glRasterPos4i");
+    glad_snap_rhi_glRasterPos4iv = (PFNGLRASTERPOS4IVPROC)load(userptr, "glRasterPos4iv");
+    glad_snap_rhi_glRasterPos4s = (PFNGLRASTERPOS4SPROC)load(userptr, "glRasterPos4s");
+    glad_snap_rhi_glRasterPos4sv = (PFNGLRASTERPOS4SVPROC)load(userptr, "glRasterPos4sv");
+    glad_snap_rhi_glReadBuffer = (PFNGLREADBUFFERPROC)load(userptr, "glReadBuffer");
+    glad_snap_rhi_glReadPixels = (PFNGLREADPIXELSPROC)load(userptr, "glReadPixels");
+    glad_snap_rhi_glRectd = (PFNGLRECTDPROC)load(userptr, "glRectd");
+    glad_snap_rhi_glRectdv = (PFNGLRECTDVPROC)load(userptr, "glRectdv");
+    glad_snap_rhi_glRectf = (PFNGLRECTFPROC)load(userptr, "glRectf");
+    glad_snap_rhi_glRectfv = (PFNGLRECTFVPROC)load(userptr, "glRectfv");
+    glad_snap_rhi_glRecti = (PFNGLRECTIPROC)load(userptr, "glRecti");
+    glad_snap_rhi_glRectiv = (PFNGLRECTIVPROC)load(userptr, "glRectiv");
+    glad_snap_rhi_glRects = (PFNGLRECTSPROC)load(userptr, "glRects");
+    glad_snap_rhi_glRectsv = (PFNGLRECTSVPROC)load(userptr, "glRectsv");
+    glad_snap_rhi_glRenderMode = (PFNGLRENDERMODEPROC)load(userptr, "glRenderMode");
+    glad_snap_rhi_glRotated = (PFNGLROTATEDPROC)load(userptr, "glRotated");
+    glad_snap_rhi_glRotatef = (PFNGLROTATEFPROC)load(userptr, "glRotatef");
+    glad_snap_rhi_glScaled = (PFNGLSCALEDPROC)load(userptr, "glScaled");
+    glad_snap_rhi_glScalef = (PFNGLSCALEFPROC)load(userptr, "glScalef");
+    glad_snap_rhi_glScissor = (PFNGLSCISSORPROC)load(userptr, "glScissor");
+    glad_snap_rhi_glSelectBuffer = (PFNGLSELECTBUFFERPROC)load(userptr, "glSelectBuffer");
+    glad_snap_rhi_glShadeModel = (PFNGLSHADEMODELPROC)load(userptr, "glShadeModel");
+    glad_snap_rhi_glStencilFunc = (PFNGLSTENCILFUNCPROC)load(userptr, "glStencilFunc");
+    glad_snap_rhi_glStencilMask = (PFNGLSTENCILMASKPROC)load(userptr, "glStencilMask");
+    glad_snap_rhi_glStencilOp = (PFNGLSTENCILOPPROC)load(userptr, "glStencilOp");
+    glad_snap_rhi_glTexCoord1d = (PFNGLTEXCOORD1DPROC)load(userptr, "glTexCoord1d");
+    glad_snap_rhi_glTexCoord1dv = (PFNGLTEXCOORD1DVPROC)load(userptr, "glTexCoord1dv");
+    glad_snap_rhi_glTexCoord1f = (PFNGLTEXCOORD1FPROC)load(userptr, "glTexCoord1f");
+    glad_snap_rhi_glTexCoord1fv = (PFNGLTEXCOORD1FVPROC)load(userptr, "glTexCoord1fv");
+    glad_snap_rhi_glTexCoord1i = (PFNGLTEXCOORD1IPROC)load(userptr, "glTexCoord1i");
+    glad_snap_rhi_glTexCoord1iv = (PFNGLTEXCOORD1IVPROC)load(userptr, "glTexCoord1iv");
+    glad_snap_rhi_glTexCoord1s = (PFNGLTEXCOORD1SPROC)load(userptr, "glTexCoord1s");
+    glad_snap_rhi_glTexCoord1sv = (PFNGLTEXCOORD1SVPROC)load(userptr, "glTexCoord1sv");
+    glad_snap_rhi_glTexCoord2d = (PFNGLTEXCOORD2DPROC)load(userptr, "glTexCoord2d");
+    glad_snap_rhi_glTexCoord2dv = (PFNGLTEXCOORD2DVPROC)load(userptr, "glTexCoord2dv");
+    glad_snap_rhi_glTexCoord2f = (PFNGLTEXCOORD2FPROC)load(userptr, "glTexCoord2f");
+    glad_snap_rhi_glTexCoord2fv = (PFNGLTEXCOORD2FVPROC)load(userptr, "glTexCoord2fv");
+    glad_snap_rhi_glTexCoord2i = (PFNGLTEXCOORD2IPROC)load(userptr, "glTexCoord2i");
+    glad_snap_rhi_glTexCoord2iv = (PFNGLTEXCOORD2IVPROC)load(userptr, "glTexCoord2iv");
+    glad_snap_rhi_glTexCoord2s = (PFNGLTEXCOORD2SPROC)load(userptr, "glTexCoord2s");
+    glad_snap_rhi_glTexCoord2sv = (PFNGLTEXCOORD2SVPROC)load(userptr, "glTexCoord2sv");
+    glad_snap_rhi_glTexCoord3d = (PFNGLTEXCOORD3DPROC)load(userptr, "glTexCoord3d");
+    glad_snap_rhi_glTexCoord3dv = (PFNGLTEXCOORD3DVPROC)load(userptr, "glTexCoord3dv");
+    glad_snap_rhi_glTexCoord3f = (PFNGLTEXCOORD3FPROC)load(userptr, "glTexCoord3f");
+    glad_snap_rhi_glTexCoord3fv = (PFNGLTEXCOORD3FVPROC)load(userptr, "glTexCoord3fv");
+    glad_snap_rhi_glTexCoord3i = (PFNGLTEXCOORD3IPROC)load(userptr, "glTexCoord3i");
+    glad_snap_rhi_glTexCoord3iv = (PFNGLTEXCOORD3IVPROC)load(userptr, "glTexCoord3iv");
+    glad_snap_rhi_glTexCoord3s = (PFNGLTEXCOORD3SPROC)load(userptr, "glTexCoord3s");
+    glad_snap_rhi_glTexCoord3sv = (PFNGLTEXCOORD3SVPROC)load(userptr, "glTexCoord3sv");
+    glad_snap_rhi_glTexCoord4d = (PFNGLTEXCOORD4DPROC)load(userptr, "glTexCoord4d");
+    glad_snap_rhi_glTexCoord4dv = (PFNGLTEXCOORD4DVPROC)load(userptr, "glTexCoord4dv");
+    glad_snap_rhi_glTexCoord4f = (PFNGLTEXCOORD4FPROC)load(userptr, "glTexCoord4f");
+    glad_snap_rhi_glTexCoord4fv = (PFNGLTEXCOORD4FVPROC)load(userptr, "glTexCoord4fv");
+    glad_snap_rhi_glTexCoord4i = (PFNGLTEXCOORD4IPROC)load(userptr, "glTexCoord4i");
+    glad_snap_rhi_glTexCoord4iv = (PFNGLTEXCOORD4IVPROC)load(userptr, "glTexCoord4iv");
+    glad_snap_rhi_glTexCoord4s = (PFNGLTEXCOORD4SPROC)load(userptr, "glTexCoord4s");
+    glad_snap_rhi_glTexCoord4sv = (PFNGLTEXCOORD4SVPROC)load(userptr, "glTexCoord4sv");
+    glad_snap_rhi_glTexEnvf = (PFNGLTEXENVFPROC)load(userptr, "glTexEnvf");
+    glad_snap_rhi_glTexEnvfv = (PFNGLTEXENVFVPROC)load(userptr, "glTexEnvfv");
+    glad_snap_rhi_glTexEnvi = (PFNGLTEXENVIPROC)load(userptr, "glTexEnvi");
+    glad_snap_rhi_glTexEnviv = (PFNGLTEXENVIVPROC)load(userptr, "glTexEnviv");
+    glad_snap_rhi_glTexGend = (PFNGLTEXGENDPROC)load(userptr, "glTexGend");
+    glad_snap_rhi_glTexGendv = (PFNGLTEXGENDVPROC)load(userptr, "glTexGendv");
+    glad_snap_rhi_glTexGenf = (PFNGLTEXGENFPROC)load(userptr, "glTexGenf");
+    glad_snap_rhi_glTexGenfv = (PFNGLTEXGENFVPROC)load(userptr, "glTexGenfv");
+    glad_snap_rhi_glTexGeni = (PFNGLTEXGENIPROC)load(userptr, "glTexGeni");
+    glad_snap_rhi_glTexGeniv = (PFNGLTEXGENIVPROC)load(userptr, "glTexGeniv");
+    glad_snap_rhi_glTexImage1D = (PFNGLTEXIMAGE1DPROC)load(userptr, "glTexImage1D");
+    glad_snap_rhi_glTexImage2D = (PFNGLTEXIMAGE2DPROC)load(userptr, "glTexImage2D");
+    glad_snap_rhi_glTexParameterf = (PFNGLTEXPARAMETERFPROC)load(userptr, "glTexParameterf");
+    glad_snap_rhi_glTexParameterfv = (PFNGLTEXPARAMETERFVPROC)load(userptr, "glTexParameterfv");
+    glad_snap_rhi_glTexParameteri = (PFNGLTEXPARAMETERIPROC)load(userptr, "glTexParameteri");
+    glad_snap_rhi_glTexParameteriv = (PFNGLTEXPARAMETERIVPROC)load(userptr, "glTexParameteriv");
+    glad_snap_rhi_glTranslated = (PFNGLTRANSLATEDPROC)load(userptr, "glTranslated");
+    glad_snap_rhi_glTranslatef = (PFNGLTRANSLATEFPROC)load(userptr, "glTranslatef");
+    glad_snap_rhi_glVertex2d = (PFNGLVERTEX2DPROC)load(userptr, "glVertex2d");
+    glad_snap_rhi_glVertex2dv = (PFNGLVERTEX2DVPROC)load(userptr, "glVertex2dv");
+    glad_snap_rhi_glVertex2f = (PFNGLVERTEX2FPROC)load(userptr, "glVertex2f");
+    glad_snap_rhi_glVertex2fv = (PFNGLVERTEX2FVPROC)load(userptr, "glVertex2fv");
+    glad_snap_rhi_glVertex2i = (PFNGLVERTEX2IPROC)load(userptr, "glVertex2i");
+    glad_snap_rhi_glVertex2iv = (PFNGLVERTEX2IVPROC)load(userptr, "glVertex2iv");
+    glad_snap_rhi_glVertex2s = (PFNGLVERTEX2SPROC)load(userptr, "glVertex2s");
+    glad_snap_rhi_glVertex2sv = (PFNGLVERTEX2SVPROC)load(userptr, "glVertex2sv");
+    glad_snap_rhi_glVertex3d = (PFNGLVERTEX3DPROC)load(userptr, "glVertex3d");
+    glad_snap_rhi_glVertex3dv = (PFNGLVERTEX3DVPROC)load(userptr, "glVertex3dv");
+    glad_snap_rhi_glVertex3f = (PFNGLVERTEX3FPROC)load(userptr, "glVertex3f");
+    glad_snap_rhi_glVertex3fv = (PFNGLVERTEX3FVPROC)load(userptr, "glVertex3fv");
+    glad_snap_rhi_glVertex3i = (PFNGLVERTEX3IPROC)load(userptr, "glVertex3i");
+    glad_snap_rhi_glVertex3iv = (PFNGLVERTEX3IVPROC)load(userptr, "glVertex3iv");
+    glad_snap_rhi_glVertex3s = (PFNGLVERTEX3SPROC)load(userptr, "glVertex3s");
+    glad_snap_rhi_glVertex3sv = (PFNGLVERTEX3SVPROC)load(userptr, "glVertex3sv");
+    glad_snap_rhi_glVertex4d = (PFNGLVERTEX4DPROC)load(userptr, "glVertex4d");
+    glad_snap_rhi_glVertex4dv = (PFNGLVERTEX4DVPROC)load(userptr, "glVertex4dv");
+    glad_snap_rhi_glVertex4f = (PFNGLVERTEX4FPROC)load(userptr, "glVertex4f");
+    glad_snap_rhi_glVertex4fv = (PFNGLVERTEX4FVPROC)load(userptr, "glVertex4fv");
+    glad_snap_rhi_glVertex4i = (PFNGLVERTEX4IPROC)load(userptr, "glVertex4i");
+    glad_snap_rhi_glVertex4iv = (PFNGLVERTEX4IVPROC)load(userptr, "glVertex4iv");
+    glad_snap_rhi_glVertex4s = (PFNGLVERTEX4SPROC)load(userptr, "glVertex4s");
+    glad_snap_rhi_glVertex4sv = (PFNGLVERTEX4SVPROC)load(userptr, "glVertex4sv");
+    glad_snap_rhi_glViewport = (PFNGLVIEWPORTPROC)load(userptr, "glViewport");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_1_1(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glAreTexturesResident = (PFNGLARETEXTURESRESIDENTPROC)load(userptr, "glAreTexturesResident");
+    glad_snap_rhi_glArrayElement = (PFNGLARRAYELEMENTPROC)load(userptr, "glArrayElement");
+    glad_snap_rhi_glBindTexture = (PFNGLBINDTEXTUREPROC)load(userptr, "glBindTexture");
+    glad_snap_rhi_glColorPointer = (PFNGLCOLORPOINTERPROC)load(userptr, "glColorPointer");
+    glad_snap_rhi_glCopyTexImage1D = (PFNGLCOPYTEXIMAGE1DPROC)load(userptr, "glCopyTexImage1D");
+    glad_snap_rhi_glCopyTexImage2D = (PFNGLCOPYTEXIMAGE2DPROC)load(userptr, "glCopyTexImage2D");
+    glad_snap_rhi_glCopyTexSubImage1D = (PFNGLCOPYTEXSUBIMAGE1DPROC)load(userptr, "glCopyTexSubImage1D");
+    glad_snap_rhi_glCopyTexSubImage2D = (PFNGLCOPYTEXSUBIMAGE2DPROC)load(userptr, "glCopyTexSubImage2D");
+    glad_snap_rhi_glDeleteTextures = (PFNGLDELETETEXTURESPROC)load(userptr, "glDeleteTextures");
+    glad_snap_rhi_glDisableClientState = (PFNGLDISABLECLIENTSTATEPROC)load(userptr, "glDisableClientState");
+    glad_snap_rhi_glDrawArrays = (PFNGLDRAWARRAYSPROC)load(userptr, "glDrawArrays");
+    glad_snap_rhi_glDrawElements = (PFNGLDRAWELEMENTSPROC)load(userptr, "glDrawElements");
+    glad_snap_rhi_glEdgeFlagPointer = (PFNGLEDGEFLAGPOINTERPROC)load(userptr, "glEdgeFlagPointer");
+    glad_snap_rhi_glEnableClientState = (PFNGLENABLECLIENTSTATEPROC)load(userptr, "glEnableClientState");
+    glad_snap_rhi_glGenTextures = (PFNGLGENTEXTURESPROC)load(userptr, "glGenTextures");
+    glad_snap_rhi_glGetPointerv = (PFNGLGETPOINTERVPROC)load(userptr, "glGetPointerv");
+    glad_snap_rhi_glIndexPointer = (PFNGLINDEXPOINTERPROC)load(userptr, "glIndexPointer");
+    glad_snap_rhi_glIndexub = (PFNGLINDEXUBPROC)load(userptr, "glIndexub");
+    glad_snap_rhi_glIndexubv = (PFNGLINDEXUBVPROC)load(userptr, "glIndexubv");
+    glad_snap_rhi_glInterleavedArrays = (PFNGLINTERLEAVEDARRAYSPROC)load(userptr, "glInterleavedArrays");
+    glad_snap_rhi_glIsTexture = (PFNGLISTEXTUREPROC)load(userptr, "glIsTexture");
+    glad_snap_rhi_glNormalPointer = (PFNGLNORMALPOINTERPROC)load(userptr, "glNormalPointer");
+    glad_snap_rhi_glPolygonOffset = (PFNGLPOLYGONOFFSETPROC)load(userptr, "glPolygonOffset");
+    glad_snap_rhi_glPopClientAttrib = (PFNGLPOPCLIENTATTRIBPROC)load(userptr, "glPopClientAttrib");
+    glad_snap_rhi_glPrioritizeTextures = (PFNGLPRIORITIZETEXTURESPROC)load(userptr, "glPrioritizeTextures");
+    glad_snap_rhi_glPushClientAttrib = (PFNGLPUSHCLIENTATTRIBPROC)load(userptr, "glPushClientAttrib");
+    glad_snap_rhi_glTexCoordPointer = (PFNGLTEXCOORDPOINTERPROC)load(userptr, "glTexCoordPointer");
+    glad_snap_rhi_glTexSubImage1D = (PFNGLTEXSUBIMAGE1DPROC)load(userptr, "glTexSubImage1D");
+    glad_snap_rhi_glTexSubImage2D = (PFNGLTEXSUBIMAGE2DPROC)load(userptr, "glTexSubImage2D");
+    glad_snap_rhi_glVertexPointer = (PFNGLVERTEXPOINTERPROC)load(userptr, "glVertexPointer");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_1_2(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glCopyTexSubImage3D = (PFNGLCOPYTEXSUBIMAGE3DPROC)load(userptr, "glCopyTexSubImage3D");
+    glad_snap_rhi_glDrawRangeElements = (PFNGLDRAWRANGEELEMENTSPROC)load(userptr, "glDrawRangeElements");
+    glad_snap_rhi_glTexImage3D = (PFNGLTEXIMAGE3DPROC)load(userptr, "glTexImage3D");
+    glad_snap_rhi_glTexSubImage3D = (PFNGLTEXSUBIMAGE3DPROC)load(userptr, "glTexSubImage3D");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_1_3(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glActiveTexture = (PFNGLACTIVETEXTUREPROC)load(userptr, "glActiveTexture");
+    glad_snap_rhi_glClientActiveTexture = (PFNGLCLIENTACTIVETEXTUREPROC)load(userptr, "glClientActiveTexture");
+    glad_snap_rhi_glCompressedTexImage1D = (PFNGLCOMPRESSEDTEXIMAGE1DPROC)load(userptr, "glCompressedTexImage1D");
+    glad_snap_rhi_glCompressedTexImage2D = (PFNGLCOMPRESSEDTEXIMAGE2DPROC)load(userptr, "glCompressedTexImage2D");
+    glad_snap_rhi_glCompressedTexImage3D = (PFNGLCOMPRESSEDTEXIMAGE3DPROC)load(userptr, "glCompressedTexImage3D");
+    glad_snap_rhi_glCompressedTexSubImage1D = (PFNGLCOMPRESSEDTEXSUBIMAGE1DPROC)load(userptr, "glCompressedTexSubImage1D");
+    glad_snap_rhi_glCompressedTexSubImage2D = (PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC)load(userptr, "glCompressedTexSubImage2D");
+    glad_snap_rhi_glCompressedTexSubImage3D = (PFNGLCOMPRESSEDTEXSUBIMAGE3DPROC)load(userptr, "glCompressedTexSubImage3D");
+    glad_snap_rhi_glGetCompressedTexImage = (PFNGLGETCOMPRESSEDTEXIMAGEPROC)load(userptr, "glGetCompressedTexImage");
+    glad_snap_rhi_glLoadTransposeMatrixd = (PFNGLLOADTRANSPOSEMATRIXDPROC)load(userptr, "glLoadTransposeMatrixd");
+    glad_snap_rhi_glLoadTransposeMatrixf = (PFNGLLOADTRANSPOSEMATRIXFPROC)load(userptr, "glLoadTransposeMatrixf");
+    glad_snap_rhi_glMultTransposeMatrixd = (PFNGLMULTTRANSPOSEMATRIXDPROC)load(userptr, "glMultTransposeMatrixd");
+    glad_snap_rhi_glMultTransposeMatrixf = (PFNGLMULTTRANSPOSEMATRIXFPROC)load(userptr, "glMultTransposeMatrixf");
+    glad_snap_rhi_glMultiTexCoord1d = (PFNGLMULTITEXCOORD1DPROC)load(userptr, "glMultiTexCoord1d");
+    glad_snap_rhi_glMultiTexCoord1dv = (PFNGLMULTITEXCOORD1DVPROC)load(userptr, "glMultiTexCoord1dv");
+    glad_snap_rhi_glMultiTexCoord1f = (PFNGLMULTITEXCOORD1FPROC)load(userptr, "glMultiTexCoord1f");
+    glad_snap_rhi_glMultiTexCoord1fv = (PFNGLMULTITEXCOORD1FVPROC)load(userptr, "glMultiTexCoord1fv");
+    glad_snap_rhi_glMultiTexCoord1i = (PFNGLMULTITEXCOORD1IPROC)load(userptr, "glMultiTexCoord1i");
+    glad_snap_rhi_glMultiTexCoord1iv = (PFNGLMULTITEXCOORD1IVPROC)load(userptr, "glMultiTexCoord1iv");
+    glad_snap_rhi_glMultiTexCoord1s = (PFNGLMULTITEXCOORD1SPROC)load(userptr, "glMultiTexCoord1s");
+    glad_snap_rhi_glMultiTexCoord1sv = (PFNGLMULTITEXCOORD1SVPROC)load(userptr, "glMultiTexCoord1sv");
+    glad_snap_rhi_glMultiTexCoord2d = (PFNGLMULTITEXCOORD2DPROC)load(userptr, "glMultiTexCoord2d");
+    glad_snap_rhi_glMultiTexCoord2dv = (PFNGLMULTITEXCOORD2DVPROC)load(userptr, "glMultiTexCoord2dv");
+    glad_snap_rhi_glMultiTexCoord2f = (PFNGLMULTITEXCOORD2FPROC)load(userptr, "glMultiTexCoord2f");
+    glad_snap_rhi_glMultiTexCoord2fv = (PFNGLMULTITEXCOORD2FVPROC)load(userptr, "glMultiTexCoord2fv");
+    glad_snap_rhi_glMultiTexCoord2i = (PFNGLMULTITEXCOORD2IPROC)load(userptr, "glMultiTexCoord2i");
+    glad_snap_rhi_glMultiTexCoord2iv = (PFNGLMULTITEXCOORD2IVPROC)load(userptr, "glMultiTexCoord2iv");
+    glad_snap_rhi_glMultiTexCoord2s = (PFNGLMULTITEXCOORD2SPROC)load(userptr, "glMultiTexCoord2s");
+    glad_snap_rhi_glMultiTexCoord2sv = (PFNGLMULTITEXCOORD2SVPROC)load(userptr, "glMultiTexCoord2sv");
+    glad_snap_rhi_glMultiTexCoord3d = (PFNGLMULTITEXCOORD3DPROC)load(userptr, "glMultiTexCoord3d");
+    glad_snap_rhi_glMultiTexCoord3dv = (PFNGLMULTITEXCOORD3DVPROC)load(userptr, "glMultiTexCoord3dv");
+    glad_snap_rhi_glMultiTexCoord3f = (PFNGLMULTITEXCOORD3FPROC)load(userptr, "glMultiTexCoord3f");
+    glad_snap_rhi_glMultiTexCoord3fv = (PFNGLMULTITEXCOORD3FVPROC)load(userptr, "glMultiTexCoord3fv");
+    glad_snap_rhi_glMultiTexCoord3i = (PFNGLMULTITEXCOORD3IPROC)load(userptr, "glMultiTexCoord3i");
+    glad_snap_rhi_glMultiTexCoord3iv = (PFNGLMULTITEXCOORD3IVPROC)load(userptr, "glMultiTexCoord3iv");
+    glad_snap_rhi_glMultiTexCoord3s = (PFNGLMULTITEXCOORD3SPROC)load(userptr, "glMultiTexCoord3s");
+    glad_snap_rhi_glMultiTexCoord3sv = (PFNGLMULTITEXCOORD3SVPROC)load(userptr, "glMultiTexCoord3sv");
+    glad_snap_rhi_glMultiTexCoord4d = (PFNGLMULTITEXCOORD4DPROC)load(userptr, "glMultiTexCoord4d");
+    glad_snap_rhi_glMultiTexCoord4dv = (PFNGLMULTITEXCOORD4DVPROC)load(userptr, "glMultiTexCoord4dv");
+    glad_snap_rhi_glMultiTexCoord4f = (PFNGLMULTITEXCOORD4FPROC)load(userptr, "glMultiTexCoord4f");
+    glad_snap_rhi_glMultiTexCoord4fv = (PFNGLMULTITEXCOORD4FVPROC)load(userptr, "glMultiTexCoord4fv");
+    glad_snap_rhi_glMultiTexCoord4i = (PFNGLMULTITEXCOORD4IPROC)load(userptr, "glMultiTexCoord4i");
+    glad_snap_rhi_glMultiTexCoord4iv = (PFNGLMULTITEXCOORD4IVPROC)load(userptr, "glMultiTexCoord4iv");
+    glad_snap_rhi_glMultiTexCoord4s = (PFNGLMULTITEXCOORD4SPROC)load(userptr, "glMultiTexCoord4s");
+    glad_snap_rhi_glMultiTexCoord4sv = (PFNGLMULTITEXCOORD4SVPROC)load(userptr, "glMultiTexCoord4sv");
+    glad_snap_rhi_glSampleCoverage = (PFNGLSAMPLECOVERAGEPROC)load(userptr, "glSampleCoverage");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_1_4(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glBlendColor = (PFNGLBLENDCOLORPROC)load(userptr, "glBlendColor");
+    glad_snap_rhi_glBlendEquation = (PFNGLBLENDEQUATIONPROC)load(userptr, "glBlendEquation");
+    glad_snap_rhi_glBlendFuncSeparate = (PFNGLBLENDFUNCSEPARATEPROC)load(userptr, "glBlendFuncSeparate");
+    glad_snap_rhi_glFogCoordPointer = (PFNGLFOGCOORDPOINTERPROC)load(userptr, "glFogCoordPointer");
+    glad_snap_rhi_glFogCoordd = (PFNGLFOGCOORDDPROC)load(userptr, "glFogCoordd");
+    glad_snap_rhi_glFogCoorddv = (PFNGLFOGCOORDDVPROC)load(userptr, "glFogCoorddv");
+    glad_snap_rhi_glFogCoordf = (PFNGLFOGCOORDFPROC)load(userptr, "glFogCoordf");
+    glad_snap_rhi_glFogCoordfv = (PFNGLFOGCOORDFVPROC)load(userptr, "glFogCoordfv");
+    glad_snap_rhi_glMultiDrawArrays = (PFNGLMULTIDRAWARRAYSPROC)load(userptr, "glMultiDrawArrays");
+    glad_snap_rhi_glMultiDrawElements = (PFNGLMULTIDRAWELEMENTSPROC)load(userptr, "glMultiDrawElements");
+    glad_snap_rhi_glPointParameterf = (PFNGLPOINTPARAMETERFPROC)load(userptr, "glPointParameterf");
+    glad_snap_rhi_glPointParameterfv = (PFNGLPOINTPARAMETERFVPROC)load(userptr, "glPointParameterfv");
+    glad_snap_rhi_glPointParameteri = (PFNGLPOINTPARAMETERIPROC)load(userptr, "glPointParameteri");
+    glad_snap_rhi_glPointParameteriv = (PFNGLPOINTPARAMETERIVPROC)load(userptr, "glPointParameteriv");
+    glad_snap_rhi_glSecondaryColor3b = (PFNGLSECONDARYCOLOR3BPROC)load(userptr, "glSecondaryColor3b");
+    glad_snap_rhi_glSecondaryColor3bv = (PFNGLSECONDARYCOLOR3BVPROC)load(userptr, "glSecondaryColor3bv");
+    glad_snap_rhi_glSecondaryColor3d = (PFNGLSECONDARYCOLOR3DPROC)load(userptr, "glSecondaryColor3d");
+    glad_snap_rhi_glSecondaryColor3dv = (PFNGLSECONDARYCOLOR3DVPROC)load(userptr, "glSecondaryColor3dv");
+    glad_snap_rhi_glSecondaryColor3f = (PFNGLSECONDARYCOLOR3FPROC)load(userptr, "glSecondaryColor3f");
+    glad_snap_rhi_glSecondaryColor3fv = (PFNGLSECONDARYCOLOR3FVPROC)load(userptr, "glSecondaryColor3fv");
+    glad_snap_rhi_glSecondaryColor3i = (PFNGLSECONDARYCOLOR3IPROC)load(userptr, "glSecondaryColor3i");
+    glad_snap_rhi_glSecondaryColor3iv = (PFNGLSECONDARYCOLOR3IVPROC)load(userptr, "glSecondaryColor3iv");
+    glad_snap_rhi_glSecondaryColor3s = (PFNGLSECONDARYCOLOR3SPROC)load(userptr, "glSecondaryColor3s");
+    glad_snap_rhi_glSecondaryColor3sv = (PFNGLSECONDARYCOLOR3SVPROC)load(userptr, "glSecondaryColor3sv");
+    glad_snap_rhi_glSecondaryColor3ub = (PFNGLSECONDARYCOLOR3UBPROC)load(userptr, "glSecondaryColor3ub");
+    glad_snap_rhi_glSecondaryColor3ubv = (PFNGLSECONDARYCOLOR3UBVPROC)load(userptr, "glSecondaryColor3ubv");
+    glad_snap_rhi_glSecondaryColor3ui = (PFNGLSECONDARYCOLOR3UIPROC)load(userptr, "glSecondaryColor3ui");
+    glad_snap_rhi_glSecondaryColor3uiv = (PFNGLSECONDARYCOLOR3UIVPROC)load(userptr, "glSecondaryColor3uiv");
+    glad_snap_rhi_glSecondaryColor3us = (PFNGLSECONDARYCOLOR3USPROC)load(userptr, "glSecondaryColor3us");
+    glad_snap_rhi_glSecondaryColor3usv = (PFNGLSECONDARYCOLOR3USVPROC)load(userptr, "glSecondaryColor3usv");
+    glad_snap_rhi_glSecondaryColorPointer = (PFNGLSECONDARYCOLORPOINTERPROC)load(userptr, "glSecondaryColorPointer");
+    glad_snap_rhi_glWindowPos2d = (PFNGLWINDOWPOS2DPROC)load(userptr, "glWindowPos2d");
+    glad_snap_rhi_glWindowPos2dv = (PFNGLWINDOWPOS2DVPROC)load(userptr, "glWindowPos2dv");
+    glad_snap_rhi_glWindowPos2f = (PFNGLWINDOWPOS2FPROC)load(userptr, "glWindowPos2f");
+    glad_snap_rhi_glWindowPos2fv = (PFNGLWINDOWPOS2FVPROC)load(userptr, "glWindowPos2fv");
+    glad_snap_rhi_glWindowPos2i = (PFNGLWINDOWPOS2IPROC)load(userptr, "glWindowPos2i");
+    glad_snap_rhi_glWindowPos2iv = (PFNGLWINDOWPOS2IVPROC)load(userptr, "glWindowPos2iv");
+    glad_snap_rhi_glWindowPos2s = (PFNGLWINDOWPOS2SPROC)load(userptr, "glWindowPos2s");
+    glad_snap_rhi_glWindowPos2sv = (PFNGLWINDOWPOS2SVPROC)load(userptr, "glWindowPos2sv");
+    glad_snap_rhi_glWindowPos3d = (PFNGLWINDOWPOS3DPROC)load(userptr, "glWindowPos3d");
+    glad_snap_rhi_glWindowPos3dv = (PFNGLWINDOWPOS3DVPROC)load(userptr, "glWindowPos3dv");
+    glad_snap_rhi_glWindowPos3f = (PFNGLWINDOWPOS3FPROC)load(userptr, "glWindowPos3f");
+    glad_snap_rhi_glWindowPos3fv = (PFNGLWINDOWPOS3FVPROC)load(userptr, "glWindowPos3fv");
+    glad_snap_rhi_glWindowPos3i = (PFNGLWINDOWPOS3IPROC)load(userptr, "glWindowPos3i");
+    glad_snap_rhi_glWindowPos3iv = (PFNGLWINDOWPOS3IVPROC)load(userptr, "glWindowPos3iv");
+    glad_snap_rhi_glWindowPos3s = (PFNGLWINDOWPOS3SPROC)load(userptr, "glWindowPos3s");
+    glad_snap_rhi_glWindowPos3sv = (PFNGLWINDOWPOS3SVPROC)load(userptr, "glWindowPos3sv");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_1_5(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glBeginQuery = (PFNGLBEGINQUERYPROC)load(userptr, "glBeginQuery");
+    glad_snap_rhi_glBindBuffer = (PFNGLBINDBUFFERPROC)load(userptr, "glBindBuffer");
+    glad_snap_rhi_glBufferData = (PFNGLBUFFERDATAPROC)load(userptr, "glBufferData");
+    glad_snap_rhi_glBufferSubData = (PFNGLBUFFERSUBDATAPROC)load(userptr, "glBufferSubData");
+    glad_snap_rhi_glDeleteBuffers = (PFNGLDELETEBUFFERSPROC)load(userptr, "glDeleteBuffers");
+    glad_snap_rhi_glDeleteQueries = (PFNGLDELETEQUERIESPROC)load(userptr, "glDeleteQueries");
+    glad_snap_rhi_glEndQuery = (PFNGLENDQUERYPROC)load(userptr, "glEndQuery");
+    glad_snap_rhi_glGenBuffers = (PFNGLGENBUFFERSPROC)load(userptr, "glGenBuffers");
+    glad_snap_rhi_glGenQueries = (PFNGLGENQUERIESPROC)load(userptr, "glGenQueries");
+    glad_snap_rhi_glGetBufferParameteriv = (PFNGLGETBUFFERPARAMETERIVPROC)load(userptr, "glGetBufferParameteriv");
+    glad_snap_rhi_glGetBufferPointerv = (PFNGLGETBUFFERPOINTERVPROC)load(userptr, "glGetBufferPointerv");
+    glad_snap_rhi_glGetBufferSubData = (PFNGLGETBUFFERSUBDATAPROC)load(userptr, "glGetBufferSubData");
+    glad_snap_rhi_glGetQueryObjectiv = (PFNGLGETQUERYOBJECTIVPROC)load(userptr, "glGetQueryObjectiv");
+    glad_snap_rhi_glGetQueryObjectuiv = (PFNGLGETQUERYOBJECTUIVPROC)load(userptr, "glGetQueryObjectuiv");
+    glad_snap_rhi_glGetQueryiv = (PFNGLGETQUERYIVPROC)load(userptr, "glGetQueryiv");
+    glad_snap_rhi_glIsBuffer = (PFNGLISBUFFERPROC)load(userptr, "glIsBuffer");
+    glad_snap_rhi_glIsQuery = (PFNGLISQUERYPROC)load(userptr, "glIsQuery");
+    glad_snap_rhi_glMapBuffer = (PFNGLMAPBUFFERPROC)load(userptr, "glMapBuffer");
+    glad_snap_rhi_glUnmapBuffer = (PFNGLUNMAPBUFFERPROC)load(userptr, "glUnmapBuffer");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_2_0(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glAttachShader = (PFNGLATTACHSHADERPROC)load(userptr, "glAttachShader");
+    glad_snap_rhi_glBindAttribLocation = (PFNGLBINDATTRIBLOCATIONPROC)load(userptr, "glBindAttribLocation");
+    glad_snap_rhi_glBlendEquationSeparate = (PFNGLBLENDEQUATIONSEPARATEPROC)load(userptr, "glBlendEquationSeparate");
+    glad_snap_rhi_glCompileShader = (PFNGLCOMPILESHADERPROC)load(userptr, "glCompileShader");
+    glad_snap_rhi_glCreateProgram = (PFNGLCREATEPROGRAMPROC)load(userptr, "glCreateProgram");
+    glad_snap_rhi_glCreateShader = (PFNGLCREATESHADERPROC)load(userptr, "glCreateShader");
+    glad_snap_rhi_glDeleteProgram = (PFNGLDELETEPROGRAMPROC)load(userptr, "glDeleteProgram");
+    glad_snap_rhi_glDeleteShader = (PFNGLDELETESHADERPROC)load(userptr, "glDeleteShader");
+    glad_snap_rhi_glDetachShader = (PFNGLDETACHSHADERPROC)load(userptr, "glDetachShader");
+    glad_snap_rhi_glDisableVertexAttribArray = (PFNGLDISABLEVERTEXATTRIBARRAYPROC)load(userptr, "glDisableVertexAttribArray");
+    glad_snap_rhi_glDrawBuffers = (PFNGLDRAWBUFFERSPROC)load(userptr, "glDrawBuffers");
+    glad_snap_rhi_glEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC)load(userptr, "glEnableVertexAttribArray");
+    glad_snap_rhi_glGetActiveAttrib = (PFNGLGETACTIVEATTRIBPROC)load(userptr, "glGetActiveAttrib");
+    glad_snap_rhi_glGetActiveUniform = (PFNGLGETACTIVEUNIFORMPROC)load(userptr, "glGetActiveUniform");
+    glad_snap_rhi_glGetAttachedShaders = (PFNGLGETATTACHEDSHADERSPROC)load(userptr, "glGetAttachedShaders");
+    glad_snap_rhi_glGetAttribLocation = (PFNGLGETATTRIBLOCATIONPROC)load(userptr, "glGetAttribLocation");
+    glad_snap_rhi_glGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOGPROC)load(userptr, "glGetProgramInfoLog");
+    glad_snap_rhi_glGetProgramiv = (PFNGLGETPROGRAMIVPROC)load(userptr, "glGetProgramiv");
+    glad_snap_rhi_glGetShaderInfoLog = (PFNGLGETSHADERINFOLOGPROC)load(userptr, "glGetShaderInfoLog");
+    glad_snap_rhi_glGetShaderSource = (PFNGLGETSHADERSOURCEPROC)load(userptr, "glGetShaderSource");
+    glad_snap_rhi_glGetShaderiv = (PFNGLGETSHADERIVPROC)load(userptr, "glGetShaderiv");
+    glad_snap_rhi_glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC)load(userptr, "glGetUniformLocation");
+    glad_snap_rhi_glGetUniformfv = (PFNGLGETUNIFORMFVPROC)load(userptr, "glGetUniformfv");
+    glad_snap_rhi_glGetUniformiv = (PFNGLGETUNIFORMIVPROC)load(userptr, "glGetUniformiv");
+    glad_snap_rhi_glGetVertexAttribPointerv = (PFNGLGETVERTEXATTRIBPOINTERVPROC)load(userptr, "glGetVertexAttribPointerv");
+    glad_snap_rhi_glGetVertexAttribdv = (PFNGLGETVERTEXATTRIBDVPROC)load(userptr, "glGetVertexAttribdv");
+    glad_snap_rhi_glGetVertexAttribfv = (PFNGLGETVERTEXATTRIBFVPROC)load(userptr, "glGetVertexAttribfv");
+    glad_snap_rhi_glGetVertexAttribiv = (PFNGLGETVERTEXATTRIBIVPROC)load(userptr, "glGetVertexAttribiv");
+    glad_snap_rhi_glIsProgram = (PFNGLISPROGRAMPROC)load(userptr, "glIsProgram");
+    glad_snap_rhi_glIsShader = (PFNGLISSHADERPROC)load(userptr, "glIsShader");
+    glad_snap_rhi_glLinkProgram = (PFNGLLINKPROGRAMPROC)load(userptr, "glLinkProgram");
+    glad_snap_rhi_glShaderSource = (PFNGLSHADERSOURCEPROC)load(userptr, "glShaderSource");
+    glad_snap_rhi_glStencilFuncSeparate = (PFNGLSTENCILFUNCSEPARATEPROC)load(userptr, "glStencilFuncSeparate");
+    glad_snap_rhi_glStencilMaskSeparate = (PFNGLSTENCILMASKSEPARATEPROC)load(userptr, "glStencilMaskSeparate");
+    glad_snap_rhi_glStencilOpSeparate = (PFNGLSTENCILOPSEPARATEPROC)load(userptr, "glStencilOpSeparate");
+    glad_snap_rhi_glUniform1f = (PFNGLUNIFORM1FPROC)load(userptr, "glUniform1f");
+    glad_snap_rhi_glUniform1fv = (PFNGLUNIFORM1FVPROC)load(userptr, "glUniform1fv");
+    glad_snap_rhi_glUniform1i = (PFNGLUNIFORM1IPROC)load(userptr, "glUniform1i");
+    glad_snap_rhi_glUniform1iv = (PFNGLUNIFORM1IVPROC)load(userptr, "glUniform1iv");
+    glad_snap_rhi_glUniform2f = (PFNGLUNIFORM2FPROC)load(userptr, "glUniform2f");
+    glad_snap_rhi_glUniform2fv = (PFNGLUNIFORM2FVPROC)load(userptr, "glUniform2fv");
+    glad_snap_rhi_glUniform2i = (PFNGLUNIFORM2IPROC)load(userptr, "glUniform2i");
+    glad_snap_rhi_glUniform2iv = (PFNGLUNIFORM2IVPROC)load(userptr, "glUniform2iv");
+    glad_snap_rhi_glUniform3f = (PFNGLUNIFORM3FPROC)load(userptr, "glUniform3f");
+    glad_snap_rhi_glUniform3fv = (PFNGLUNIFORM3FVPROC)load(userptr, "glUniform3fv");
+    glad_snap_rhi_glUniform3i = (PFNGLUNIFORM3IPROC)load(userptr, "glUniform3i");
+    glad_snap_rhi_glUniform3iv = (PFNGLUNIFORM3IVPROC)load(userptr, "glUniform3iv");
+    glad_snap_rhi_glUniform4f = (PFNGLUNIFORM4FPROC)load(userptr, "glUniform4f");
+    glad_snap_rhi_glUniform4fv = (PFNGLUNIFORM4FVPROC)load(userptr, "glUniform4fv");
+    glad_snap_rhi_glUniform4i = (PFNGLUNIFORM4IPROC)load(userptr, "glUniform4i");
+    glad_snap_rhi_glUniform4iv = (PFNGLUNIFORM4IVPROC)load(userptr, "glUniform4iv");
+    glad_snap_rhi_glUniformMatrix2fv = (PFNGLUNIFORMMATRIX2FVPROC)load(userptr, "glUniformMatrix2fv");
+    glad_snap_rhi_glUniformMatrix3fv = (PFNGLUNIFORMMATRIX3FVPROC)load(userptr, "glUniformMatrix3fv");
+    glad_snap_rhi_glUniformMatrix4fv = (PFNGLUNIFORMMATRIX4FVPROC)load(userptr, "glUniformMatrix4fv");
+    glad_snap_rhi_glUseProgram = (PFNGLUSEPROGRAMPROC)load(userptr, "glUseProgram");
+    glad_snap_rhi_glValidateProgram = (PFNGLVALIDATEPROGRAMPROC)load(userptr, "glValidateProgram");
+    glad_snap_rhi_glVertexAttrib1d = (PFNGLVERTEXATTRIB1DPROC)load(userptr, "glVertexAttrib1d");
+    glad_snap_rhi_glVertexAttrib1dv = (PFNGLVERTEXATTRIB1DVPROC)load(userptr, "glVertexAttrib1dv");
+    glad_snap_rhi_glVertexAttrib1f = (PFNGLVERTEXATTRIB1FPROC)load(userptr, "glVertexAttrib1f");
+    glad_snap_rhi_glVertexAttrib1fv = (PFNGLVERTEXATTRIB1FVPROC)load(userptr, "glVertexAttrib1fv");
+    glad_snap_rhi_glVertexAttrib1s = (PFNGLVERTEXATTRIB1SPROC)load(userptr, "glVertexAttrib1s");
+    glad_snap_rhi_glVertexAttrib1sv = (PFNGLVERTEXATTRIB1SVPROC)load(userptr, "glVertexAttrib1sv");
+    glad_snap_rhi_glVertexAttrib2d = (PFNGLVERTEXATTRIB2DPROC)load(userptr, "glVertexAttrib2d");
+    glad_snap_rhi_glVertexAttrib2dv = (PFNGLVERTEXATTRIB2DVPROC)load(userptr, "glVertexAttrib2dv");
+    glad_snap_rhi_glVertexAttrib2f = (PFNGLVERTEXATTRIB2FPROC)load(userptr, "glVertexAttrib2f");
+    glad_snap_rhi_glVertexAttrib2fv = (PFNGLVERTEXATTRIB2FVPROC)load(userptr, "glVertexAttrib2fv");
+    glad_snap_rhi_glVertexAttrib2s = (PFNGLVERTEXATTRIB2SPROC)load(userptr, "glVertexAttrib2s");
+    glad_snap_rhi_glVertexAttrib2sv = (PFNGLVERTEXATTRIB2SVPROC)load(userptr, "glVertexAttrib2sv");
+    glad_snap_rhi_glVertexAttrib3d = (PFNGLVERTEXATTRIB3DPROC)load(userptr, "glVertexAttrib3d");
+    glad_snap_rhi_glVertexAttrib3dv = (PFNGLVERTEXATTRIB3DVPROC)load(userptr, "glVertexAttrib3dv");
+    glad_snap_rhi_glVertexAttrib3f = (PFNGLVERTEXATTRIB3FPROC)load(userptr, "glVertexAttrib3f");
+    glad_snap_rhi_glVertexAttrib3fv = (PFNGLVERTEXATTRIB3FVPROC)load(userptr, "glVertexAttrib3fv");
+    glad_snap_rhi_glVertexAttrib3s = (PFNGLVERTEXATTRIB3SPROC)load(userptr, "glVertexAttrib3s");
+    glad_snap_rhi_glVertexAttrib3sv = (PFNGLVERTEXATTRIB3SVPROC)load(userptr, "glVertexAttrib3sv");
+    glad_snap_rhi_glVertexAttrib4Nbv = (PFNGLVERTEXATTRIB4NBVPROC)load(userptr, "glVertexAttrib4Nbv");
+    glad_snap_rhi_glVertexAttrib4Niv = (PFNGLVERTEXATTRIB4NIVPROC)load(userptr, "glVertexAttrib4Niv");
+    glad_snap_rhi_glVertexAttrib4Nsv = (PFNGLVERTEXATTRIB4NSVPROC)load(userptr, "glVertexAttrib4Nsv");
+    glad_snap_rhi_glVertexAttrib4Nub = (PFNGLVERTEXATTRIB4NUBPROC)load(userptr, "glVertexAttrib4Nub");
+    glad_snap_rhi_glVertexAttrib4Nubv = (PFNGLVERTEXATTRIB4NUBVPROC)load(userptr, "glVertexAttrib4Nubv");
+    glad_snap_rhi_glVertexAttrib4Nuiv = (PFNGLVERTEXATTRIB4NUIVPROC)load(userptr, "glVertexAttrib4Nuiv");
+    glad_snap_rhi_glVertexAttrib4Nusv = (PFNGLVERTEXATTRIB4NUSVPROC)load(userptr, "glVertexAttrib4Nusv");
+    glad_snap_rhi_glVertexAttrib4bv = (PFNGLVERTEXATTRIB4BVPROC)load(userptr, "glVertexAttrib4bv");
+    glad_snap_rhi_glVertexAttrib4d = (PFNGLVERTEXATTRIB4DPROC)load(userptr, "glVertexAttrib4d");
+    glad_snap_rhi_glVertexAttrib4dv = (PFNGLVERTEXATTRIB4DVPROC)load(userptr, "glVertexAttrib4dv");
+    glad_snap_rhi_glVertexAttrib4f = (PFNGLVERTEXATTRIB4FPROC)load(userptr, "glVertexAttrib4f");
+    glad_snap_rhi_glVertexAttrib4fv = (PFNGLVERTEXATTRIB4FVPROC)load(userptr, "glVertexAttrib4fv");
+    glad_snap_rhi_glVertexAttrib4iv = (PFNGLVERTEXATTRIB4IVPROC)load(userptr, "glVertexAttrib4iv");
+    glad_snap_rhi_glVertexAttrib4s = (PFNGLVERTEXATTRIB4SPROC)load(userptr, "glVertexAttrib4s");
+    glad_snap_rhi_glVertexAttrib4sv = (PFNGLVERTEXATTRIB4SVPROC)load(userptr, "glVertexAttrib4sv");
+    glad_snap_rhi_glVertexAttrib4ubv = (PFNGLVERTEXATTRIB4UBVPROC)load(userptr, "glVertexAttrib4ubv");
+    glad_snap_rhi_glVertexAttrib4uiv = (PFNGLVERTEXATTRIB4UIVPROC)load(userptr, "glVertexAttrib4uiv");
+    glad_snap_rhi_glVertexAttrib4usv = (PFNGLVERTEXATTRIB4USVPROC)load(userptr, "glVertexAttrib4usv");
+    glad_snap_rhi_glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC)load(userptr, "glVertexAttribPointer");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_2_1(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glUniformMatrix2x3fv = (PFNGLUNIFORMMATRIX2X3FVPROC)load(userptr, "glUniformMatrix2x3fv");
+    glad_snap_rhi_glUniformMatrix2x4fv = (PFNGLUNIFORMMATRIX2X4FVPROC)load(userptr, "glUniformMatrix2x4fv");
+    glad_snap_rhi_glUniformMatrix3x2fv = (PFNGLUNIFORMMATRIX3X2FVPROC)load(userptr, "glUniformMatrix3x2fv");
+    glad_snap_rhi_glUniformMatrix3x4fv = (PFNGLUNIFORMMATRIX3X4FVPROC)load(userptr, "glUniformMatrix3x4fv");
+    glad_snap_rhi_glUniformMatrix4x2fv = (PFNGLUNIFORMMATRIX4X2FVPROC)load(userptr, "glUniformMatrix4x2fv");
+    glad_snap_rhi_glUniformMatrix4x3fv = (PFNGLUNIFORMMATRIX4X3FVPROC)load(userptr, "glUniformMatrix4x3fv");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_3_0(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glBeginConditionalRender = (PFNGLBEGINCONDITIONALRENDERPROC)load(userptr, "glBeginConditionalRender");
+    glad_snap_rhi_glBeginTransformFeedback = (PFNGLBEGINTRANSFORMFEEDBACKPROC)load(userptr, "glBeginTransformFeedback");
+    glad_snap_rhi_glBindBufferBase = (PFNGLBINDBUFFERBASEPROC)load(userptr, "glBindBufferBase");
+    glad_snap_rhi_glBindBufferRange = (PFNGLBINDBUFFERRANGEPROC)load(userptr, "glBindBufferRange");
+    glad_snap_rhi_glBindFragDataLocation = (PFNGLBINDFRAGDATALOCATIONPROC)load(userptr, "glBindFragDataLocation");
+    glad_snap_rhi_glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC)load(userptr, "glBindFramebuffer");
+    glad_snap_rhi_glBindRenderbuffer = (PFNGLBINDRENDERBUFFERPROC)load(userptr, "glBindRenderbuffer");
+    glad_snap_rhi_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)load(userptr, "glBindVertexArray");
+    glad_snap_rhi_glBlitFramebuffer = (PFNGLBLITFRAMEBUFFERPROC)load(userptr, "glBlitFramebuffer");
+    glad_snap_rhi_glCheckFramebufferStatus = (PFNGLCHECKFRAMEBUFFERSTATUSPROC)load(userptr, "glCheckFramebufferStatus");
+    glad_snap_rhi_glClampColor = (PFNGLCLAMPCOLORPROC)load(userptr, "glClampColor");
+    glad_snap_rhi_glClearBufferfi = (PFNGLCLEARBUFFERFIPROC)load(userptr, "glClearBufferfi");
+    glad_snap_rhi_glClearBufferfv = (PFNGLCLEARBUFFERFVPROC)load(userptr, "glClearBufferfv");
+    glad_snap_rhi_glClearBufferiv = (PFNGLCLEARBUFFERIVPROC)load(userptr, "glClearBufferiv");
+    glad_snap_rhi_glClearBufferuiv = (PFNGLCLEARBUFFERUIVPROC)load(userptr, "glClearBufferuiv");
+    glad_snap_rhi_glColorMaski = (PFNGLCOLORMASKIPROC)load(userptr, "glColorMaski");
+    glad_snap_rhi_glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC)load(userptr, "glDeleteFramebuffers");
+    glad_snap_rhi_glDeleteRenderbuffers = (PFNGLDELETERENDERBUFFERSPROC)load(userptr, "glDeleteRenderbuffers");
+    glad_snap_rhi_glDeleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC)load(userptr, "glDeleteVertexArrays");
+    glad_snap_rhi_glDisablei = (PFNGLDISABLEIPROC)load(userptr, "glDisablei");
+    glad_snap_rhi_glEnablei = (PFNGLENABLEIPROC)load(userptr, "glEnablei");
+    glad_snap_rhi_glEndConditionalRender = (PFNGLENDCONDITIONALRENDERPROC)load(userptr, "glEndConditionalRender");
+    glad_snap_rhi_glEndTransformFeedback = (PFNGLENDTRANSFORMFEEDBACKPROC)load(userptr, "glEndTransformFeedback");
+    glad_snap_rhi_glFlushMappedBufferRange = (PFNGLFLUSHMAPPEDBUFFERRANGEPROC)load(userptr, "glFlushMappedBufferRange");
+    glad_snap_rhi_glFramebufferRenderbuffer = (PFNGLFRAMEBUFFERRENDERBUFFERPROC)load(userptr, "glFramebufferRenderbuffer");
+    glad_snap_rhi_glFramebufferTexture1D = (PFNGLFRAMEBUFFERTEXTURE1DPROC)load(userptr, "glFramebufferTexture1D");
+    glad_snap_rhi_glFramebufferTexture2D = (PFNGLFRAMEBUFFERTEXTURE2DPROC)load(userptr, "glFramebufferTexture2D");
+    glad_snap_rhi_glFramebufferTexture3D = (PFNGLFRAMEBUFFERTEXTURE3DPROC)load(userptr, "glFramebufferTexture3D");
+    glad_snap_rhi_glFramebufferTextureLayer = (PFNGLFRAMEBUFFERTEXTURELAYERPROC)load(userptr, "glFramebufferTextureLayer");
+    glad_snap_rhi_glGenFramebuffers = (PFNGLGENFRAMEBUFFERSPROC)load(userptr, "glGenFramebuffers");
+    glad_snap_rhi_glGenRenderbuffers = (PFNGLGENRENDERBUFFERSPROC)load(userptr, "glGenRenderbuffers");
+    glad_snap_rhi_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)load(userptr, "glGenVertexArrays");
+    glad_snap_rhi_glGenerateMipmap = (PFNGLGENERATEMIPMAPPROC)load(userptr, "glGenerateMipmap");
+    glad_snap_rhi_glGetBooleani_v = (PFNGLGETBOOLEANI_VPROC)load(userptr, "glGetBooleani_v");
+    glad_snap_rhi_glGetFragDataLocation = (PFNGLGETFRAGDATALOCATIONPROC)load(userptr, "glGetFragDataLocation");
+    glad_snap_rhi_glGetFramebufferAttachmentParameteriv =
+        (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC)load(userptr, "glGetFramebufferAttachmentParameteriv");
+    glad_snap_rhi_glGetIntegeri_v = (PFNGLGETINTEGERI_VPROC)load(userptr, "glGetIntegeri_v");
+    glad_snap_rhi_glGetRenderbufferParameteriv =
+        (PFNGLGETRENDERBUFFERPARAMETERIVPROC)load(userptr, "glGetRenderbufferParameteriv");
+    glad_snap_rhi_glGetStringi = (PFNGLGETSTRINGIPROC)load(userptr, "glGetStringi");
+    glad_snap_rhi_glGetTexParameterIiv = (PFNGLGETTEXPARAMETERIIVPROC)load(userptr, "glGetTexParameterIiv");
+    glad_snap_rhi_glGetTexParameterIuiv = (PFNGLGETTEXPARAMETERIUIVPROC)load(userptr, "glGetTexParameterIuiv");
+    glad_snap_rhi_glGetTransformFeedbackVarying =
+        (PFNGLGETTRANSFORMFEEDBACKVARYINGPROC)load(userptr, "glGetTransformFeedbackVarying");
+    glad_snap_rhi_glGetUniformuiv = (PFNGLGETUNIFORMUIVPROC)load(userptr, "glGetUniformuiv");
+    glad_snap_rhi_glGetVertexAttribIiv = (PFNGLGETVERTEXATTRIBIIVPROC)load(userptr, "glGetVertexAttribIiv");
+    glad_snap_rhi_glGetVertexAttribIuiv = (PFNGLGETVERTEXATTRIBIUIVPROC)load(userptr, "glGetVertexAttribIuiv");
+    glad_snap_rhi_glIsEnabledi = (PFNGLISENABLEDIPROC)load(userptr, "glIsEnabledi");
+    glad_snap_rhi_glIsFramebuffer = (PFNGLISFRAMEBUFFERPROC)load(userptr, "glIsFramebuffer");
+    glad_snap_rhi_glIsRenderbuffer = (PFNGLISRENDERBUFFERPROC)load(userptr, "glIsRenderbuffer");
+    glad_snap_rhi_glIsVertexArray = (PFNGLISVERTEXARRAYPROC)load(userptr, "glIsVertexArray");
+    glad_snap_rhi_glMapBufferRange = (PFNGLMAPBUFFERRANGEPROC)load(userptr, "glMapBufferRange");
+    glad_snap_rhi_glRenderbufferStorage = (PFNGLRENDERBUFFERSTORAGEPROC)load(userptr, "glRenderbufferStorage");
+    glad_snap_rhi_glRenderbufferStorageMultisample =
+        (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC)load(userptr, "glRenderbufferStorageMultisample");
+    glad_snap_rhi_glTexParameterIiv = (PFNGLTEXPARAMETERIIVPROC)load(userptr, "glTexParameterIiv");
+    glad_snap_rhi_glTexParameterIuiv = (PFNGLTEXPARAMETERIUIVPROC)load(userptr, "glTexParameterIuiv");
+    glad_snap_rhi_glTransformFeedbackVaryings =
+        (PFNGLTRANSFORMFEEDBACKVARYINGSPROC)load(userptr, "glTransformFeedbackVaryings");
+    glad_snap_rhi_glUniform1ui = (PFNGLUNIFORM1UIPROC)load(userptr, "glUniform1ui");
+    glad_snap_rhi_glUniform1uiv = (PFNGLUNIFORM1UIVPROC)load(userptr, "glUniform1uiv");
+    glad_snap_rhi_glUniform2ui = (PFNGLUNIFORM2UIPROC)load(userptr, "glUniform2ui");
+    glad_snap_rhi_glUniform2uiv = (PFNGLUNIFORM2UIVPROC)load(userptr, "glUniform2uiv");
+    glad_snap_rhi_glUniform3ui = (PFNGLUNIFORM3UIPROC)load(userptr, "glUniform3ui");
+    glad_snap_rhi_glUniform3uiv = (PFNGLUNIFORM3UIVPROC)load(userptr, "glUniform3uiv");
+    glad_snap_rhi_glUniform4ui = (PFNGLUNIFORM4UIPROC)load(userptr, "glUniform4ui");
+    glad_snap_rhi_glUniform4uiv = (PFNGLUNIFORM4UIVPROC)load(userptr, "glUniform4uiv");
+    glad_snap_rhi_glVertexAttribI1i = (PFNGLVERTEXATTRIBI1IPROC)load(userptr, "glVertexAttribI1i");
+    glad_snap_rhi_glVertexAttribI1iv = (PFNGLVERTEXATTRIBI1IVPROC)load(userptr, "glVertexAttribI1iv");
+    glad_snap_rhi_glVertexAttribI1ui = (PFNGLVERTEXATTRIBI1UIPROC)load(userptr, "glVertexAttribI1ui");
+    glad_snap_rhi_glVertexAttribI1uiv = (PFNGLVERTEXATTRIBI1UIVPROC)load(userptr, "glVertexAttribI1uiv");
+    glad_snap_rhi_glVertexAttribI2i = (PFNGLVERTEXATTRIBI2IPROC)load(userptr, "glVertexAttribI2i");
+    glad_snap_rhi_glVertexAttribI2iv = (PFNGLVERTEXATTRIBI2IVPROC)load(userptr, "glVertexAttribI2iv");
+    glad_snap_rhi_glVertexAttribI2ui = (PFNGLVERTEXATTRIBI2UIPROC)load(userptr, "glVertexAttribI2ui");
+    glad_snap_rhi_glVertexAttribI2uiv = (PFNGLVERTEXATTRIBI2UIVPROC)load(userptr, "glVertexAttribI2uiv");
+    glad_snap_rhi_glVertexAttribI3i = (PFNGLVERTEXATTRIBI3IPROC)load(userptr, "glVertexAttribI3i");
+    glad_snap_rhi_glVertexAttribI3iv = (PFNGLVERTEXATTRIBI3IVPROC)load(userptr, "glVertexAttribI3iv");
+    glad_snap_rhi_glVertexAttribI3ui = (PFNGLVERTEXATTRIBI3UIPROC)load(userptr, "glVertexAttribI3ui");
+    glad_snap_rhi_glVertexAttribI3uiv = (PFNGLVERTEXATTRIBI3UIVPROC)load(userptr, "glVertexAttribI3uiv");
+    glad_snap_rhi_glVertexAttribI4bv = (PFNGLVERTEXATTRIBI4BVPROC)load(userptr, "glVertexAttribI4bv");
+    glad_snap_rhi_glVertexAttribI4i = (PFNGLVERTEXATTRIBI4IPROC)load(userptr, "glVertexAttribI4i");
+    glad_snap_rhi_glVertexAttribI4iv = (PFNGLVERTEXATTRIBI4IVPROC)load(userptr, "glVertexAttribI4iv");
+    glad_snap_rhi_glVertexAttribI4sv = (PFNGLVERTEXATTRIBI4SVPROC)load(userptr, "glVertexAttribI4sv");
+    glad_snap_rhi_glVertexAttribI4ubv = (PFNGLVERTEXATTRIBI4UBVPROC)load(userptr, "glVertexAttribI4ubv");
+    glad_snap_rhi_glVertexAttribI4ui = (PFNGLVERTEXATTRIBI4UIPROC)load(userptr, "glVertexAttribI4ui");
+    glad_snap_rhi_glVertexAttribI4uiv = (PFNGLVERTEXATTRIBI4UIVPROC)load(userptr, "glVertexAttribI4uiv");
+    glad_snap_rhi_glVertexAttribI4usv = (PFNGLVERTEXATTRIBI4USVPROC)load(userptr, "glVertexAttribI4usv");
+    glad_snap_rhi_glVertexAttribIPointer = (PFNGLVERTEXATTRIBIPOINTERPROC)load(userptr, "glVertexAttribIPointer");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_3_1(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glBindBufferBase = (PFNGLBINDBUFFERBASEPROC)load(userptr, "glBindBufferBase");
+    glad_snap_rhi_glBindBufferRange = (PFNGLBINDBUFFERRANGEPROC)load(userptr, "glBindBufferRange");
+    glad_snap_rhi_glCopyBufferSubData = (PFNGLCOPYBUFFERSUBDATAPROC)load(userptr, "glCopyBufferSubData");
+    glad_snap_rhi_glDrawArraysInstanced = (PFNGLDRAWARRAYSINSTANCEDPROC)load(userptr, "glDrawArraysInstanced");
+    glad_snap_rhi_glDrawElementsInstanced = (PFNGLDRAWELEMENTSINSTANCEDPROC)load(userptr, "glDrawElementsInstanced");
+    glad_snap_rhi_glGetActiveUniformBlockName =
+        (PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC)load(userptr, "glGetActiveUniformBlockName");
+    glad_snap_rhi_glGetActiveUniformBlockiv = (PFNGLGETACTIVEUNIFORMBLOCKIVPROC)load(userptr, "glGetActiveUniformBlockiv");
+    glad_snap_rhi_glGetActiveUniformName = (PFNGLGETACTIVEUNIFORMNAMEPROC)load(userptr, "glGetActiveUniformName");
+    glad_snap_rhi_glGetActiveUniformsiv = (PFNGLGETACTIVEUNIFORMSIVPROC)load(userptr, "glGetActiveUniformsiv");
+    glad_snap_rhi_glGetIntegeri_v = (PFNGLGETINTEGERI_VPROC)load(userptr, "glGetIntegeri_v");
+    glad_snap_rhi_glGetUniformBlockIndex = (PFNGLGETUNIFORMBLOCKINDEXPROC)load(userptr, "glGetUniformBlockIndex");
+    glad_snap_rhi_glGetUniformIndices = (PFNGLGETUNIFORMINDICESPROC)load(userptr, "glGetUniformIndices");
+    glad_snap_rhi_glPrimitiveRestartIndex = (PFNGLPRIMITIVERESTARTINDEXPROC)load(userptr, "glPrimitiveRestartIndex");
+    glad_snap_rhi_glTexBuffer = (PFNGLTEXBUFFERPROC)load(userptr, "glTexBuffer");
+    glad_snap_rhi_glUniformBlockBinding = (PFNGLUNIFORMBLOCKBINDINGPROC)load(userptr, "glUniformBlockBinding");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_3_2(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glClientWaitSync = (PFNGLCLIENTWAITSYNCPROC)load(userptr, "glClientWaitSync");
+    glad_snap_rhi_glDeleteSync = (PFNGLDELETESYNCPROC)load(userptr, "glDeleteSync");
+    glad_snap_rhi_glDrawElementsBaseVertex = (PFNGLDRAWELEMENTSBASEVERTEXPROC)load(userptr, "glDrawElementsBaseVertex");
+    glad_snap_rhi_glDrawElementsInstancedBaseVertex =
+        (PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXPROC)load(userptr, "glDrawElementsInstancedBaseVertex");
+    glad_snap_rhi_glDrawRangeElementsBaseVertex =
+        (PFNGLDRAWRANGEELEMENTSBASEVERTEXPROC)load(userptr, "glDrawRangeElementsBaseVertex");
+    glad_snap_rhi_glFenceSync = (PFNGLFENCESYNCPROC)load(userptr, "glFenceSync");
+    glad_snap_rhi_glFramebufferTexture = (PFNGLFRAMEBUFFERTEXTUREPROC)load(userptr, "glFramebufferTexture");
+    glad_snap_rhi_glGetBufferParameteri64v = (PFNGLGETBUFFERPARAMETERI64VPROC)load(userptr, "glGetBufferParameteri64v");
+    glad_snap_rhi_glGetInteger64i_v = (PFNGLGETINTEGER64I_VPROC)load(userptr, "glGetInteger64i_v");
+    glad_snap_rhi_glGetInteger64v = (PFNGLGETINTEGER64VPROC)load(userptr, "glGetInteger64v");
+    glad_snap_rhi_glGetMultisamplefv = (PFNGLGETMULTISAMPLEFVPROC)load(userptr, "glGetMultisamplefv");
+    glad_snap_rhi_glGetSynciv = (PFNGLGETSYNCIVPROC)load(userptr, "glGetSynciv");
+    glad_snap_rhi_glIsSync = (PFNGLISSYNCPROC)load(userptr, "glIsSync");
+    glad_snap_rhi_glMultiDrawElementsBaseVertex =
+        (PFNGLMULTIDRAWELEMENTSBASEVERTEXPROC)load(userptr, "glMultiDrawElementsBaseVertex");
+    glad_snap_rhi_glProvokingVertex = (PFNGLPROVOKINGVERTEXPROC)load(userptr, "glProvokingVertex");
+    glad_snap_rhi_glSampleMaski = (PFNGLSAMPLEMASKIPROC)load(userptr, "glSampleMaski");
+    glad_snap_rhi_glTexImage2DMultisample = (PFNGLTEXIMAGE2DMULTISAMPLEPROC)load(userptr, "glTexImage2DMultisample");
+    glad_snap_rhi_glTexImage3DMultisample = (PFNGLTEXIMAGE3DMULTISAMPLEPROC)load(userptr, "glTexImage3DMultisample");
+    glad_snap_rhi_glWaitSync = (PFNGLWAITSYNCPROC)load(userptr, "glWaitSync");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_3_3(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glBindFragDataLocationIndexed =
+        (PFNGLBINDFRAGDATALOCATIONINDEXEDPROC)load(userptr, "glBindFragDataLocationIndexed");
+    glad_snap_rhi_glBindSampler = (PFNGLBINDSAMPLERPROC)load(userptr, "glBindSampler");
+    glad_snap_rhi_glColorP3ui = (PFNGLCOLORP3UIPROC)load(userptr, "glColorP3ui");
+    glad_snap_rhi_glColorP3uiv = (PFNGLCOLORP3UIVPROC)load(userptr, "glColorP3uiv");
+    glad_snap_rhi_glColorP4ui = (PFNGLCOLORP4UIPROC)load(userptr, "glColorP4ui");
+    glad_snap_rhi_glColorP4uiv = (PFNGLCOLORP4UIVPROC)load(userptr, "glColorP4uiv");
+    glad_snap_rhi_glDeleteSamplers = (PFNGLDELETESAMPLERSPROC)load(userptr, "glDeleteSamplers");
+    glad_snap_rhi_glGenSamplers = (PFNGLGENSAMPLERSPROC)load(userptr, "glGenSamplers");
+    glad_snap_rhi_glGetFragDataIndex = (PFNGLGETFRAGDATAINDEXPROC)load(userptr, "glGetFragDataIndex");
+    glad_snap_rhi_glGetQueryObjecti64v = (PFNGLGETQUERYOBJECTI64VPROC)load(userptr, "glGetQueryObjecti64v");
+    glad_snap_rhi_glGetQueryObjectui64v = (PFNGLGETQUERYOBJECTUI64VPROC)load(userptr, "glGetQueryObjectui64v");
+    glad_snap_rhi_glGetSamplerParameterIiv = (PFNGLGETSAMPLERPARAMETERIIVPROC)load(userptr, "glGetSamplerParameterIiv");
+    glad_snap_rhi_glGetSamplerParameterIuiv = (PFNGLGETSAMPLERPARAMETERIUIVPROC)load(userptr, "glGetSamplerParameterIuiv");
+    glad_snap_rhi_glGetSamplerParameterfv = (PFNGLGETSAMPLERPARAMETERFVPROC)load(userptr, "glGetSamplerParameterfv");
+    glad_snap_rhi_glGetSamplerParameteriv = (PFNGLGETSAMPLERPARAMETERIVPROC)load(userptr, "glGetSamplerParameteriv");
+    glad_snap_rhi_glIsSampler = (PFNGLISSAMPLERPROC)load(userptr, "glIsSampler");
+    glad_snap_rhi_glMultiTexCoordP1ui = (PFNGLMULTITEXCOORDP1UIPROC)load(userptr, "glMultiTexCoordP1ui");
+    glad_snap_rhi_glMultiTexCoordP1uiv = (PFNGLMULTITEXCOORDP1UIVPROC)load(userptr, "glMultiTexCoordP1uiv");
+    glad_snap_rhi_glMultiTexCoordP2ui = (PFNGLMULTITEXCOORDP2UIPROC)load(userptr, "glMultiTexCoordP2ui");
+    glad_snap_rhi_glMultiTexCoordP2uiv = (PFNGLMULTITEXCOORDP2UIVPROC)load(userptr, "glMultiTexCoordP2uiv");
+    glad_snap_rhi_glMultiTexCoordP3ui = (PFNGLMULTITEXCOORDP3UIPROC)load(userptr, "glMultiTexCoordP3ui");
+    glad_snap_rhi_glMultiTexCoordP3uiv = (PFNGLMULTITEXCOORDP3UIVPROC)load(userptr, "glMultiTexCoordP3uiv");
+    glad_snap_rhi_glMultiTexCoordP4ui = (PFNGLMULTITEXCOORDP4UIPROC)load(userptr, "glMultiTexCoordP4ui");
+    glad_snap_rhi_glMultiTexCoordP4uiv = (PFNGLMULTITEXCOORDP4UIVPROC)load(userptr, "glMultiTexCoordP4uiv");
+    glad_snap_rhi_glNormalP3ui = (PFNGLNORMALP3UIPROC)load(userptr, "glNormalP3ui");
+    glad_snap_rhi_glNormalP3uiv = (PFNGLNORMALP3UIVPROC)load(userptr, "glNormalP3uiv");
+    glad_snap_rhi_glQueryCounter = (PFNGLQUERYCOUNTERPROC)load(userptr, "glQueryCounter");
+    glad_snap_rhi_glSamplerParameterIiv = (PFNGLSAMPLERPARAMETERIIVPROC)load(userptr, "glSamplerParameterIiv");
+    glad_snap_rhi_glSamplerParameterIuiv = (PFNGLSAMPLERPARAMETERIUIVPROC)load(userptr, "glSamplerParameterIuiv");
+    glad_snap_rhi_glSamplerParameterf = (PFNGLSAMPLERPARAMETERFPROC)load(userptr, "glSamplerParameterf");
+    glad_snap_rhi_glSamplerParameterfv = (PFNGLSAMPLERPARAMETERFVPROC)load(userptr, "glSamplerParameterfv");
+    glad_snap_rhi_glSamplerParameteri = (PFNGLSAMPLERPARAMETERIPROC)load(userptr, "glSamplerParameteri");
+    glad_snap_rhi_glSamplerParameteriv = (PFNGLSAMPLERPARAMETERIVPROC)load(userptr, "glSamplerParameteriv");
+    glad_snap_rhi_glSecondaryColorP3ui = (PFNGLSECONDARYCOLORP3UIPROC)load(userptr, "glSecondaryColorP3ui");
+    glad_snap_rhi_glSecondaryColorP3uiv = (PFNGLSECONDARYCOLORP3UIVPROC)load(userptr, "glSecondaryColorP3uiv");
+    glad_snap_rhi_glTexCoordP1ui = (PFNGLTEXCOORDP1UIPROC)load(userptr, "glTexCoordP1ui");
+    glad_snap_rhi_glTexCoordP1uiv = (PFNGLTEXCOORDP1UIVPROC)load(userptr, "glTexCoordP1uiv");
+    glad_snap_rhi_glTexCoordP2ui = (PFNGLTEXCOORDP2UIPROC)load(userptr, "glTexCoordP2ui");
+    glad_snap_rhi_glTexCoordP2uiv = (PFNGLTEXCOORDP2UIVPROC)load(userptr, "glTexCoordP2uiv");
+    glad_snap_rhi_glTexCoordP3ui = (PFNGLTEXCOORDP3UIPROC)load(userptr, "glTexCoordP3ui");
+    glad_snap_rhi_glTexCoordP3uiv = (PFNGLTEXCOORDP3UIVPROC)load(userptr, "glTexCoordP3uiv");
+    glad_snap_rhi_glTexCoordP4ui = (PFNGLTEXCOORDP4UIPROC)load(userptr, "glTexCoordP4ui");
+    glad_snap_rhi_glTexCoordP4uiv = (PFNGLTEXCOORDP4UIVPROC)load(userptr, "glTexCoordP4uiv");
+    glad_snap_rhi_glVertexAttribDivisor = (PFNGLVERTEXATTRIBDIVISORPROC)load(userptr, "glVertexAttribDivisor");
+    glad_snap_rhi_glVertexAttribP1ui = (PFNGLVERTEXATTRIBP1UIPROC)load(userptr, "glVertexAttribP1ui");
+    glad_snap_rhi_glVertexAttribP1uiv = (PFNGLVERTEXATTRIBP1UIVPROC)load(userptr, "glVertexAttribP1uiv");
+    glad_snap_rhi_glVertexAttribP2ui = (PFNGLVERTEXATTRIBP2UIPROC)load(userptr, "glVertexAttribP2ui");
+    glad_snap_rhi_glVertexAttribP2uiv = (PFNGLVERTEXATTRIBP2UIVPROC)load(userptr, "glVertexAttribP2uiv");
+    glad_snap_rhi_glVertexAttribP3ui = (PFNGLVERTEXATTRIBP3UIPROC)load(userptr, "glVertexAttribP3ui");
+    glad_snap_rhi_glVertexAttribP3uiv = (PFNGLVERTEXATTRIBP3UIVPROC)load(userptr, "glVertexAttribP3uiv");
+    glad_snap_rhi_glVertexAttribP4ui = (PFNGLVERTEXATTRIBP4UIPROC)load(userptr, "glVertexAttribP4ui");
+    glad_snap_rhi_glVertexAttribP4uiv = (PFNGLVERTEXATTRIBP4UIVPROC)load(userptr, "glVertexAttribP4uiv");
+    glad_snap_rhi_glVertexP2ui = (PFNGLVERTEXP2UIPROC)load(userptr, "glVertexP2ui");
+    glad_snap_rhi_glVertexP2uiv = (PFNGLVERTEXP2UIVPROC)load(userptr, "glVertexP2uiv");
+    glad_snap_rhi_glVertexP3ui = (PFNGLVERTEXP3UIPROC)load(userptr, "glVertexP3ui");
+    glad_snap_rhi_glVertexP3uiv = (PFNGLVERTEXP3UIVPROC)load(userptr, "glVertexP3uiv");
+    glad_snap_rhi_glVertexP4ui = (PFNGLVERTEXP4UIPROC)load(userptr, "glVertexP4ui");
+    glad_snap_rhi_glVertexP4uiv = (PFNGLVERTEXP4UIVPROC)load(userptr, "glVertexP4uiv");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_4_0(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glBeginQueryIndexed = (PFNGLBEGINQUERYINDEXEDPROC)load(userptr, "glBeginQueryIndexed");
+    glad_snap_rhi_glBindTransformFeedback = (PFNGLBINDTRANSFORMFEEDBACKPROC)load(userptr, "glBindTransformFeedback");
+    glad_snap_rhi_glBlendEquationSeparatei = (PFNGLBLENDEQUATIONSEPARATEIPROC)load(userptr, "glBlendEquationSeparatei");
+    glad_snap_rhi_glBlendEquationi = (PFNGLBLENDEQUATIONIPROC)load(userptr, "glBlendEquationi");
+    glad_snap_rhi_glBlendFuncSeparatei = (PFNGLBLENDFUNCSEPARATEIPROC)load(userptr, "glBlendFuncSeparatei");
+    glad_snap_rhi_glBlendFunci = (PFNGLBLENDFUNCIPROC)load(userptr, "glBlendFunci");
+    glad_snap_rhi_glDeleteTransformFeedbacks = (PFNGLDELETETRANSFORMFEEDBACKSPROC)load(userptr, "glDeleteTransformFeedbacks");
+    glad_snap_rhi_glDrawArraysIndirect = (PFNGLDRAWARRAYSINDIRECTPROC)load(userptr, "glDrawArraysIndirect");
+    glad_snap_rhi_glDrawElementsIndirect = (PFNGLDRAWELEMENTSINDIRECTPROC)load(userptr, "glDrawElementsIndirect");
+    glad_snap_rhi_glDrawTransformFeedback = (PFNGLDRAWTRANSFORMFEEDBACKPROC)load(userptr, "glDrawTransformFeedback");
+    glad_snap_rhi_glDrawTransformFeedbackStream =
+        (PFNGLDRAWTRANSFORMFEEDBACKSTREAMPROC)load(userptr, "glDrawTransformFeedbackStream");
+    glad_snap_rhi_glEndQueryIndexed = (PFNGLENDQUERYINDEXEDPROC)load(userptr, "glEndQueryIndexed");
+    glad_snap_rhi_glGenTransformFeedbacks = (PFNGLGENTRANSFORMFEEDBACKSPROC)load(userptr, "glGenTransformFeedbacks");
+    glad_snap_rhi_glGetActiveSubroutineName = (PFNGLGETACTIVESUBROUTINENAMEPROC)load(userptr, "glGetActiveSubroutineName");
+    glad_snap_rhi_glGetActiveSubroutineUniformName =
+        (PFNGLGETACTIVESUBROUTINEUNIFORMNAMEPROC)load(userptr, "glGetActiveSubroutineUniformName");
+    glad_snap_rhi_glGetActiveSubroutineUniformiv =
+        (PFNGLGETACTIVESUBROUTINEUNIFORMIVPROC)load(userptr, "glGetActiveSubroutineUniformiv");
+    glad_snap_rhi_glGetProgramStageiv = (PFNGLGETPROGRAMSTAGEIVPROC)load(userptr, "glGetProgramStageiv");
+    glad_snap_rhi_glGetQueryIndexediv = (PFNGLGETQUERYINDEXEDIVPROC)load(userptr, "glGetQueryIndexediv");
+    glad_snap_rhi_glGetSubroutineIndex = (PFNGLGETSUBROUTINEINDEXPROC)load(userptr, "glGetSubroutineIndex");
+    glad_snap_rhi_glGetSubroutineUniformLocation =
+        (PFNGLGETSUBROUTINEUNIFORMLOCATIONPROC)load(userptr, "glGetSubroutineUniformLocation");
+    glad_snap_rhi_glGetUniformSubroutineuiv = (PFNGLGETUNIFORMSUBROUTINEUIVPROC)load(userptr, "glGetUniformSubroutineuiv");
+    glad_snap_rhi_glGetUniformdv = (PFNGLGETUNIFORMDVPROC)load(userptr, "glGetUniformdv");
+    glad_snap_rhi_glIsTransformFeedback = (PFNGLISTRANSFORMFEEDBACKPROC)load(userptr, "glIsTransformFeedback");
+    glad_snap_rhi_glMinSampleShading = (PFNGLMINSAMPLESHADINGPROC)load(userptr, "glMinSampleShading");
+    glad_snap_rhi_glPatchParameterfv = (PFNGLPATCHPARAMETERFVPROC)load(userptr, "glPatchParameterfv");
+    glad_snap_rhi_glPatchParameteri = (PFNGLPATCHPARAMETERIPROC)load(userptr, "glPatchParameteri");
+    glad_snap_rhi_glPauseTransformFeedback = (PFNGLPAUSETRANSFORMFEEDBACKPROC)load(userptr, "glPauseTransformFeedback");
+    glad_snap_rhi_glResumeTransformFeedback = (PFNGLRESUMETRANSFORMFEEDBACKPROC)load(userptr, "glResumeTransformFeedback");
+    glad_snap_rhi_glUniform1d = (PFNGLUNIFORM1DPROC)load(userptr, "glUniform1d");
+    glad_snap_rhi_glUniform1dv = (PFNGLUNIFORM1DVPROC)load(userptr, "glUniform1dv");
+    glad_snap_rhi_glUniform2d = (PFNGLUNIFORM2DPROC)load(userptr, "glUniform2d");
+    glad_snap_rhi_glUniform2dv = (PFNGLUNIFORM2DVPROC)load(userptr, "glUniform2dv");
+    glad_snap_rhi_glUniform3d = (PFNGLUNIFORM3DPROC)load(userptr, "glUniform3d");
+    glad_snap_rhi_glUniform3dv = (PFNGLUNIFORM3DVPROC)load(userptr, "glUniform3dv");
+    glad_snap_rhi_glUniform4d = (PFNGLUNIFORM4DPROC)load(userptr, "glUniform4d");
+    glad_snap_rhi_glUniform4dv = (PFNGLUNIFORM4DVPROC)load(userptr, "glUniform4dv");
+    glad_snap_rhi_glUniformMatrix2dv = (PFNGLUNIFORMMATRIX2DVPROC)load(userptr, "glUniformMatrix2dv");
+    glad_snap_rhi_glUniformMatrix2x3dv = (PFNGLUNIFORMMATRIX2X3DVPROC)load(userptr, "glUniformMatrix2x3dv");
+    glad_snap_rhi_glUniformMatrix2x4dv = (PFNGLUNIFORMMATRIX2X4DVPROC)load(userptr, "glUniformMatrix2x4dv");
+    glad_snap_rhi_glUniformMatrix3dv = (PFNGLUNIFORMMATRIX3DVPROC)load(userptr, "glUniformMatrix3dv");
+    glad_snap_rhi_glUniformMatrix3x2dv = (PFNGLUNIFORMMATRIX3X2DVPROC)load(userptr, "glUniformMatrix3x2dv");
+    glad_snap_rhi_glUniformMatrix3x4dv = (PFNGLUNIFORMMATRIX3X4DVPROC)load(userptr, "glUniformMatrix3x4dv");
+    glad_snap_rhi_glUniformMatrix4dv = (PFNGLUNIFORMMATRIX4DVPROC)load(userptr, "glUniformMatrix4dv");
+    glad_snap_rhi_glUniformMatrix4x2dv = (PFNGLUNIFORMMATRIX4X2DVPROC)load(userptr, "glUniformMatrix4x2dv");
+    glad_snap_rhi_glUniformMatrix4x3dv = (PFNGLUNIFORMMATRIX4X3DVPROC)load(userptr, "glUniformMatrix4x3dv");
+    glad_snap_rhi_glUniformSubroutinesuiv = (PFNGLUNIFORMSUBROUTINESUIVPROC)load(userptr, "glUniformSubroutinesuiv");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_4_1(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glActiveShaderProgram = (PFNGLACTIVESHADERPROGRAMPROC)load(userptr, "glActiveShaderProgram");
+    glad_snap_rhi_glBindProgramPipeline = (PFNGLBINDPROGRAMPIPELINEPROC)load(userptr, "glBindProgramPipeline");
+    glad_snap_rhi_glClearDepthf = (PFNGLCLEARDEPTHFPROC)load(userptr, "glClearDepthf");
+    glad_snap_rhi_glCreateShaderProgramv = (PFNGLCREATESHADERPROGRAMVPROC)load(userptr, "glCreateShaderProgramv");
+    glad_snap_rhi_glDeleteProgramPipelines = (PFNGLDELETEPROGRAMPIPELINESPROC)load(userptr, "glDeleteProgramPipelines");
+    glad_snap_rhi_glDepthRangeArrayv = (PFNGLDEPTHRANGEARRAYVPROC)load(userptr, "glDepthRangeArrayv");
+    glad_snap_rhi_glDepthRangeIndexed = (PFNGLDEPTHRANGEINDEXEDPROC)load(userptr, "glDepthRangeIndexed");
+    glad_snap_rhi_glDepthRangef = (PFNGLDEPTHRANGEFPROC)load(userptr, "glDepthRangef");
+    glad_snap_rhi_glGenProgramPipelines = (PFNGLGENPROGRAMPIPELINESPROC)load(userptr, "glGenProgramPipelines");
+    glad_snap_rhi_glGetDoublei_v = (PFNGLGETDOUBLEI_VPROC)load(userptr, "glGetDoublei_v");
+    glad_snap_rhi_glGetFloati_v = (PFNGLGETFLOATI_VPROC)load(userptr, "glGetFloati_v");
+    glad_snap_rhi_glGetProgramBinary = (PFNGLGETPROGRAMBINARYPROC)load(userptr, "glGetProgramBinary");
+    glad_snap_rhi_glGetProgramPipelineInfoLog =
+        (PFNGLGETPROGRAMPIPELINEINFOLOGPROC)load(userptr, "glGetProgramPipelineInfoLog");
+    glad_snap_rhi_glGetProgramPipelineiv = (PFNGLGETPROGRAMPIPELINEIVPROC)load(userptr, "glGetProgramPipelineiv");
+    glad_snap_rhi_glGetShaderPrecisionFormat = (PFNGLGETSHADERPRECISIONFORMATPROC)load(userptr, "glGetShaderPrecisionFormat");
+    glad_snap_rhi_glGetVertexAttribLdv = (PFNGLGETVERTEXATTRIBLDVPROC)load(userptr, "glGetVertexAttribLdv");
+    glad_snap_rhi_glIsProgramPipeline = (PFNGLISPROGRAMPIPELINEPROC)load(userptr, "glIsProgramPipeline");
+    glad_snap_rhi_glProgramBinary = (PFNGLPROGRAMBINARYPROC)load(userptr, "glProgramBinary");
+    glad_snap_rhi_glProgramParameteri = (PFNGLPROGRAMPARAMETERIPROC)load(userptr, "glProgramParameteri");
+    glad_snap_rhi_glProgramUniform1d = (PFNGLPROGRAMUNIFORM1DPROC)load(userptr, "glProgramUniform1d");
+    glad_snap_rhi_glProgramUniform1dv = (PFNGLPROGRAMUNIFORM1DVPROC)load(userptr, "glProgramUniform1dv");
+    glad_snap_rhi_glProgramUniform1f = (PFNGLPROGRAMUNIFORM1FPROC)load(userptr, "glProgramUniform1f");
+    glad_snap_rhi_glProgramUniform1fv = (PFNGLPROGRAMUNIFORM1FVPROC)load(userptr, "glProgramUniform1fv");
+    glad_snap_rhi_glProgramUniform1i = (PFNGLPROGRAMUNIFORM1IPROC)load(userptr, "glProgramUniform1i");
+    glad_snap_rhi_glProgramUniform1iv = (PFNGLPROGRAMUNIFORM1IVPROC)load(userptr, "glProgramUniform1iv");
+    glad_snap_rhi_glProgramUniform1ui = (PFNGLPROGRAMUNIFORM1UIPROC)load(userptr, "glProgramUniform1ui");
+    glad_snap_rhi_glProgramUniform1uiv = (PFNGLPROGRAMUNIFORM1UIVPROC)load(userptr, "glProgramUniform1uiv");
+    glad_snap_rhi_glProgramUniform2d = (PFNGLPROGRAMUNIFORM2DPROC)load(userptr, "glProgramUniform2d");
+    glad_snap_rhi_glProgramUniform2dv = (PFNGLPROGRAMUNIFORM2DVPROC)load(userptr, "glProgramUniform2dv");
+    glad_snap_rhi_glProgramUniform2f = (PFNGLPROGRAMUNIFORM2FPROC)load(userptr, "glProgramUniform2f");
+    glad_snap_rhi_glProgramUniform2fv = (PFNGLPROGRAMUNIFORM2FVPROC)load(userptr, "glProgramUniform2fv");
+    glad_snap_rhi_glProgramUniform2i = (PFNGLPROGRAMUNIFORM2IPROC)load(userptr, "glProgramUniform2i");
+    glad_snap_rhi_glProgramUniform2iv = (PFNGLPROGRAMUNIFORM2IVPROC)load(userptr, "glProgramUniform2iv");
+    glad_snap_rhi_glProgramUniform2ui = (PFNGLPROGRAMUNIFORM2UIPROC)load(userptr, "glProgramUniform2ui");
+    glad_snap_rhi_glProgramUniform2uiv = (PFNGLPROGRAMUNIFORM2UIVPROC)load(userptr, "glProgramUniform2uiv");
+    glad_snap_rhi_glProgramUniform3d = (PFNGLPROGRAMUNIFORM3DPROC)load(userptr, "glProgramUniform3d");
+    glad_snap_rhi_glProgramUniform3dv = (PFNGLPROGRAMUNIFORM3DVPROC)load(userptr, "glProgramUniform3dv");
+    glad_snap_rhi_glProgramUniform3f = (PFNGLPROGRAMUNIFORM3FPROC)load(userptr, "glProgramUniform3f");
+    glad_snap_rhi_glProgramUniform3fv = (PFNGLPROGRAMUNIFORM3FVPROC)load(userptr, "glProgramUniform3fv");
+    glad_snap_rhi_glProgramUniform3i = (PFNGLPROGRAMUNIFORM3IPROC)load(userptr, "glProgramUniform3i");
+    glad_snap_rhi_glProgramUniform3iv = (PFNGLPROGRAMUNIFORM3IVPROC)load(userptr, "glProgramUniform3iv");
+    glad_snap_rhi_glProgramUniform3ui = (PFNGLPROGRAMUNIFORM3UIPROC)load(userptr, "glProgramUniform3ui");
+    glad_snap_rhi_glProgramUniform3uiv = (PFNGLPROGRAMUNIFORM3UIVPROC)load(userptr, "glProgramUniform3uiv");
+    glad_snap_rhi_glProgramUniform4d = (PFNGLPROGRAMUNIFORM4DPROC)load(userptr, "glProgramUniform4d");
+    glad_snap_rhi_glProgramUniform4dv = (PFNGLPROGRAMUNIFORM4DVPROC)load(userptr, "glProgramUniform4dv");
+    glad_snap_rhi_glProgramUniform4f = (PFNGLPROGRAMUNIFORM4FPROC)load(userptr, "glProgramUniform4f");
+    glad_snap_rhi_glProgramUniform4fv = (PFNGLPROGRAMUNIFORM4FVPROC)load(userptr, "glProgramUniform4fv");
+    glad_snap_rhi_glProgramUniform4i = (PFNGLPROGRAMUNIFORM4IPROC)load(userptr, "glProgramUniform4i");
+    glad_snap_rhi_glProgramUniform4iv = (PFNGLPROGRAMUNIFORM4IVPROC)load(userptr, "glProgramUniform4iv");
+    glad_snap_rhi_glProgramUniform4ui = (PFNGLPROGRAMUNIFORM4UIPROC)load(userptr, "glProgramUniform4ui");
+    glad_snap_rhi_glProgramUniform4uiv = (PFNGLPROGRAMUNIFORM4UIVPROC)load(userptr, "glProgramUniform4uiv");
+    glad_snap_rhi_glProgramUniformMatrix2dv = (PFNGLPROGRAMUNIFORMMATRIX2DVPROC)load(userptr, "glProgramUniformMatrix2dv");
+    glad_snap_rhi_glProgramUniformMatrix2fv = (PFNGLPROGRAMUNIFORMMATRIX2FVPROC)load(userptr, "glProgramUniformMatrix2fv");
+    glad_snap_rhi_glProgramUniformMatrix2x3dv =
+        (PFNGLPROGRAMUNIFORMMATRIX2X3DVPROC)load(userptr, "glProgramUniformMatrix2x3dv");
+    glad_snap_rhi_glProgramUniformMatrix2x3fv =
+        (PFNGLPROGRAMUNIFORMMATRIX2X3FVPROC)load(userptr, "glProgramUniformMatrix2x3fv");
+    glad_snap_rhi_glProgramUniformMatrix2x4dv =
+        (PFNGLPROGRAMUNIFORMMATRIX2X4DVPROC)load(userptr, "glProgramUniformMatrix2x4dv");
+    glad_snap_rhi_glProgramUniformMatrix2x4fv =
+        (PFNGLPROGRAMUNIFORMMATRIX2X4FVPROC)load(userptr, "glProgramUniformMatrix2x4fv");
+    glad_snap_rhi_glProgramUniformMatrix3dv = (PFNGLPROGRAMUNIFORMMATRIX3DVPROC)load(userptr, "glProgramUniformMatrix3dv");
+    glad_snap_rhi_glProgramUniformMatrix3fv = (PFNGLPROGRAMUNIFORMMATRIX3FVPROC)load(userptr, "glProgramUniformMatrix3fv");
+    glad_snap_rhi_glProgramUniformMatrix3x2dv =
+        (PFNGLPROGRAMUNIFORMMATRIX3X2DVPROC)load(userptr, "glProgramUniformMatrix3x2dv");
+    glad_snap_rhi_glProgramUniformMatrix3x2fv =
+        (PFNGLPROGRAMUNIFORMMATRIX3X2FVPROC)load(userptr, "glProgramUniformMatrix3x2fv");
+    glad_snap_rhi_glProgramUniformMatrix3x4dv =
+        (PFNGLPROGRAMUNIFORMMATRIX3X4DVPROC)load(userptr, "glProgramUniformMatrix3x4dv");
+    glad_snap_rhi_glProgramUniformMatrix3x4fv =
+        (PFNGLPROGRAMUNIFORMMATRIX3X4FVPROC)load(userptr, "glProgramUniformMatrix3x4fv");
+    glad_snap_rhi_glProgramUniformMatrix4dv = (PFNGLPROGRAMUNIFORMMATRIX4DVPROC)load(userptr, "glProgramUniformMatrix4dv");
+    glad_snap_rhi_glProgramUniformMatrix4fv = (PFNGLPROGRAMUNIFORMMATRIX4FVPROC)load(userptr, "glProgramUniformMatrix4fv");
+    glad_snap_rhi_glProgramUniformMatrix4x2dv =
+        (PFNGLPROGRAMUNIFORMMATRIX4X2DVPROC)load(userptr, "glProgramUniformMatrix4x2dv");
+    glad_snap_rhi_glProgramUniformMatrix4x2fv =
+        (PFNGLPROGRAMUNIFORMMATRIX4X2FVPROC)load(userptr, "glProgramUniformMatrix4x2fv");
+    glad_snap_rhi_glProgramUniformMatrix4x3dv =
+        (PFNGLPROGRAMUNIFORMMATRIX4X3DVPROC)load(userptr, "glProgramUniformMatrix4x3dv");
+    glad_snap_rhi_glProgramUniformMatrix4x3fv =
+        (PFNGLPROGRAMUNIFORMMATRIX4X3FVPROC)load(userptr, "glProgramUniformMatrix4x3fv");
+    glad_snap_rhi_glReleaseShaderCompiler = (PFNGLRELEASESHADERCOMPILERPROC)load(userptr, "glReleaseShaderCompiler");
+    glad_snap_rhi_glScissorArrayv = (PFNGLSCISSORARRAYVPROC)load(userptr, "glScissorArrayv");
+    glad_snap_rhi_glScissorIndexed = (PFNGLSCISSORINDEXEDPROC)load(userptr, "glScissorIndexed");
+    glad_snap_rhi_glScissorIndexedv = (PFNGLSCISSORINDEXEDVPROC)load(userptr, "glScissorIndexedv");
+    glad_snap_rhi_glShaderBinary = (PFNGLSHADERBINARYPROC)load(userptr, "glShaderBinary");
+    glad_snap_rhi_glUseProgramStages = (PFNGLUSEPROGRAMSTAGESPROC)load(userptr, "glUseProgramStages");
+    glad_snap_rhi_glValidateProgramPipeline = (PFNGLVALIDATEPROGRAMPIPELINEPROC)load(userptr, "glValidateProgramPipeline");
+    glad_snap_rhi_glVertexAttribL1d = (PFNGLVERTEXATTRIBL1DPROC)load(userptr, "glVertexAttribL1d");
+    glad_snap_rhi_glVertexAttribL1dv = (PFNGLVERTEXATTRIBL1DVPROC)load(userptr, "glVertexAttribL1dv");
+    glad_snap_rhi_glVertexAttribL2d = (PFNGLVERTEXATTRIBL2DPROC)load(userptr, "glVertexAttribL2d");
+    glad_snap_rhi_glVertexAttribL2dv = (PFNGLVERTEXATTRIBL2DVPROC)load(userptr, "glVertexAttribL2dv");
+    glad_snap_rhi_glVertexAttribL3d = (PFNGLVERTEXATTRIBL3DPROC)load(userptr, "glVertexAttribL3d");
+    glad_snap_rhi_glVertexAttribL3dv = (PFNGLVERTEXATTRIBL3DVPROC)load(userptr, "glVertexAttribL3dv");
+    glad_snap_rhi_glVertexAttribL4d = (PFNGLVERTEXATTRIBL4DPROC)load(userptr, "glVertexAttribL4d");
+    glad_snap_rhi_glVertexAttribL4dv = (PFNGLVERTEXATTRIBL4DVPROC)load(userptr, "glVertexAttribL4dv");
+    glad_snap_rhi_glVertexAttribLPointer = (PFNGLVERTEXATTRIBLPOINTERPROC)load(userptr, "glVertexAttribLPointer");
+    glad_snap_rhi_glViewportArrayv = (PFNGLVIEWPORTARRAYVPROC)load(userptr, "glViewportArrayv");
+    glad_snap_rhi_glViewportIndexedf = (PFNGLVIEWPORTINDEXEDFPROC)load(userptr, "glViewportIndexedf");
+    glad_snap_rhi_glViewportIndexedfv = (PFNGLVIEWPORTINDEXEDFVPROC)load(userptr, "glViewportIndexedfv");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_4_2(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glBindImageTexture = (PFNGLBINDIMAGETEXTUREPROC)load(userptr, "glBindImageTexture");
+    glad_snap_rhi_glDrawArraysInstancedBaseInstance =
+        (PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEPROC)load(userptr, "glDrawArraysInstancedBaseInstance");
+    glad_snap_rhi_glDrawElementsInstancedBaseInstance =
+        (PFNGLDRAWELEMENTSINSTANCEDBASEINSTANCEPROC)load(userptr, "glDrawElementsInstancedBaseInstance");
+    glad_snap_rhi_glDrawElementsInstancedBaseVertexBaseInstance = (PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEPROC)load(
+        userptr, "glDrawElementsInstancedBaseVertexBaseInstance");
+    glad_snap_rhi_glDrawTransformFeedbackInstanced =
+        (PFNGLDRAWTRANSFORMFEEDBACKINSTANCEDPROC)load(userptr, "glDrawTransformFeedbackInstanced");
+    glad_snap_rhi_glDrawTransformFeedbackStreamInstanced =
+        (PFNGLDRAWTRANSFORMFEEDBACKSTREAMINSTANCEDPROC)load(userptr, "glDrawTransformFeedbackStreamInstanced");
+    glad_snap_rhi_glGetActiveAtomicCounterBufferiv =
+        (PFNGLGETACTIVEATOMICCOUNTERBUFFERIVPROC)load(userptr, "glGetActiveAtomicCounterBufferiv");
+    glad_snap_rhi_glGetInternalformativ = (PFNGLGETINTERNALFORMATIVPROC)load(userptr, "glGetInternalformativ");
+    glad_snap_rhi_glMemoryBarrier = (PFNGLMEMORYBARRIERPROC)load(userptr, "glMemoryBarrier");
+    glad_snap_rhi_glTexStorage1D = (PFNGLTEXSTORAGE1DPROC)load(userptr, "glTexStorage1D");
+    glad_snap_rhi_glTexStorage2D = (PFNGLTEXSTORAGE2DPROC)load(userptr, "glTexStorage2D");
+    glad_snap_rhi_glTexStorage3D = (PFNGLTEXSTORAGE3DPROC)load(userptr, "glTexStorage3D");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_4_3(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glBindVertexBuffer = (PFNGLBINDVERTEXBUFFERPROC)load(userptr, "glBindVertexBuffer");
+    glad_snap_rhi_glClearBufferData = (PFNGLCLEARBUFFERDATAPROC)load(userptr, "glClearBufferData");
+    glad_snap_rhi_glClearBufferSubData = (PFNGLCLEARBUFFERSUBDATAPROC)load(userptr, "glClearBufferSubData");
+    glad_snap_rhi_glCopyImageSubData = (PFNGLCOPYIMAGESUBDATAPROC)load(userptr, "glCopyImageSubData");
+    glad_snap_rhi_glDebugMessageCallback = (PFNGLDEBUGMESSAGECALLBACKPROC)load(userptr, "glDebugMessageCallback");
+    glad_snap_rhi_glDebugMessageControl = (PFNGLDEBUGMESSAGECONTROLPROC)load(userptr, "glDebugMessageControl");
+    glad_snap_rhi_glDebugMessageInsert = (PFNGLDEBUGMESSAGEINSERTPROC)load(userptr, "glDebugMessageInsert");
+    glad_snap_rhi_glDispatchCompute = (PFNGLDISPATCHCOMPUTEPROC)load(userptr, "glDispatchCompute");
+    glad_snap_rhi_glDispatchComputeIndirect = (PFNGLDISPATCHCOMPUTEINDIRECTPROC)load(userptr, "glDispatchComputeIndirect");
+    glad_snap_rhi_glFramebufferParameteri = (PFNGLFRAMEBUFFERPARAMETERIPROC)load(userptr, "glFramebufferParameteri");
+    glad_snap_rhi_glGetDebugMessageLog = (PFNGLGETDEBUGMESSAGELOGPROC)load(userptr, "glGetDebugMessageLog");
+    glad_snap_rhi_glGetFramebufferParameteriv =
+        (PFNGLGETFRAMEBUFFERPARAMETERIVPROC)load(userptr, "glGetFramebufferParameteriv");
+    glad_snap_rhi_glGetInternalformati64v = (PFNGLGETINTERNALFORMATI64VPROC)load(userptr, "glGetInternalformati64v");
+    glad_snap_rhi_glGetObjectLabel = (PFNGLGETOBJECTLABELPROC)load(userptr, "glGetObjectLabel");
+    glad_snap_rhi_glGetObjectPtrLabel = (PFNGLGETOBJECTPTRLABELPROC)load(userptr, "glGetObjectPtrLabel");
+    glad_snap_rhi_glGetPointerv = (PFNGLGETPOINTERVPROC)load(userptr, "glGetPointerv");
+    glad_snap_rhi_glGetProgramInterfaceiv = (PFNGLGETPROGRAMINTERFACEIVPROC)load(userptr, "glGetProgramInterfaceiv");
+    glad_snap_rhi_glGetProgramResourceIndex = (PFNGLGETPROGRAMRESOURCEINDEXPROC)load(userptr, "glGetProgramResourceIndex");
+    glad_snap_rhi_glGetProgramResourceLocation =
+        (PFNGLGETPROGRAMRESOURCELOCATIONPROC)load(userptr, "glGetProgramResourceLocation");
+    glad_snap_rhi_glGetProgramResourceLocationIndex =
+        (PFNGLGETPROGRAMRESOURCELOCATIONINDEXPROC)load(userptr, "glGetProgramResourceLocationIndex");
+    glad_snap_rhi_glGetProgramResourceName = (PFNGLGETPROGRAMRESOURCENAMEPROC)load(userptr, "glGetProgramResourceName");
+    glad_snap_rhi_glGetProgramResourceiv = (PFNGLGETPROGRAMRESOURCEIVPROC)load(userptr, "glGetProgramResourceiv");
+    glad_snap_rhi_glInvalidateBufferData = (PFNGLINVALIDATEBUFFERDATAPROC)load(userptr, "glInvalidateBufferData");
+    glad_snap_rhi_glInvalidateBufferSubData = (PFNGLINVALIDATEBUFFERSUBDATAPROC)load(userptr, "glInvalidateBufferSubData");
+    glad_snap_rhi_glInvalidateFramebuffer = (PFNGLINVALIDATEFRAMEBUFFERPROC)load(userptr, "glInvalidateFramebuffer");
+    glad_snap_rhi_glInvalidateSubFramebuffer = (PFNGLINVALIDATESUBFRAMEBUFFERPROC)load(userptr, "glInvalidateSubFramebuffer");
+    glad_snap_rhi_glInvalidateTexImage = (PFNGLINVALIDATETEXIMAGEPROC)load(userptr, "glInvalidateTexImage");
+    glad_snap_rhi_glInvalidateTexSubImage = (PFNGLINVALIDATETEXSUBIMAGEPROC)load(userptr, "glInvalidateTexSubImage");
+    glad_snap_rhi_glMultiDrawArraysIndirect = (PFNGLMULTIDRAWARRAYSINDIRECTPROC)load(userptr, "glMultiDrawArraysIndirect");
+    glad_snap_rhi_glMultiDrawElementsIndirect =
+        (PFNGLMULTIDRAWELEMENTSINDIRECTPROC)load(userptr, "glMultiDrawElementsIndirect");
+    glad_snap_rhi_glObjectLabel = (PFNGLOBJECTLABELPROC)load(userptr, "glObjectLabel");
+    glad_snap_rhi_glObjectPtrLabel = (PFNGLOBJECTPTRLABELPROC)load(userptr, "glObjectPtrLabel");
+    glad_snap_rhi_glPopDebugGroup = (PFNGLPOPDEBUGGROUPPROC)load(userptr, "glPopDebugGroup");
+    glad_snap_rhi_glPushDebugGroup = (PFNGLPUSHDEBUGGROUPPROC)load(userptr, "glPushDebugGroup");
+    glad_snap_rhi_glShaderStorageBlockBinding =
+        (PFNGLSHADERSTORAGEBLOCKBINDINGPROC)load(userptr, "glShaderStorageBlockBinding");
+    glad_snap_rhi_glTexBufferRange = (PFNGLTEXBUFFERRANGEPROC)load(userptr, "glTexBufferRange");
+    glad_snap_rhi_glTexStorage2DMultisample = (PFNGLTEXSTORAGE2DMULTISAMPLEPROC)load(userptr, "glTexStorage2DMultisample");
+    glad_snap_rhi_glTexStorage3DMultisample = (PFNGLTEXSTORAGE3DMULTISAMPLEPROC)load(userptr, "glTexStorage3DMultisample");
+    glad_snap_rhi_glTextureView = (PFNGLTEXTUREVIEWPROC)load(userptr, "glTextureView");
+    glad_snap_rhi_glVertexAttribBinding = (PFNGLVERTEXATTRIBBINDINGPROC)load(userptr, "glVertexAttribBinding");
+    glad_snap_rhi_glVertexAttribFormat = (PFNGLVERTEXATTRIBFORMATPROC)load(userptr, "glVertexAttribFormat");
+    glad_snap_rhi_glVertexAttribIFormat = (PFNGLVERTEXATTRIBIFORMATPROC)load(userptr, "glVertexAttribIFormat");
+    glad_snap_rhi_glVertexAttribLFormat = (PFNGLVERTEXATTRIBLFORMATPROC)load(userptr, "glVertexAttribLFormat");
+    glad_snap_rhi_glVertexBindingDivisor = (PFNGLVERTEXBINDINGDIVISORPROC)load(userptr, "glVertexBindingDivisor");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_4_4(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glBindBuffersBase = (PFNGLBINDBUFFERSBASEPROC)load(userptr, "glBindBuffersBase");
+    glad_snap_rhi_glBindBuffersRange = (PFNGLBINDBUFFERSRANGEPROC)load(userptr, "glBindBuffersRange");
+    glad_snap_rhi_glBindImageTextures = (PFNGLBINDIMAGETEXTURESPROC)load(userptr, "glBindImageTextures");
+    glad_snap_rhi_glBindSamplers = (PFNGLBINDSAMPLERSPROC)load(userptr, "glBindSamplers");
+    glad_snap_rhi_glBindTextures = (PFNGLBINDTEXTURESPROC)load(userptr, "glBindTextures");
+    glad_snap_rhi_glBindVertexBuffers = (PFNGLBINDVERTEXBUFFERSPROC)load(userptr, "glBindVertexBuffers");
+    glad_snap_rhi_glBufferStorage = (PFNGLBUFFERSTORAGEPROC)load(userptr, "glBufferStorage");
+    glad_snap_rhi_glClearTexImage = (PFNGLCLEARTEXIMAGEPROC)load(userptr, "glClearTexImage");
+    glad_snap_rhi_glClearTexSubImage = (PFNGLCLEARTEXSUBIMAGEPROC)load(userptr, "glClearTexSubImage");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_4_5(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glBindTextureUnit = (PFNGLBINDTEXTUREUNITPROC)load(userptr, "glBindTextureUnit");
+    glad_snap_rhi_glBlitNamedFramebuffer = (PFNGLBLITNAMEDFRAMEBUFFERPROC)load(userptr, "glBlitNamedFramebuffer");
+    glad_snap_rhi_glCheckNamedFramebufferStatus =
+        (PFNGLCHECKNAMEDFRAMEBUFFERSTATUSPROC)load(userptr, "glCheckNamedFramebufferStatus");
+    glad_snap_rhi_glClearNamedBufferData = (PFNGLCLEARNAMEDBUFFERDATAPROC)load(userptr, "glClearNamedBufferData");
+    glad_snap_rhi_glClearNamedBufferSubData = (PFNGLCLEARNAMEDBUFFERSUBDATAPROC)load(userptr, "glClearNamedBufferSubData");
+    glad_snap_rhi_glClearNamedFramebufferfi = (PFNGLCLEARNAMEDFRAMEBUFFERFIPROC)load(userptr, "glClearNamedFramebufferfi");
+    glad_snap_rhi_glClearNamedFramebufferfv = (PFNGLCLEARNAMEDFRAMEBUFFERFVPROC)load(userptr, "glClearNamedFramebufferfv");
+    glad_snap_rhi_glClearNamedFramebufferiv = (PFNGLCLEARNAMEDFRAMEBUFFERIVPROC)load(userptr, "glClearNamedFramebufferiv");
+    glad_snap_rhi_glClearNamedFramebufferuiv = (PFNGLCLEARNAMEDFRAMEBUFFERUIVPROC)load(userptr, "glClearNamedFramebufferuiv");
+    glad_snap_rhi_glClipControl = (PFNGLCLIPCONTROLPROC)load(userptr, "glClipControl");
+    glad_snap_rhi_glCompressedTextureSubImage1D =
+        (PFNGLCOMPRESSEDTEXTURESUBIMAGE1DPROC)load(userptr, "glCompressedTextureSubImage1D");
+    glad_snap_rhi_glCompressedTextureSubImage2D =
+        (PFNGLCOMPRESSEDTEXTURESUBIMAGE2DPROC)load(userptr, "glCompressedTextureSubImage2D");
+    glad_snap_rhi_glCompressedTextureSubImage3D =
+        (PFNGLCOMPRESSEDTEXTURESUBIMAGE3DPROC)load(userptr, "glCompressedTextureSubImage3D");
+    glad_snap_rhi_glCopyNamedBufferSubData = (PFNGLCOPYNAMEDBUFFERSUBDATAPROC)load(userptr, "glCopyNamedBufferSubData");
+    glad_snap_rhi_glCopyTextureSubImage1D = (PFNGLCOPYTEXTURESUBIMAGE1DPROC)load(userptr, "glCopyTextureSubImage1D");
+    glad_snap_rhi_glCopyTextureSubImage2D = (PFNGLCOPYTEXTURESUBIMAGE2DPROC)load(userptr, "glCopyTextureSubImage2D");
+    glad_snap_rhi_glCopyTextureSubImage3D = (PFNGLCOPYTEXTURESUBIMAGE3DPROC)load(userptr, "glCopyTextureSubImage3D");
+    glad_snap_rhi_glCreateBuffers = (PFNGLCREATEBUFFERSPROC)load(userptr, "glCreateBuffers");
+    glad_snap_rhi_glCreateFramebuffers = (PFNGLCREATEFRAMEBUFFERSPROC)load(userptr, "glCreateFramebuffers");
+    glad_snap_rhi_glCreateProgramPipelines = (PFNGLCREATEPROGRAMPIPELINESPROC)load(userptr, "glCreateProgramPipelines");
+    glad_snap_rhi_glCreateQueries = (PFNGLCREATEQUERIESPROC)load(userptr, "glCreateQueries");
+    glad_snap_rhi_glCreateRenderbuffers = (PFNGLCREATERENDERBUFFERSPROC)load(userptr, "glCreateRenderbuffers");
+    glad_snap_rhi_glCreateSamplers = (PFNGLCREATESAMPLERSPROC)load(userptr, "glCreateSamplers");
+    glad_snap_rhi_glCreateTextures = (PFNGLCREATETEXTURESPROC)load(userptr, "glCreateTextures");
+    glad_snap_rhi_glCreateTransformFeedbacks = (PFNGLCREATETRANSFORMFEEDBACKSPROC)load(userptr, "glCreateTransformFeedbacks");
+    glad_snap_rhi_glCreateVertexArrays = (PFNGLCREATEVERTEXARRAYSPROC)load(userptr, "glCreateVertexArrays");
+    glad_snap_rhi_glDisableVertexArrayAttrib = (PFNGLDISABLEVERTEXARRAYATTRIBPROC)load(userptr, "glDisableVertexArrayAttrib");
+    glad_snap_rhi_glEnableVertexArrayAttrib = (PFNGLENABLEVERTEXARRAYATTRIBPROC)load(userptr, "glEnableVertexArrayAttrib");
+    glad_snap_rhi_glFlushMappedNamedBufferRange =
+        (PFNGLFLUSHMAPPEDNAMEDBUFFERRANGEPROC)load(userptr, "glFlushMappedNamedBufferRange");
+    glad_snap_rhi_glGenerateTextureMipmap = (PFNGLGENERATETEXTUREMIPMAPPROC)load(userptr, "glGenerateTextureMipmap");
+    glad_snap_rhi_glGetCompressedTextureImage =
+        (PFNGLGETCOMPRESSEDTEXTUREIMAGEPROC)load(userptr, "glGetCompressedTextureImage");
+    glad_snap_rhi_glGetCompressedTextureSubImage =
+        (PFNGLGETCOMPRESSEDTEXTURESUBIMAGEPROC)load(userptr, "glGetCompressedTextureSubImage");
+    glad_snap_rhi_glGetGraphicsResetStatus = (PFNGLGETGRAPHICSRESETSTATUSPROC)load(userptr, "glGetGraphicsResetStatus");
+    glad_snap_rhi_glGetNamedBufferParameteri64v =
+        (PFNGLGETNAMEDBUFFERPARAMETERI64VPROC)load(userptr, "glGetNamedBufferParameteri64v");
+    glad_snap_rhi_glGetNamedBufferParameteriv =
+        (PFNGLGETNAMEDBUFFERPARAMETERIVPROC)load(userptr, "glGetNamedBufferParameteriv");
+    glad_snap_rhi_glGetNamedBufferPointerv = (PFNGLGETNAMEDBUFFERPOINTERVPROC)load(userptr, "glGetNamedBufferPointerv");
+    glad_snap_rhi_glGetNamedBufferSubData = (PFNGLGETNAMEDBUFFERSUBDATAPROC)load(userptr, "glGetNamedBufferSubData");
+    glad_snap_rhi_glGetNamedFramebufferAttachmentParameteriv =
+        (PFNGLGETNAMEDFRAMEBUFFERATTACHMENTPARAMETERIVPROC)load(userptr, "glGetNamedFramebufferAttachmentParameteriv");
+    glad_snap_rhi_glGetNamedFramebufferParameteriv =
+        (PFNGLGETNAMEDFRAMEBUFFERPARAMETERIVPROC)load(userptr, "glGetNamedFramebufferParameteriv");
+    glad_snap_rhi_glGetNamedRenderbufferParameteriv =
+        (PFNGLGETNAMEDRENDERBUFFERPARAMETERIVPROC)load(userptr, "glGetNamedRenderbufferParameteriv");
+    glad_snap_rhi_glGetQueryBufferObjecti64v = (PFNGLGETQUERYBUFFEROBJECTI64VPROC)load(userptr, "glGetQueryBufferObjecti64v");
+    glad_snap_rhi_glGetQueryBufferObjectiv = (PFNGLGETQUERYBUFFEROBJECTIVPROC)load(userptr, "glGetQueryBufferObjectiv");
+    glad_snap_rhi_glGetQueryBufferObjectui64v =
+        (PFNGLGETQUERYBUFFEROBJECTUI64VPROC)load(userptr, "glGetQueryBufferObjectui64v");
+    glad_snap_rhi_glGetQueryBufferObjectuiv = (PFNGLGETQUERYBUFFEROBJECTUIVPROC)load(userptr, "glGetQueryBufferObjectuiv");
+    glad_snap_rhi_glGetTextureImage = (PFNGLGETTEXTUREIMAGEPROC)load(userptr, "glGetTextureImage");
+    glad_snap_rhi_glGetTextureLevelParameterfv =
+        (PFNGLGETTEXTURELEVELPARAMETERFVPROC)load(userptr, "glGetTextureLevelParameterfv");
+    glad_snap_rhi_glGetTextureLevelParameteriv =
+        (PFNGLGETTEXTURELEVELPARAMETERIVPROC)load(userptr, "glGetTextureLevelParameteriv");
+    glad_snap_rhi_glGetTextureParameterIiv = (PFNGLGETTEXTUREPARAMETERIIVPROC)load(userptr, "glGetTextureParameterIiv");
+    glad_snap_rhi_glGetTextureParameterIuiv = (PFNGLGETTEXTUREPARAMETERIUIVPROC)load(userptr, "glGetTextureParameterIuiv");
+    glad_snap_rhi_glGetTextureParameterfv = (PFNGLGETTEXTUREPARAMETERFVPROC)load(userptr, "glGetTextureParameterfv");
+    glad_snap_rhi_glGetTextureParameteriv = (PFNGLGETTEXTUREPARAMETERIVPROC)load(userptr, "glGetTextureParameteriv");
+    glad_snap_rhi_glGetTextureSubImage = (PFNGLGETTEXTURESUBIMAGEPROC)load(userptr, "glGetTextureSubImage");
+    glad_snap_rhi_glGetTransformFeedbacki64_v =
+        (PFNGLGETTRANSFORMFEEDBACKI64_VPROC)load(userptr, "glGetTransformFeedbacki64_v");
+    glad_snap_rhi_glGetTransformFeedbacki_v = (PFNGLGETTRANSFORMFEEDBACKI_VPROC)load(userptr, "glGetTransformFeedbacki_v");
+    glad_snap_rhi_glGetTransformFeedbackiv = (PFNGLGETTRANSFORMFEEDBACKIVPROC)load(userptr, "glGetTransformFeedbackiv");
+    glad_snap_rhi_glGetVertexArrayIndexed64iv =
+        (PFNGLGETVERTEXARRAYINDEXED64IVPROC)load(userptr, "glGetVertexArrayIndexed64iv");
+    glad_snap_rhi_glGetVertexArrayIndexediv = (PFNGLGETVERTEXARRAYINDEXEDIVPROC)load(userptr, "glGetVertexArrayIndexediv");
+    glad_snap_rhi_glGetVertexArrayiv = (PFNGLGETVERTEXARRAYIVPROC)load(userptr, "glGetVertexArrayiv");
+    glad_snap_rhi_glGetnColorTable = (PFNGLGETNCOLORTABLEPROC)load(userptr, "glGetnColorTable");
+    glad_snap_rhi_glGetnCompressedTexImage = (PFNGLGETNCOMPRESSEDTEXIMAGEPROC)load(userptr, "glGetnCompressedTexImage");
+    glad_snap_rhi_glGetnConvolutionFilter = (PFNGLGETNCONVOLUTIONFILTERPROC)load(userptr, "glGetnConvolutionFilter");
+    glad_snap_rhi_glGetnHistogram = (PFNGLGETNHISTOGRAMPROC)load(userptr, "glGetnHistogram");
+    glad_snap_rhi_glGetnMapdv = (PFNGLGETNMAPDVPROC)load(userptr, "glGetnMapdv");
+    glad_snap_rhi_glGetnMapfv = (PFNGLGETNMAPFVPROC)load(userptr, "glGetnMapfv");
+    glad_snap_rhi_glGetnMapiv = (PFNGLGETNMAPIVPROC)load(userptr, "glGetnMapiv");
+    glad_snap_rhi_glGetnMinmax = (PFNGLGETNMINMAXPROC)load(userptr, "glGetnMinmax");
+    glad_snap_rhi_glGetnPixelMapfv = (PFNGLGETNPIXELMAPFVPROC)load(userptr, "glGetnPixelMapfv");
+    glad_snap_rhi_glGetnPixelMapuiv = (PFNGLGETNPIXELMAPUIVPROC)load(userptr, "glGetnPixelMapuiv");
+    glad_snap_rhi_glGetnPixelMapusv = (PFNGLGETNPIXELMAPUSVPROC)load(userptr, "glGetnPixelMapusv");
+    glad_snap_rhi_glGetnPolygonStipple = (PFNGLGETNPOLYGONSTIPPLEPROC)load(userptr, "glGetnPolygonStipple");
+    glad_snap_rhi_glGetnSeparableFilter = (PFNGLGETNSEPARABLEFILTERPROC)load(userptr, "glGetnSeparableFilter");
+    glad_snap_rhi_glGetnTexImage = (PFNGLGETNTEXIMAGEPROC)load(userptr, "glGetnTexImage");
+    glad_snap_rhi_glGetnUniformdv = (PFNGLGETNUNIFORMDVPROC)load(userptr, "glGetnUniformdv");
+    glad_snap_rhi_glGetnUniformfv = (PFNGLGETNUNIFORMFVPROC)load(userptr, "glGetnUniformfv");
+    glad_snap_rhi_glGetnUniformiv = (PFNGLGETNUNIFORMIVPROC)load(userptr, "glGetnUniformiv");
+    glad_snap_rhi_glGetnUniformuiv = (PFNGLGETNUNIFORMUIVPROC)load(userptr, "glGetnUniformuiv");
+    glad_snap_rhi_glInvalidateNamedFramebufferData =
+        (PFNGLINVALIDATENAMEDFRAMEBUFFERDATAPROC)load(userptr, "glInvalidateNamedFramebufferData");
+    glad_snap_rhi_glInvalidateNamedFramebufferSubData =
+        (PFNGLINVALIDATENAMEDFRAMEBUFFERSUBDATAPROC)load(userptr, "glInvalidateNamedFramebufferSubData");
+    glad_snap_rhi_glMapNamedBuffer = (PFNGLMAPNAMEDBUFFERPROC)load(userptr, "glMapNamedBuffer");
+    glad_snap_rhi_glMapNamedBufferRange = (PFNGLMAPNAMEDBUFFERRANGEPROC)load(userptr, "glMapNamedBufferRange");
+    glad_snap_rhi_glMemoryBarrierByRegion = (PFNGLMEMORYBARRIERBYREGIONPROC)load(userptr, "glMemoryBarrierByRegion");
+    glad_snap_rhi_glNamedBufferData = (PFNGLNAMEDBUFFERDATAPROC)load(userptr, "glNamedBufferData");
+    glad_snap_rhi_glNamedBufferStorage = (PFNGLNAMEDBUFFERSTORAGEPROC)load(userptr, "glNamedBufferStorage");
+    glad_snap_rhi_glNamedBufferSubData = (PFNGLNAMEDBUFFERSUBDATAPROC)load(userptr, "glNamedBufferSubData");
+    glad_snap_rhi_glNamedFramebufferDrawBuffer =
+        (PFNGLNAMEDFRAMEBUFFERDRAWBUFFERPROC)load(userptr, "glNamedFramebufferDrawBuffer");
+    glad_snap_rhi_glNamedFramebufferDrawBuffers =
+        (PFNGLNAMEDFRAMEBUFFERDRAWBUFFERSPROC)load(userptr, "glNamedFramebufferDrawBuffers");
+    glad_snap_rhi_glNamedFramebufferParameteri =
+        (PFNGLNAMEDFRAMEBUFFERPARAMETERIPROC)load(userptr, "glNamedFramebufferParameteri");
+    glad_snap_rhi_glNamedFramebufferReadBuffer =
+        (PFNGLNAMEDFRAMEBUFFERREADBUFFERPROC)load(userptr, "glNamedFramebufferReadBuffer");
+    glad_snap_rhi_glNamedFramebufferRenderbuffer =
+        (PFNGLNAMEDFRAMEBUFFERRENDERBUFFERPROC)load(userptr, "glNamedFramebufferRenderbuffer");
+    glad_snap_rhi_glNamedFramebufferTexture = (PFNGLNAMEDFRAMEBUFFERTEXTUREPROC)load(userptr, "glNamedFramebufferTexture");
+    glad_snap_rhi_glNamedFramebufferTextureLayer =
+        (PFNGLNAMEDFRAMEBUFFERTEXTURELAYERPROC)load(userptr, "glNamedFramebufferTextureLayer");
+    glad_snap_rhi_glNamedRenderbufferStorage = (PFNGLNAMEDRENDERBUFFERSTORAGEPROC)load(userptr, "glNamedRenderbufferStorage");
+    glad_snap_rhi_glNamedRenderbufferStorageMultisample =
+        (PFNGLNAMEDRENDERBUFFERSTORAGEMULTISAMPLEPROC)load(userptr, "glNamedRenderbufferStorageMultisample");
+    glad_snap_rhi_glReadnPixels = (PFNGLREADNPIXELSPROC)load(userptr, "glReadnPixels");
+    glad_snap_rhi_glTextureBarrier = (PFNGLTEXTUREBARRIERPROC)load(userptr, "glTextureBarrier");
+    glad_snap_rhi_glTextureBuffer = (PFNGLTEXTUREBUFFERPROC)load(userptr, "glTextureBuffer");
+    glad_snap_rhi_glTextureBufferRange = (PFNGLTEXTUREBUFFERRANGEPROC)load(userptr, "glTextureBufferRange");
+    glad_snap_rhi_glTextureParameterIiv = (PFNGLTEXTUREPARAMETERIIVPROC)load(userptr, "glTextureParameterIiv");
+    glad_snap_rhi_glTextureParameterIuiv = (PFNGLTEXTUREPARAMETERIUIVPROC)load(userptr, "glTextureParameterIuiv");
+    glad_snap_rhi_glTextureParameterf = (PFNGLTEXTUREPARAMETERFPROC)load(userptr, "glTextureParameterf");
+    glad_snap_rhi_glTextureParameterfv = (PFNGLTEXTUREPARAMETERFVPROC)load(userptr, "glTextureParameterfv");
+    glad_snap_rhi_glTextureParameteri = (PFNGLTEXTUREPARAMETERIPROC)load(userptr, "glTextureParameteri");
+    glad_snap_rhi_glTextureParameteriv = (PFNGLTEXTUREPARAMETERIVPROC)load(userptr, "glTextureParameteriv");
+    glad_snap_rhi_glTextureStorage1D = (PFNGLTEXTURESTORAGE1DPROC)load(userptr, "glTextureStorage1D");
+    glad_snap_rhi_glTextureStorage2D = (PFNGLTEXTURESTORAGE2DPROC)load(userptr, "glTextureStorage2D");
+    glad_snap_rhi_glTextureStorage2DMultisample =
+        (PFNGLTEXTURESTORAGE2DMULTISAMPLEPROC)load(userptr, "glTextureStorage2DMultisample");
+    glad_snap_rhi_glTextureStorage3D = (PFNGLTEXTURESTORAGE3DPROC)load(userptr, "glTextureStorage3D");
+    glad_snap_rhi_glTextureStorage3DMultisample =
+        (PFNGLTEXTURESTORAGE3DMULTISAMPLEPROC)load(userptr, "glTextureStorage3DMultisample");
+    glad_snap_rhi_glTextureSubImage1D = (PFNGLTEXTURESUBIMAGE1DPROC)load(userptr, "glTextureSubImage1D");
+    glad_snap_rhi_glTextureSubImage2D = (PFNGLTEXTURESUBIMAGE2DPROC)load(userptr, "glTextureSubImage2D");
+    glad_snap_rhi_glTextureSubImage3D = (PFNGLTEXTURESUBIMAGE3DPROC)load(userptr, "glTextureSubImage3D");
+    glad_snap_rhi_glTransformFeedbackBufferBase =
+        (PFNGLTRANSFORMFEEDBACKBUFFERBASEPROC)load(userptr, "glTransformFeedbackBufferBase");
+    glad_snap_rhi_glTransformFeedbackBufferRange =
+        (PFNGLTRANSFORMFEEDBACKBUFFERRANGEPROC)load(userptr, "glTransformFeedbackBufferRange");
+    glad_snap_rhi_glUnmapNamedBuffer = (PFNGLUNMAPNAMEDBUFFERPROC)load(userptr, "glUnmapNamedBuffer");
+    glad_snap_rhi_glVertexArrayAttribBinding = (PFNGLVERTEXARRAYATTRIBBINDINGPROC)load(userptr, "glVertexArrayAttribBinding");
+    glad_snap_rhi_glVertexArrayAttribFormat = (PFNGLVERTEXARRAYATTRIBFORMATPROC)load(userptr, "glVertexArrayAttribFormat");
+    glad_snap_rhi_glVertexArrayAttribIFormat = (PFNGLVERTEXARRAYATTRIBIFORMATPROC)load(userptr, "glVertexArrayAttribIFormat");
+    glad_snap_rhi_glVertexArrayAttribLFormat = (PFNGLVERTEXARRAYATTRIBLFORMATPROC)load(userptr, "glVertexArrayAttribLFormat");
+    glad_snap_rhi_glVertexArrayBindingDivisor =
+        (PFNGLVERTEXARRAYBINDINGDIVISORPROC)load(userptr, "glVertexArrayBindingDivisor");
+    glad_snap_rhi_glVertexArrayElementBuffer = (PFNGLVERTEXARRAYELEMENTBUFFERPROC)load(userptr, "glVertexArrayElementBuffer");
+    glad_snap_rhi_glVertexArrayVertexBuffer = (PFNGLVERTEXARRAYVERTEXBUFFERPROC)load(userptr, "glVertexArrayVertexBuffer");
+    glad_snap_rhi_glVertexArrayVertexBuffers = (PFNGLVERTEXARRAYVERTEXBUFFERSPROC)load(userptr, "glVertexArrayVertexBuffers");
+}
+static void glad_snap_rhi_gl_load_GL_VERSION_4_6(GLADuserptrloadfunc load, void* userptr) {
+    glad_snap_rhi_glMultiDrawArraysIndirectCount =
+        (PFNGLMULTIDRAWARRAYSINDIRECTCOUNTPROC)load(userptr, "glMultiDrawArraysIndirectCount");
+    glad_snap_rhi_glMultiDrawElementsIndirectCount =
+        (PFNGLMULTIDRAWELEMENTSINDIRECTCOUNTPROC)load(userptr, "glMultiDrawElementsIndirectCount");
+    glad_snap_rhi_glPolygonOffsetClamp = (PFNGLPOLYGONOFFSETCLAMPPROC)load(userptr, "glPolygonOffsetClamp");
+    glad_snap_rhi_glSpecializeShader = (PFNGLSPECIALIZESHADERPROC)load(userptr, "glSpecializeShader");
+}
+static void glad_snap_rhi_gl_load_GL_ARB_draw_instanced(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_ARB_draw_instanced)
+        return;
+    glad_snap_rhi_glDrawArraysInstancedARB = (PFNGLDRAWARRAYSINSTANCEDARBPROC)load(userptr, "glDrawArraysInstancedARB");
+    glad_snap_rhi_glDrawElementsInstancedARB = (PFNGLDRAWELEMENTSINSTANCEDARBPROC)load(userptr, "glDrawElementsInstancedARB");
+}
+static void glad_snap_rhi_gl_load_GL_ARB_timer_query(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_ARB_timer_query)
+        return;
+    glad_snap_rhi_glGetQueryObjecti64v = (PFNGLGETQUERYOBJECTI64VPROC)load(userptr, "glGetQueryObjecti64v");
+    glad_snap_rhi_glGetQueryObjectui64v = (PFNGLGETQUERYOBJECTUI64VPROC)load(userptr, "glGetQueryObjectui64v");
+    glad_snap_rhi_glQueryCounter = (PFNGLQUERYCOUNTERPROC)load(userptr, "glQueryCounter");
+}
+static void glad_snap_rhi_gl_load_GL_EXT_blend_minmax(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_EXT_blend_minmax)
+        return;
+    glad_snap_rhi_glBlendEquationEXT = (PFNGLBLENDEQUATIONEXTPROC)load(userptr, "glBlendEquationEXT");
+}
+static void glad_snap_rhi_gl_load_GL_EXT_debug_marker(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_EXT_debug_marker)
+        return;
+    glad_snap_rhi_glInsertEventMarkerEXT = (PFNGLINSERTEVENTMARKEREXTPROC)load(userptr, "glInsertEventMarkerEXT");
+    glad_snap_rhi_glPopGroupMarkerEXT = (PFNGLPOPGROUPMARKEREXTPROC)load(userptr, "glPopGroupMarkerEXT");
+    glad_snap_rhi_glPushGroupMarkerEXT = (PFNGLPUSHGROUPMARKEREXTPROC)load(userptr, "glPushGroupMarkerEXT");
+}
+static void glad_snap_rhi_gl_load_GL_EXT_draw_instanced(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_EXT_draw_instanced)
+        return;
+    glad_snap_rhi_glDrawArraysInstancedEXT = (PFNGLDRAWARRAYSINSTANCEDEXTPROC)load(userptr, "glDrawArraysInstancedEXT");
+    glad_snap_rhi_glDrawElementsInstancedEXT = (PFNGLDRAWELEMENTSINSTANCEDEXTPROC)load(userptr, "glDrawElementsInstancedEXT");
+}
+static void glad_snap_rhi_gl_load_GL_EXT_framebuffer_multisample(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_EXT_framebuffer_multisample)
+        return;
+    glad_snap_rhi_glRenderbufferStorageMultisampleEXT =
+        (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC)load(userptr, "glRenderbufferStorageMultisampleEXT");
+}
+static void glad_snap_rhi_gl_load_GL_EXT_shader_framebuffer_fetch_non_coherent(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_EXT_shader_framebuffer_fetch_non_coherent)
+        return;
+    glad_snap_rhi_glFramebufferFetchBarrierEXT =
+        (PFNGLFRAMEBUFFERFETCHBARRIEREXTPROC)load(userptr, "glFramebufferFetchBarrierEXT");
+}
+static void glad_snap_rhi_gl_load_GL_EXT_texture_array(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_EXT_texture_array)
+        return;
+    glad_snap_rhi_glFramebufferTextureLayerEXT =
+        (PFNGLFRAMEBUFFERTEXTURELAYEREXTPROC)load(userptr, "glFramebufferTextureLayerEXT");
+}
+static void glad_snap_rhi_gl_load_GL_KHR_debug(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_KHR_debug)
+        return;
+    glad_snap_rhi_glDebugMessageCallback = (PFNGLDEBUGMESSAGECALLBACKPROC)load(userptr, "glDebugMessageCallback");
+    glad_snap_rhi_glDebugMessageControl = (PFNGLDEBUGMESSAGECONTROLPROC)load(userptr, "glDebugMessageControl");
+    glad_snap_rhi_glDebugMessageInsert = (PFNGLDEBUGMESSAGEINSERTPROC)load(userptr, "glDebugMessageInsert");
+    glad_snap_rhi_glGetDebugMessageLog = (PFNGLGETDEBUGMESSAGELOGPROC)load(userptr, "glGetDebugMessageLog");
+    glad_snap_rhi_glGetObjectLabel = (PFNGLGETOBJECTLABELPROC)load(userptr, "glGetObjectLabel");
+    glad_snap_rhi_glGetObjectPtrLabel = (PFNGLGETOBJECTPTRLABELPROC)load(userptr, "glGetObjectPtrLabel");
+    glad_snap_rhi_glGetPointerv = (PFNGLGETPOINTERVPROC)load(userptr, "glGetPointerv");
+    glad_snap_rhi_glObjectLabel = (PFNGLOBJECTLABELPROC)load(userptr, "glObjectLabel");
+    glad_snap_rhi_glObjectPtrLabel = (PFNGLOBJECTPTRLABELPROC)load(userptr, "glObjectPtrLabel");
+    glad_snap_rhi_glPopDebugGroup = (PFNGLPOPDEBUGGROUPPROC)load(userptr, "glPopDebugGroup");
+    glad_snap_rhi_glPushDebugGroup = (PFNGLPUSHDEBUGGROUPPROC)load(userptr, "glPushDebugGroup");
+}
+static void glad_snap_rhi_gl_load_GL_EXT_discard_framebuffer(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_EXT_discard_framebuffer)
+        return;
+    glad_snap_rhi_glDiscardFramebufferEXT = (PFNGLDISCARDFRAMEBUFFEREXTPROC)load(userptr, "glDiscardFramebufferEXT");
+}
+static void glad_snap_rhi_gl_load_GL_EXT_disjoint_timer_query(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_EXT_disjoint_timer_query)
+        return;
+    glad_snap_rhi_glBeginQueryEXT = (PFNGLBEGINQUERYEXTPROC)load(userptr, "glBeginQueryEXT");
+    glad_snap_rhi_glDeleteQueriesEXT = (PFNGLDELETEQUERIESEXTPROC)load(userptr, "glDeleteQueriesEXT");
+    glad_snap_rhi_glEndQueryEXT = (PFNGLENDQUERYEXTPROC)load(userptr, "glEndQueryEXT");
+    glad_snap_rhi_glGenQueriesEXT = (PFNGLGENQUERIESEXTPROC)load(userptr, "glGenQueriesEXT");
+    glad_snap_rhi_glGetInteger64vEXT = (PFNGLGETINTEGER64VEXTPROC)load(userptr, "glGetInteger64vEXT");
+    glad_snap_rhi_glGetQueryObjecti64vEXT = (PFNGLGETQUERYOBJECTI64VEXTPROC)load(userptr, "glGetQueryObjecti64vEXT");
+    glad_snap_rhi_glGetQueryObjectivEXT = (PFNGLGETQUERYOBJECTIVEXTPROC)load(userptr, "glGetQueryObjectivEXT");
+    glad_snap_rhi_glGetQueryObjectui64vEXT = (PFNGLGETQUERYOBJECTUI64VEXTPROC)load(userptr, "glGetQueryObjectui64vEXT");
+    glad_snap_rhi_glGetQueryObjectuivEXT = (PFNGLGETQUERYOBJECTUIVEXTPROC)load(userptr, "glGetQueryObjectuivEXT");
+    glad_snap_rhi_glGetQueryivEXT = (PFNGLGETQUERYIVEXTPROC)load(userptr, "glGetQueryivEXT");
+    glad_snap_rhi_glIsQueryEXT = (PFNGLISQUERYEXTPROC)load(userptr, "glIsQueryEXT");
+    glad_snap_rhi_glQueryCounterEXT = (PFNGLQUERYCOUNTEREXTPROC)load(userptr, "glQueryCounterEXT");
+}
+static void glad_snap_rhi_gl_load_GL_EXT_texture_border_clamp(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_EXT_texture_border_clamp)
+        return;
+    glad_snap_rhi_glGetSamplerParameterIivEXT =
+        (PFNGLGETSAMPLERPARAMETERIIVEXTPROC)load(userptr, "glGetSamplerParameterIivEXT");
+    glad_snap_rhi_glGetSamplerParameterIuivEXT =
+        (PFNGLGETSAMPLERPARAMETERIUIVEXTPROC)load(userptr, "glGetSamplerParameterIuivEXT");
+    glad_snap_rhi_glGetTexParameterIivEXT = (PFNGLGETTEXPARAMETERIIVEXTPROC)load(userptr, "glGetTexParameterIivEXT");
+    glad_snap_rhi_glGetTexParameterIuivEXT = (PFNGLGETTEXPARAMETERIUIVEXTPROC)load(userptr, "glGetTexParameterIuivEXT");
+    glad_snap_rhi_glSamplerParameterIivEXT = (PFNGLSAMPLERPARAMETERIIVEXTPROC)load(userptr, "glSamplerParameterIivEXT");
+    glad_snap_rhi_glSamplerParameterIuivEXT = (PFNGLSAMPLERPARAMETERIUIVEXTPROC)load(userptr, "glSamplerParameterIuivEXT");
+    glad_snap_rhi_glTexParameterIivEXT = (PFNGLTEXPARAMETERIIVEXTPROC)load(userptr, "glTexParameterIivEXT");
+    glad_snap_rhi_glTexParameterIuivEXT = (PFNGLTEXPARAMETERIUIVEXTPROC)load(userptr, "glTexParameterIuivEXT");
+}
+static void glad_snap_rhi_gl_load_GL_EXT_multisampled_render_to_texture(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_EXT_multisampled_render_to_texture)
+        return;
+    glad_snap_rhi_glFramebufferTexture2DMultisampleEXT =
+        (PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC)load(userptr, "glFramebufferTexture2DMultisampleEXT");
+    glad_snap_rhi_glRenderbufferStorageMultisampleEXT =
+        (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC)load(userptr, "glRenderbufferStorageMultisampleEXT");
+}
+static void glad_snap_rhi_gl_load_GL_APPLE_sync(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_APPLE_sync)
+        return;
+    glad_snap_rhi_glClientWaitSyncAPPLE = (PFNGLCLIENTWAITSYNCAPPLEPROC)load(userptr, "glClientWaitSyncAPPLE");
+    glad_snap_rhi_glDeleteSyncAPPLE = (PFNGLDELETESYNCAPPLEPROC)load(userptr, "glDeleteSyncAPPLE");
+    glad_snap_rhi_glFenceSyncAPPLE = (PFNGLFENCESYNCAPPLEPROC)load(userptr, "glFenceSyncAPPLE");
+    glad_snap_rhi_glGetInteger64vAPPLE = (PFNGLGETINTEGER64VAPPLEPROC)load(userptr, "glGetInteger64vAPPLE");
+    glad_snap_rhi_glGetSyncivAPPLE = (PFNGLGETSYNCIVAPPLEPROC)load(userptr, "glGetSyncivAPPLE");
+    glad_snap_rhi_glIsSyncAPPLE = (PFNGLISSYNCAPPLEPROC)load(userptr, "glIsSyncAPPLE");
+    glad_snap_rhi_glWaitSyncAPPLE = (PFNGLWAITSYNCAPPLEPROC)load(userptr, "glWaitSyncAPPLE");
+}
+static void glad_snap_rhi_gl_load_GL_APPLE_framebuffer_multisample(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_APPLE_framebuffer_multisample)
+        return;
+    glad_snap_rhi_glRenderbufferStorageMultisampleAPPLE =
+        (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEAPPLEPROC)load(userptr, "glRenderbufferStorageMultisampleAPPLE");
+    glad_snap_rhi_glResolveMultisampleFramebufferAPPLE =
+        (PFNGLRESOLVEMULTISAMPLEFRAMEBUFFERAPPLEPROC)load(userptr, "glResolveMultisampleFramebufferAPPLE");
+}
+static void glad_snap_rhi_gl_load_GL_EXT_memory_object(GLADuserptrloadfunc load, void* userptr) {
+    if (!GLAD_SNAP_RHI_GL_EXT_memory_object)
+        return;
+    glad_snap_rhi_glCreateMemoryObjectsEXT = (PFNGLCREATEMEMORYOBJECTSEXTPROC)load(userptr, "glCreateMemoryObjectsEXT");
+    glad_snap_rhi_glDeleteMemoryObjectsEXT = (PFNGLDELETEMEMORYOBJECTSEXTPROC)load(userptr, "glDeleteMemoryObjectsEXT");
+    glad_snap_rhi_glTexStorageMem2DEXT = (PFNGLTEXSTORAGEMEM2DEXTPROC)load(userptr, "glTexStorageMem2DEXT");
+    glad_snap_rhi_glTexStorageMem3DEXT = (PFNGLTEXSTORAGEMEM3DEXTPROC)load(userptr, "glTexStorageMem3DEXT");
+    glad_snap_rhi_glImportMemoryFdEXT = (PFNGLIMPORTMEMORYFDEXTPROC)load(userptr, "glImportMemoryFdEXT");
+    glad_snap_rhi_glImportMemoryWin32HandleEXT =
+        (PFNGLIMPORTMEMORYWIN32HANDLEEXTPROC)load(userptr, "glImportMemoryWin32HandleEXT");
+}
+#if defined(GL_ES_VERSION_3_0) || defined(GL_VERSION_3_0)
+#define GLAD_SNAP_RHI_GL_IS_SOME_NEW_VERSION 1
+#else
+#define GLAD_SNAP_RHI_GL_IS_SOME_NEW_VERSION 0
+#endif
+
+static int glad_snap_rhi_gl_get_extensions(int version,
+                                     const char** out_exts,
+                                     unsigned int* out_num_exts_i,
+                                     char*** out_exts_i) {
+#if GLAD_SNAP_RHI_GL_IS_SOME_NEW_VERSION
+    if (GLAD_VERSION_MAJOR(version) < 3) {
+#else
+    (void)version;
+    (void)out_num_exts_i;
+    (void)out_exts_i;
+#endif
+        if (glad_snap_rhi_glGetString == NULL) {
+            return 0;
+        }
+        *out_exts = (const char*)glad_snap_rhi_glGetString(GL_EXTENSIONS);
+#if GLAD_SNAP_RHI_GL_IS_SOME_NEW_VERSION
+    } else {
+        unsigned int index = 0;
+        unsigned int num_exts_i = 0;
+        char** exts_i = NULL;
+        if (glad_snap_rhi_glGetStringi == NULL || glad_snap_rhi_glGetIntegerv == NULL) {
+            return 0;
+        }
+        glad_snap_rhi_glGetIntegerv(GL_NUM_EXTENSIONS, (int*)&num_exts_i);
+        if (num_exts_i > 0) {
+            exts_i = (char**)malloc(num_exts_i * (sizeof *exts_i));
+        }
+        if (exts_i == NULL) {
+            return 0;
+        }
+        for (index = 0; index < num_exts_i; index++) {
+            const char* gl_str_tmp = (const char*)glad_snap_rhi_glGetStringi(GL_EXTENSIONS, index);
+            size_t len = strlen(gl_str_tmp) + 1;
+
+            char* local_str = (char*)malloc(len * sizeof(char));
+            if (local_str != NULL) {
+                memcpy(local_str, gl_str_tmp, len * sizeof(char));
+            }
+
+            exts_i[index] = local_str;
+        }
+
+        *out_num_exts_i = num_exts_i;
+        *out_exts_i = exts_i;
+    }
+#endif
+    return 1;
+}
+static void glad_snap_rhi_gl_free_extensions(char** exts_i, unsigned int num_exts_i) {
+    if (exts_i != NULL) {
+        unsigned int index;
+        for (index = 0; index < num_exts_i; index++) {
+            free((void*)(exts_i[index]));
+        }
+        free((void*)exts_i);
+        exts_i = NULL;
+    }
+}
+static int glad_snap_rhi_gl_has_extension(
+    int version, const char* exts, unsigned int num_exts_i, char** exts_i, const char* ext) {
+    if (GLAD_VERSION_MAJOR(version) < 3 || !GLAD_SNAP_RHI_GL_IS_SOME_NEW_VERSION) {
+        const char* extensions;
+        const char* loc;
+        const char* terminator;
+        extensions = exts;
+        if (extensions == NULL || ext == NULL) {
+            return 0;
+        }
+        while (1) {
+            loc = strstr(extensions, ext);
+            if (loc == NULL) {
+                return 0;
+            }
+            terminator = loc + strlen(ext);
+            if ((loc == extensions || *(loc - 1) == ' ') && (*terminator == ' ' || *terminator == '\0')) {
+                return 1;
+            }
+            extensions = terminator;
+        }
+    } else {
+        unsigned int index;
+        for (index = 0; index < num_exts_i; index++) {
+            const char* e = exts_i[index];
+            if (strcmp(e, ext) == 0) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+static GLADapiproc glad_snap_rhi_gl_get_proc_from_userptr(void* userptr, const char* name) {
+    return (GLAD_GNUC_EXTENSION(GLADapiproc(*)(const char* name)) userptr)(name);
+}
+
+static int glad_snap_rhi_gl_find_extensions_gl(int version) {
+    const char* exts = NULL;
+    unsigned int num_exts_i = 0;
+    char** exts_i = NULL;
+    if (!glad_snap_rhi_gl_get_extensions(version, &exts, &num_exts_i, &exts_i))
+        return 0;
+
+    GLAD_SNAP_RHI_GL_ARB_draw_instanced =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_ARB_draw_instanced");
+    GLAD_SNAP_RHI_GL_ARB_shader_texture_lod =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_ARB_shader_texture_lod");
+    GLAD_SNAP_RHI_GL_ARB_timer_query = glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_ARB_timer_query");
+    GLAD_SNAP_RHI_GL_EXT_blend_minmax = glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_blend_minmax");
+    GLAD_SNAP_RHI_GL_EXT_debug_marker = glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_debug_marker");
+    GLAD_SNAP_RHI_GL_EXT_draw_instanced =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_draw_instanced");
+    GLAD_SNAP_RHI_GL_EXT_discard_framebuffer =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_discard_framebuffer");
+    GLAD_SNAP_RHI_GL_EXT_framebuffer_multisample =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_framebuffer_multisample");
+    GLAD_SNAP_RHI_GL_EXT_framebuffer_multisample_blit_scaled =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_framebuffer_multisample_blit_scaled");
+    GLAD_SNAP_RHI_GL_EXT_shader_framebuffer_fetch =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_shader_framebuffer_fetch");
+    GLAD_SNAP_RHI_GL_EXT_shader_framebuffer_fetch_non_coherent =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_shader_framebuffer_fetch_non_coherent");
+    GLAD_SNAP_RHI_GL_EXT_texture_array = glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_texture_array");
+    GLAD_SNAP_RHI_GL_KHR_debug = glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_KHR_debug");
+    GLAD_SNAP_RHI_GL_EXT_disjoint_timer_query =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_disjoint_timer_query");
+    GLAD_SNAP_RHI_WGL_ARB_create_context =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "WGL_ARB_create_context");
+    GLAD_SNAP_RHI_GL_EXT_color_buffer_half_float =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_color_buffer_half_float");
+    GLAD_SNAP_RHI_GL_EXT_texture_rg = glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_texture_rg");
+    GLAD_SNAP_RHI_GL_EXT_shader_texture_lod =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_shader_texture_lod");
+    GLAD_SNAP_RHI_GL_EXT_texture_border_clamp =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_texture_border_clamp");
+    GLAD_SNAP_RHI_GL_EXT_clip_cull_distance =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_clip_cull_distance");
+    GLAD_SNAP_RHI_GL_EXT_multisampled_render_to_texture =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_multisampled_render_to_texture");
+    GLAD_SNAP_RHI_GL_APPLE_sync = glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_APPLE_sync");
+    GLAD_SNAP_RHI_GL_APPLE_clip_distance =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_APPLE_clip_distance");
+    GLAD_SNAP_RHI_GL_APPLE_framebuffer_multisample =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_APPLE_framebuffer_multisample");
+    GLAD_SNAP_RHI_GL_EXT_texture_filter_anisotropic =
+        glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_texture_filter_anisotropic");
+    GLAD_SNAP_RHI_GL_EXT_memory_object = glad_snap_rhi_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_EXT_memory_object");
+
+    glad_snap_rhi_gl_free_extensions(exts_i, num_exts_i);
+
+    return 1;
+}
+
+static int glad_snap_rhi_gl_find_core_gl(void) {
+    int i;
+    const char* version;
+    const char* prefixes[] = {"OpenGL ES-CM ", "OpenGL ES-CL ", "OpenGL ES ", "OpenGL SC ", NULL};
+    int major = 0;
+    int minor = 0;
+    version = (const char*)glad_snap_rhi_glGetString(GL_VERSION);
+    if (!version)
+        return 0;
+    for (i = 0; prefixes[i]; i++) {
+        const size_t length = strlen(prefixes[i]);
+        if (strncmp(version, prefixes[i], length) == 0) {
+            version += length;
+            break;
+        }
+    }
+
+    GLAD_IMPL_UTIL_SSCANF(version, "%d.%d", &major, &minor);
+
+    GLAD_SNAP_RHI_GL_VERSION_1_0 = (major == 1 && minor >= 0) || major > 1;
+    GLAD_SNAP_RHI_GL_VERSION_1_1 = (major == 1 && minor >= 1) || major > 1;
+    GLAD_SNAP_RHI_GL_VERSION_1_2 = (major == 1 && minor >= 2) || major > 1;
+    GLAD_SNAP_RHI_GL_VERSION_1_3 = (major == 1 && minor >= 3) || major > 1;
+    GLAD_SNAP_RHI_GL_VERSION_1_4 = (major == 1 && minor >= 4) || major > 1;
+    GLAD_SNAP_RHI_GL_VERSION_1_5 = (major == 1 && minor >= 5) || major > 1;
+    GLAD_SNAP_RHI_GL_VERSION_2_0 = (major == 2 && minor >= 0) || major > 2;
+    GLAD_SNAP_RHI_GL_VERSION_2_1 = (major == 2 && minor >= 1) || major > 2;
+    GLAD_SNAP_RHI_GL_VERSION_3_0 = (major == 3 && minor >= 0) || major > 3;
+    GLAD_SNAP_RHI_GL_VERSION_3_1 = (major == 3 && minor >= 1) || major > 3;
+    GLAD_SNAP_RHI_GL_VERSION_3_2 = (major == 3 && minor >= 2) || major > 3;
+    GLAD_SNAP_RHI_GL_VERSION_3_3 = (major == 3 && minor >= 3) || major > 3;
+    GLAD_SNAP_RHI_GL_VERSION_4_0 = (major == 4 && minor >= 0) || major > 4;
+    GLAD_SNAP_RHI_GL_VERSION_4_1 = (major == 4 && minor >= 1) || major > 4;
+    GLAD_SNAP_RHI_GL_VERSION_4_2 = (major == 4 && minor >= 2) || major > 4;
+    GLAD_SNAP_RHI_GL_VERSION_4_3 = (major == 4 && minor >= 3) || major > 4;
+    GLAD_SNAP_RHI_GL_VERSION_4_4 = (major == 4 && minor >= 4) || major > 4;
+    GLAD_SNAP_RHI_GL_VERSION_4_5 = (major == 4 && minor >= 5) || major > 4;
+    GLAD_SNAP_RHI_GL_VERSION_4_6 = (major == 4 && minor >= 6) || major > 4;
+
+    return GLAD_MAKE_VERSION(major, minor);
+}
+
+int gladLoadGLUserPtr(GLADuserptrloadfunc load, void* userptr) {
+    int version;
+
+    glad_snap_rhi_glGetString = (PFNGLGETSTRINGPROC)load(userptr, "glGetString");
+    if (glad_snap_rhi_glGetString == NULL)
+        return 0;
+    if (glad_snap_rhi_glGetString(GL_VERSION) == NULL)
+        return 0;
+    version = glad_snap_rhi_gl_find_core_gl();
+
+    glad_snap_rhi_gl_load_GL_VERSION_1_0(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_1_1(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_1_2(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_1_3(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_1_4(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_1_5(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_2_0(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_2_1(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_3_0(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_3_1(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_3_2(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_3_3(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_4_0(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_4_1(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_4_2(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_4_3(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_4_4(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_4_5(load, userptr);
+    glad_snap_rhi_gl_load_GL_VERSION_4_6(load, userptr);
+
+    if (!glad_snap_rhi_gl_find_extensions_gl(version))
+        return 0;
+    glad_snap_rhi_gl_load_GL_ARB_draw_instanced(load, userptr);
+    glad_snap_rhi_gl_load_GL_ARB_timer_query(load, userptr);
+    glad_snap_rhi_gl_load_GL_EXT_blend_minmax(load, userptr);
+    glad_snap_rhi_gl_load_GL_EXT_debug_marker(load, userptr);
+    glad_snap_rhi_gl_load_GL_EXT_discard_framebuffer(load, userptr);
+    glad_snap_rhi_gl_load_GL_EXT_draw_instanced(load, userptr);
+    glad_snap_rhi_gl_load_GL_EXT_framebuffer_multisample(load, userptr);
+    glad_snap_rhi_gl_load_GL_EXT_shader_framebuffer_fetch_non_coherent(load, userptr);
+    glad_snap_rhi_gl_load_GL_EXT_texture_array(load, userptr);
+    glad_snap_rhi_gl_load_GL_KHR_debug(load, userptr);
+    glad_snap_rhi_gl_load_GL_EXT_disjoint_timer_query(load, userptr);
+    glad_snap_rhi_gl_load_GL_EXT_texture_border_clamp(load, userptr);
+    glad_snap_rhi_gl_load_GL_EXT_multisampled_render_to_texture(load, userptr);
+    glad_snap_rhi_gl_load_GL_APPLE_sync(load, userptr);
+    glad_snap_rhi_gl_load_GL_APPLE_framebuffer_multisample(load, userptr);
+    glad_snap_rhi_gl_load_GL_EXT_memory_object(load, userptr);
+
+    return version;
+}
+
+int gladLoadGL(GLADloadfunc load) {
+    return gladLoadGLUserPtr(glad_snap_rhi_gl_get_proc_from_userptr, GLAD_GNUC_EXTENSION(void*) load);
+}
+
+int gladLoadGLSafe(GLADloadfunc load) {
+    static std::once_flag of;
+    static int retValue = 0;
+    std::call_once(of, [&] { retValue = gladLoadGL(load); });
+    return retValue;
+}
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

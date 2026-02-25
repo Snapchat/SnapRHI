@@ -1,0 +1,98 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        // ─── macOS ──────────────────────────────────────────────────
+        {
+            "label": "Build: macos-metal-demo",
+            "type": "shell",
+            "command": "cmake --preset macos-metal-demo && cmake --build build/macos-metal-demo --parallel",
+            "group": "build",
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Build: macos-vulkan-demo",
+            "type": "shell",
+            "command": "cmake --preset macos-vulkan-demo && cmake --build build/macos-vulkan-demo --parallel",
+            "group": "build",
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Build: macos-opengl-demo",
+            "type": "shell",
+            "command": "cmake --preset macos-opengl-demo && cmake --build build/macos-opengl-demo --parallel",
+            "group": "build",
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Build: macos-metal-demo-validation",
+            "type": "shell",
+            "command": "cmake --preset macos-metal-demo-validation && cmake --build build/macos-metal-demo-validation --parallel",
+            "group": "build",
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Build: macos-vulkan-demo-validation",
+            "type": "shell",
+            "command": "cmake --preset macos-vulkan-demo-validation && cmake --build build/macos-vulkan-demo-validation --parallel",
+            "group": "build",
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Build: macos-opengl-demo-validation",
+            "type": "shell",
+            "command": "cmake --preset macos-opengl-demo-validation && cmake --build build/macos-opengl-demo-validation --parallel",
+            "group": "build",
+            "problemMatcher": "$gcc"
+        },
+        // ─── Linux ──────────────────────────────────────────────────
+        {
+            "label": "Build: linux-vulkan-demo",
+            "type": "shell",
+            "command": "cmake --preset linux-vulkan-demo && cmake --build build/linux-vulkan-demo --parallel",
+            "group": "build",
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Build: linux-opengl-demo",
+            "type": "shell",
+            "command": "cmake --preset linux-opengl-demo && cmake --build build/linux-opengl-demo --parallel",
+            "group": "build",
+            "problemMatcher": "$gcc"
+        },
+        // ─── Windows ────────────────────────────────────────────────
+        {
+            "label": "Build: windows-vulkan-demo",
+            "type": "shell",
+            "command": "cmake --preset windows-vulkan-demo && cmake --build build/windows-vulkan-demo --config Debug --parallel",
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build: windows-opengl-demo",
+            "type": "shell",
+            "command": "cmake --preset windows-opengl-demo && cmake --build build/windows-opengl-demo --config Debug --parallel",
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        // ─── Active Preset (generic) ────────────────────────────────
+        {
+            "label": "Build: Active Preset",
+            "type": "cmake",
+            "command": "build",
+            "targets": ["all"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$gcc"
+        },
+        // ─── Clean ──────────────────────────────────────────────────
+        {
+            "label": "Clean Build",
+            "type": "cmake",
+            "command": "clean",
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
+}

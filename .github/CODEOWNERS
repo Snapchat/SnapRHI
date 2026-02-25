@@ -1,0 +1,34 @@
+# CODEOWNERS for SnapRHI
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# Later rules take precedence. Add backend specialists alongside the default
+# owner when the team grows (e.g., /src/backend/vulkan/ @vdeviatkovSC @vulkan-dev).
+
+# ── Default owner ────────────────────────────────────────────────────────────
+*                                       @vdeviatkovSC
+
+# ── Public API & interop ─────────────────────────────────────────────────────
+/src/public-api/                        @vdeviatkovSC
+/src/interop/                           @vdeviatkovSC @trossimel-sc
+
+# ── Backend implementations ──────────────────────────────────────────────────
+/src/backend/common/                    @vdeviatkovSC @shanumante-sc
+/src/backend/metal/                     @vdeviatkovSC @smarton-sc @shanumante-sc
+/src/backend/noop/                      @vdeviatkovSC @shanumante-sc
+/src/backend/opengl/                    @vdeviatkovSC @smarton-sc @shanumante-sc
+/src/backend/vulkan/                    @vdeviatkovSC @smarton-sc @shanumante-sc
+
+# ── Build system & CI ────────────────────────────────────────────────────────
+CMakeLists.txt                          @vdeviatkovSC
+CMakePresets.json                       @vdeviatkovSC
+/cmake/                                 @vdeviatkovSC
+/.github/                               @vdeviatkovSC
+
+# ── Documentation ────────────────────────────────────────────────────────────
+/docs/                                  @vdeviatkovSC
+
+# ── Examples ─────────────────────────────────────────────────────────────────
+/examples/                              @vdeviatkovSC
+
+# ── Third-party dependencies ─────────────────────────────────────────────────
+/third-party/                           @vdeviatkovSC

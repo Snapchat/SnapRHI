@@ -1,0 +1,111 @@
+name: "Bug Report"
+description: "Report a bug or incorrect behavior in SnapRHI."
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a bug.
+        Please fill out the sections below so we can reproduce and fix the issue quickly.
+
+  - type: dropdown
+    id: backend
+    attributes:
+      label: Backend
+      description: "Which graphics backend are you using?"
+      multiple: true
+      options:
+        - Metal
+        - Vulkan
+        - "OpenGL / OpenGL ES"
+        - Noop
+        - All backends
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: "Which platform(s) are affected?"
+      multiple: true
+      options:
+        - macOS
+        - iOS
+        - Windows
+        - Linux
+        - Android
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: "SnapRHI version / commit SHA"
+      description: "The version tag or commit hash you're building against."
+      placeholder: "e.g. v1.2.0 or abc1234"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Describe the bug"
+      description: "A clear and concise description of the incorrect behavior."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Expected behavior"
+      description: "What you expected to happen instead."
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: "Steps to reproduce"
+      description: |
+        Minimal steps to trigger the bug. A self-contained code snippet or link to a failing test is ideal.
+      placeholder: |
+        1. Configure with `cmake --preset macos-metal`
+        2. Build and run the triangle-demo-app
+        3. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: "Environment details"
+      description: "Any relevant details about your environment."
+      placeholder: |
+        - "OS version: macOS 15.2"
+        - "GPU: Apple M2 Max"
+        - "Driver version: (if Vulkan/OpenGL)"
+        - "CMake version: 3.28"
+        - "Compiler: Apple Clang 16"
+    validations:
+      required: false
+
+  - type: textarea
+    id: validation
+    attributes:
+      label: "Validation / debug output"
+      description: |
+        If applicable, paste output from validation layers, sanitizers, or GPU capture tools.
+        Build with `-DSNAP_RHI_ENABLE_VALIDATION=ON` to enable validation checks.
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: "Additional context"
+      description: "Screenshots, frame captures, profiler traces, or anything else that helps."
+    validations:
+      required: false

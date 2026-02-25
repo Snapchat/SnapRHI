@@ -1,0 +1,19 @@
+{
+    // Recommended extensions for SnapRHI development.
+    // VS Code will prompt to install these when opening the workspace.
+    "recommendations": [
+        // ── Required ────────────────────────────────────────────────
+        "ms-vscode.cmake-tools",         // CMake preset integration, configure/build/debug
+        "ms-vscode.cpptools",            // C/C++ IntelliSense, debugging (cppdbg/cppvsdbg)
+
+        // ── Highly Recommended ──────────────────────────────────────
+        "twxs.cmake",                    // CMakeLists.txt syntax highlighting
+        "vadimcn.vscode-lldb",           // LLDB debugger (macOS/Linux — used by launch.json)
+        "xaver.clang-format",            // clang-format integration
+
+        // ── Shader Development ──────────────────────────────────────
+        "slevesque.shader",              // GLSL/HLSL syntax highlighting
+        "nickmqb.vscode-metal-shader"    // Metal Shading Language support
+    ],
+    "unwantedRecommendations": []
+}

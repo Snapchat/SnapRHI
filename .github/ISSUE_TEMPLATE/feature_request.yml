@@ -1,0 +1,83 @@
+name: "Feature Request"
+description: "Propose a new feature or API addition for SnapRHI."
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement!
+        Please describe the problem you're trying to solve and the solution you'd like.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: |
+        What limitation, pain point, or missing capability prompted this request?
+        Describe the use case, not just the desired API.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: |
+        Describe the API or behavior you'd like. Pseudo-code, API sketches, or
+        references to how other graphics APIs solve this are very helpful.
+      placeholder: |
+        ```cpp
+        // Example API sketch
+        auto query = device->createTimestampQuery(...);
+        ```
+    validations:
+      required: true
+
+  - type: dropdown
+    id: backends
+    attributes:
+      label: Affected backends
+      description: Which backends would need changes?
+      multiple: true
+      options:
+        - Metal
+        - Vulkan
+        - "OpenGL / OpenGL ES"
+        - Noop
+        - All backends
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      description: How would you characterize the scope of this change?
+      options:
+        - Public API addition
+        - Public API modification (breaking change)
+        - Backend-internal improvement
+        - Build system / tooling
+        - Documentation
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: |
+        Have you considered other approaches? What are the trade-offs?
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: |
+        Links to related specs (Vulkan, Metal, GL), ADRs, issues, or prior discussions.
+    validations:
+      required: false

@@ -1,0 +1,91 @@
+name: "Performance Issue"
+description: "Report a performance regression or optimization opportunity."
+title: "[Perf]: "
+labels: ["performance", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for performance regressions, unexpected CPU/GPU overhead,
+        or optimization suggestions. For correctness bugs, use the Bug Report template instead.
+  - type: dropdown
+    id: backend
+    attributes:
+      label: Backend
+      description: Which backend is affected?
+      multiple: true
+      options:
+        - Metal
+        - Vulkan
+        - OpenGL / OpenGL ES
+        - All backends
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: Which platform(s) are affected?
+      multiple: true
+      options:
+        - macOS
+        - iOS
+        - Windows
+        - Linux
+        - Android
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: What area is the performance issue in?
+      options:
+        - "Command recording / submission"
+        - "Resource creation / destruction"
+        - "Descriptor binding"
+        - "Synchronization (fences, barriers)"
+        - "Memory allocation / mapping"
+        - "State tracking / caching"
+        - "Shader compilation / pipeline creation"
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the issue
+      description: |
+        What operation is slower than expected? Include frame times, call counts,
+        or profiler data if available.
+    validations:
+      required: true
+  - type: textarea
+    id: profiling
+    attributes:
+      label: Profiling data
+      description: |
+        Attach or paste profiler output, traces, or benchmarks.
+        See [docs/profiling.md](../docs/profiling.md) for platform-specific tooling guidance.
+      render: text
+    validations:
+      required: false
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment details
+      placeholder: |
+        - OS version: macOS 15.2
+        - GPU: Apple M2 Max
+        - Build type: Release
+        - Compiler: Apple Clang 16
+        - Validation enabled: No
+    validations:
+      required: false
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: "Frame captures, screenshots, comparison with native API calls, etc."
+    validations:
+      required: false
