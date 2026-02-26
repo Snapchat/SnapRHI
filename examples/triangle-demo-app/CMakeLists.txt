@@ -244,6 +244,9 @@ if(APPLE)
             XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.snap.rhi.demo"
             MACOSX_BUNDLE_GUI_IDENTIFIER "com.snap.rhi.demo"
             MACOSX_BUNDLE_BUNDLE_NAME "SnapRHI"
+            MACOSX_BUNDLE_EXECUTABLE_NAME "snap_rhi_demo_app"
+            MACOSX_BUNDLE_SHORT_VERSION_STRING "1.0"
+            MACOSX_BUNDLE_BUNDLE_VERSION "1"
             MACOSX_BUNDLE_INFO_PLIST "${IOS_PLATFORM_DIR}/Info.plist"
         )
 
@@ -388,6 +391,13 @@ fi
         if(EXISTS "${MACOS_PLATFORM_DIR}/Info.plist")
             set_target_properties(snap_rhi_demo_app PROPERTIES
                 MACOSX_BUNDLE_INFO_PLIST "${MACOS_PLATFORM_DIR}/Info.plist"
+                MACOSX_BUNDLE_BUNDLE_NAME "SnapRHI Demo"
+                MACOSX_BUNDLE_GUI_IDENTIFIER "com.snap.rhi.demo"
+                MACOSX_BUNDLE_EXECUTABLE_NAME "snap_rhi_demo_app"
+                MACOSX_BUNDLE_SHORT_VERSION_STRING "1.0"
+                MACOSX_BUNDLE_BUNDLE_VERSION "1"
+                MACOSX_BUNDLE_ICON_FILE ""
+                MACOSX_BUNDLE_INFO_STRING "${CMAKE_OSX_DEPLOYMENT_TARGET}"
             )
         endif()
     endif()
