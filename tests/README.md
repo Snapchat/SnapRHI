@@ -19,7 +19,6 @@ from a single executable, using **Catch2 v2** as the test framework.
 9. [Directory Structure](#directory-structure)
 10. [Writing New Tests](#writing-new-tests)
 11. [Vulkan SPIR-V Shaders](#vulkan-spir-v-shaders)
-12. [CI Integration](#ci-integration)
 
 ---
 
@@ -166,15 +165,6 @@ cmake -B build -S . \
   -DSNAP_RHI_VULKAN_ENABLE_LAYERS=ON
 cmake --build build --target snap-rhi-tests --parallel
 ./build/tests/snap-rhi-tests
-```
-
-Or enable everything at once:
-
-```bash
-cmake -B build -S . \
-  -DSNAP_RHI_BUILD_TESTS=ON \
-  -DSNAP_RHI_ENABLE_VULKAN=ON \
-  -DSNAP_RHI_ENABLE_ALL_VALIDATION=ON
 ```
 
 ---
@@ -372,29 +362,5 @@ When `glslc` is not available, CMake falls back to the checked-in header at
 tests/scripts/compile_vulkan_shaders.sh
 git add tests/generated/VulkanSPIRV.h
 ```
-
----
-
-## CI Integration
-
-Tests run automatically on every push and PR via GitHub Actions (see
-`.github/workflows/ci.yml`).
-
-### CI Matrix
-
-| Platform | Backend | Runner | Tests Run | GPU Guaranteed |
-|----------|---------|--------|-----------|----------------|
-| macOS | Metal | `macos-14` (Apple Silicon) | Yes | **Yes** — `test_required: true` |
-| macOS | Vulkan | `macos-14` | Yes | No |
-| macOS | OpenGL | `macos-14` | Yes | No |
-| Linux | Vulkan | `ubuntu-24.04` | Yes | No |
-| Linux | OpenGL | `ubuntu-24.04` | Yes | No |
-| Windows | Vulkan | `windows-latest` | Yes | No |
-| Windows | OpenGL | `windows-latest` | Yes | No |
-| iOS | Metal/Vulkan/OpenGL ES | `macos-14` | Build only | N/A (no device) |
-| Android | Vulkan/OpenGL ES | `ubuntu-24.04` | Build only | N/A (no device) |
-
-When `test_required` is not set, the test step uses `continue-on-error: true`
-so that runners without a GPU do not block CI.
 
 ---
