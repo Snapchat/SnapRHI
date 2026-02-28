@@ -22,7 +22,6 @@
 
 #define CATCH_CONFIG_RUNNER   // We provide our own main()
 #include <catch2/catch.hpp>
-
 #import <Foundation/Foundation.h>
 
 // ── NSException translator ─────────────────────────────────────────────────
