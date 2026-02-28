@@ -146,7 +146,7 @@ jobs:
       # initialise on the CI runner are skipped gracefully (the test
       # harness returns nullopt and the test loop continues).
       - name: Test
-        run: ctest --test-dir build --output-on-failure --timeout 120
+        run: ctest --test-dir build --output-on-failure --timeout 120 --verbose
         continue-on-error: true
 
   # ---------------------------------------------------------------------------
