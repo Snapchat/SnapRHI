@@ -149,6 +149,10 @@ jobs:
       - name: Test
         run: ctest --test-dir build --output-on-failure --timeout 120 --verbose
         continue-on-error: true
+        env:
+          MTL_DEBUG_LAYER: 1
+          MTL_DEBUG_LAYER_WARNING_MODE: assert
+          MTL_DEBUG_LAYER_ERROR_MODE: assert
 
   # ---------------------------------------------------------------------------
   # iOS builds (Xcode cross-compile — build tests, cannot run)
