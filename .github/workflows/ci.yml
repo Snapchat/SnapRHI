@@ -151,8 +151,8 @@ jobs:
         continue-on-error: true
         env:
           MTL_DEBUG_LAYER: 1
-          MTL_DEBUG_LAYER_WARNING_MODE: log
-          MTL_DEBUG_LAYER_ERROR_MODE: log
+          MTL_DEBUG_LAYER_WARNING_MODE: nslog
+          MTL_DEBUG_LAYER_ERROR_MODE: nslog
 
   # ---------------------------------------------------------------------------
   # iOS builds (Xcode cross-compile — build tests, cannot run)
