@@ -165,6 +165,8 @@ if(IOS)
             "-framework IOSurface"
             "-framework QuartzCore"
             "-framework Foundation"
+            "-framework CoreGraphics"
+            "-framework UIKit"
         )
     endif()
 
