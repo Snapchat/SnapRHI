@@ -1,14 +1,14 @@
 # ============================================================================
-# SnapRHI — CI Build Matrix
+# SnapRHI — CI Build & Test Matrix
 # ============================================================================
-# Builds the SnapRHI library for every platform × backend combination.
+# Builds the SnapRHI library and runs unit tests for every platform × backend.
 #
 # Matrix:
-#   macOS   — Metal, Vulkan, OpenGL
-#   iOS     — Metal, Vulkan, OpenGL ES  (Xcode, library only — no device tests)
-#   Linux   — Vulkan, OpenGL
-#   Windows — Vulkan, OpenGL
-#   Android — Vulkan, OpenGL ES         (NDK cross-compile, library only)
+#   macOS   — Metal, Vulkan, OpenGL          (build + test)
+#   Linux   — Vulkan, OpenGL                 (build + test)
+#   Windows — Vulkan, OpenGL                 (build + test)
+#   iOS     — Metal, Vulkan, OpenGL ES       (build only — no device)
+#   Android — Vulkan, OpenGL ES              (build only — no device)
 # ============================================================================
 
 name: CI
@@ -42,7 +42,7 @@ jobs:
           check-path: 'examples'
 
   # ---------------------------------------------------------------------------
-  # Desktop builds (macOS, Linux, Windows)
+  # Desktop builds + tests (macOS, Linux, Windows)
   # ---------------------------------------------------------------------------
   desktop:
     name: "${{ matrix.os }} — ${{ matrix.backend }}"
@@ -57,17 +57,21 @@ jobs:
             backend: Metal
             cmake_flags: >-
               -DSNAP_RHI_ENABLE_METAL=ON
+              -DSNAP_RHI_BUILD_TESTS=ON
+            test_required: true         # Metal GPU always available
           - os: macOS
             runner: macos-14
             backend: Vulkan
             cmake_flags: >-
               -DSNAP_RHI_ENABLE_VULKAN=ON
+              -DSNAP_RHI_BUILD_TESTS=ON
             install_vulkan_sdk: true
           - os: macOS
             runner: macos-14
             backend: OpenGL
             cmake_flags: >-
               -DSNAP_RHI_ENABLE_OPENGL=ON
+              -DSNAP_RHI_BUILD_TESTS=ON
 
           # ── Linux ──────────────────────────────────────────────
           - os: Linux
@@ -75,11 +79,13 @@ jobs:
             backend: Vulkan
             cmake_flags: >-
               -DSNAP_RHI_ENABLE_VULKAN=ON
+              -DSNAP_RHI_BUILD_TESTS=ON
           - os: Linux
             runner: ubuntu-24.04
             backend: OpenGL
             cmake_flags: >-
               -DSNAP_RHI_ENABLE_OPENGL=ON
+              -DSNAP_RHI_BUILD_TESTS=ON
 
           # ── Windows ────────────────────────────────────────────
           - os: Windows
@@ -87,12 +93,14 @@ jobs:
             backend: Vulkan
             cmake_flags: >-
               -DSNAP_RHI_ENABLE_VULKAN=ON
+              -DSNAP_RHI_BUILD_TESTS=ON
             install_vulkan_sdk: true
           - os: Windows
             runner: windows-latest
             backend: OpenGL
             cmake_flags: >-
               -DSNAP_RHI_ENABLE_OPENGL=ON
+              -DSNAP_RHI_BUILD_TESTS=ON
 
     steps:
       - name: Checkout
@@ -134,8 +142,17 @@ jobs:
       - name: Build
         run: cmake --build build --config Release --parallel
 
+      # ── Run tests ────────────────────────────────────────────
+      # Tests create GPU devices at runtime.  When test_required is
+      # set, failures are a hard gate (Metal and OpenGL on macOS have
+      # guaranteed GPU access).  Other backends may lack a GPU on their
+      # CI runner, so failures are allowed.
+      - name: Test
+        run: ctest --test-dir build --output-on-failure --verbose --timeout 120
+        continue-on-error: ${{ matrix.test_required != true }}
+
   # ---------------------------------------------------------------------------
-  # iOS builds (Xcode cross-compile, library only)
+  # iOS builds (Xcode cross-compile — build tests, cannot run)
   # ---------------------------------------------------------------------------
   ios:
     name: "iOS — ${{ matrix.backend }}"
@@ -147,13 +164,16 @@ jobs:
           - backend: Metal
             cmake_flags: >-
               -DSNAP_RHI_ENABLE_METAL=ON
+              -DSNAP_RHI_BUILD_TESTS=ON
           - backend: Vulkan
             cmake_flags: >-
               -DSNAP_RHI_ENABLE_VULKAN=ON
+              -DSNAP_RHI_BUILD_TESTS=ON
             install_vulkan_sdk: true
           - backend: OpenGL ES
             cmake_flags: >-
               -DSNAP_RHI_ENABLE_OPENGL=ON
+              -DSNAP_RHI_BUILD_TESTS=ON
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -189,7 +209,7 @@ jobs:
           CODE_SIGNING_ALLOWED=NO
 
   # ---------------------------------------------------------------------------
-  # Android builds (NDK cross-compile, library only)
+  # Android builds (NDK cross-compile — build tests, cannot run)
   # ---------------------------------------------------------------------------
   android:
     name: "Android — ${{ matrix.backend }}"
@@ -201,9 +221,11 @@ jobs:
           - backend: Vulkan
             cmake_flags: >-
               -DSNAP_RHI_ENABLE_VULKAN=ON
+              -DSNAP_RHI_BUILD_TESTS=ON
           - backend: OpenGL ES
             cmake_flags: >-
               -DSNAP_RHI_ENABLE_OPENGL=ON
+              -DSNAP_RHI_BUILD_TESTS=ON
     env:
       ANDROID_NDK_VERSION: "28.2.13676358"
     steps:
