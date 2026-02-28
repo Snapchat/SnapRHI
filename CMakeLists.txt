@@ -68,6 +68,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(GNUInstallDirs)
 option(SNAP_RHI_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 option(SNAP_RHI_BUILD_EXAMPLES "Build example applications" OFF)
+option(SNAP_RHI_BUILD_TESTS "Build unit tests (Catch2)" OFF)
 option(SNAP_RHI_INSTALL "Generate CMake install rules" OFF)
 
 # ============================================================================
@@ -155,6 +156,14 @@ snap_rhi_add_packaging_modules()
 # ============================================================================
 if(SNAP_RHI_BUILD_EXAMPLES)
     add_subdirectory(examples/triangle-demo-app)
+endif()
+
+# ============================================================================
+# Unit Tests
+# ============================================================================
+if(SNAP_RHI_BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
 endif()
 
 # ============================================================================
