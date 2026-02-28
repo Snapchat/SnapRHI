@@ -202,15 +202,6 @@ MTL_DEBUG_LAYER_WARNING_MODE=nslog \
 | `MTL_DEBUG_LAYER_ERROR_MODE` | `assert` / `nslog` / `ignore` | Use `assert` — fails immediately on Metal errors |
 | `MTL_DEBUG_LAYER_WARNING_MODE` | `assert` / `nslog` / `ignore` | Use `nslog` (see note below) |
 
-> **Why `WARNING_MODE=nslog` and not `assert`?**
->
-> The Metal backend binds argument buffers to both vertex and fragment stages
-> unconditionally.  When a fragment shader does not reference `buffer(0)`,
-> Metal reports an "unused binding in encoder at Buffer index 0" **warning**.
-> This is a backend design trade-off (not a correctness bug) and would cause
-> false failures with `assert` mode.  Use `nslog` to see warnings without
-> aborting.
-
 ---
 
 ## Vulkan Validation Layers
