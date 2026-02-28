@@ -39,7 +39,7 @@ CATCH_TRANSLATE_EXCEPTION(NSException*& e) {
 }
 
 int main(int argc, char* argv[]) {
-    @autoreleasepool {
+    {
         Catch::Session session;
 
         const int result = session.applyCommandLine(argc, argv);
