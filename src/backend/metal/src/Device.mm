@@ -1037,6 +1037,30 @@ namespace snap::rhi::backend::metal {
 
 Device::Device(const snap::rhi::backend::metal::DeviceCreateInfo& info)
     : snap::rhi::backend::common::DeviceContextless(info), mtlDevice(createMetalDevice()) {
+    // ── Metal 2 minimum requirement ────────────────────────────
+    // The backend uses argument buffers, which require Metal 2 (macOS 10.13 / iOS 11).
+    // On older systems MTLCreateSystemDefaultDevice() may still succeed, but the
+    // device will not support the features we rely on.  Fail early with a clear
+    // message instead of crashing later.
+    if (!mtlDevice) {
+        snap::rhi::common::throwException(
+            "[Metal] MTLCreateSystemDefaultDevice() returned nil — no Metal-capable GPU found.");
+    }
+
+    if (@available(macOS 10.13, iOS 11.0, *)) {
+        if ([mtlDevice argumentBuffersSupport] == MTLArgumentBuffersTier1 ||
+            [mtlDevice argumentBuffersSupport] == MTLArgumentBuffersTier2) {
+            // Metal 2+ — argument buffers are supported, proceed.
+        } else {
+            snap::rhi::common::throwException(
+                "[Metal] Device does not support argument buffers. "
+                "Metal 2 (macOS 10.13+ / iOS 11+) is the minimum requirement for SnapRHI.");
+        }
+    } else {
+        snap::rhi::common::throwException("[Metal] SnapRHI requires Metal 2 (macOS 10.13+ / iOS 11+). "
+                                          "Current OS version does not meet the minimum requirement.");
+    }
+
     // Query GPU family support for capability configuration
     const MetalGPUFamilySupport gpuFamily = MetalGPUFamilySupport::queryFromDevice(mtlDevice);
 
