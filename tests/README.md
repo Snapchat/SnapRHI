@@ -130,57 +130,8 @@ The test executable accepts all standard **Catch2 v2** CLI options.
 ### By test name (substring match)
 
 ```bash
-./build/tests/snap-rhi-tests "Buffer"           # all test cases containing "Buffer"
 ./build/tests/snap-rhi-tests "RenderCommandEncoder — Basic draw call"
 ```
-
-### By tag
-
-Every test case is tagged. Tags can be combined:
-
-```bash
-./build/tests/snap-rhi-tests [buffer]           # only buffer tests
-./build/tests/snap-rhi-tests [rendering]        # all rendering tests
-./build/tests/snap-rhi-tests [api][texture]     # tests tagged with BOTH api AND texture
-./build/tests/snap-rhi-tests [compute],[blit]   # tests tagged with compute OR blit
-./build/tests/snap-rhi-tests ~[rendering]       # everything EXCEPT rendering tests
-```
-
-### Available Tags
-
-| Tag | Category | Description |
-|-----|----------|-------------|
-| `[api]` | All | Present on every test (core API surface) |
-| `[buffer]` | API | Buffer creation, mapping, read-back |
-| `[texture]` | API | Texture 2D, cubemap, texture views |
-| `[sampler]` | API | Sampler state creation |
-| `[device]` | API | Device creation, queries, debug messenger |
-| `[descriptor]` | API | Descriptor set layout, pool, binding |
-| `[pipeline-cache]` | API | Pipeline cache creation |
-| `[command-buffer]` | API | Command buffer creation, encoder access |
-| `[command-queue]` | API | Command queue waitIdle / waitUntilScheduled |
-| `[sync]` | API | Synchronization primitives |
-| `[fence]` | API | Fence creation, wait, signal |
-| `[semaphore]` | API | Semaphore creation |
-| `[query]` | API | Query pool (timestamps, occlusion) |
-| `[blit]` | Blit | Buffer ↔ texture transfers, mipmap generation |
-| `[readback]` | Blit | Texture → buffer read-back |
-| `[mipmap]` | Blit | Mipmap generation |
-| `[compute]` | Compute | Compute pipeline, dispatch, SSBO |
-| `[dispatch]` | Compute | Compute dispatch with data verification |
-| `[pipeline]` | Compute/Rendering | Pipeline creation |
-| `[rendering]` | Rendering | All render tests |
-| `[encoder]` | Rendering | Basic draw calls |
-| `[dynamic]` | Rendering | Dynamic rendering (VK_KHR_dynamic_rendering) |
-| `[indexed]` | Rendering | Indexed draw calls |
-| `[instancing]` | Rendering | Instanced draw calls |
-| `[blending]` | Rendering | Alpha blending |
-| `[depth]` | Rendering | Depth testing |
-| `[culling]` | Rendering | Back-face culling |
-| `[viewport]` | Rendering | Viewport clipping |
-| `[writemask]` | Rendering | Color write mask |
-| `[msaa]` | Rendering | Multi-sample anti-aliasing |
-| `[shader]` | Rendering | Shader library/module creation |
 
 ---
 
