@@ -10,11 +10,12 @@ VkCommandBuffer allocatePrimaryCommandBuffer(VkDevice vkDevice,
                                              const snap::rhi::backend::common::ValidationLayer& validationLayer) {
     VkCommandBuffer commandBuffer = VK_NULL_HANDLE;
 
-    VkCommandBufferAllocateInfo createInfo{};
-    createInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    createInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    createInfo.commandPool = pool;
-    createInfo.commandBufferCount = 1;
+    const VkCommandBufferAllocateInfo createInfo{
+        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+        .commandPool = pool,
+        .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+        .commandBufferCount = 1,
+    };
 
     VkResult result = vkAllocateCommandBuffers(vkDevice, &createInfo, &commandBuffer);
     SNAP_RHI_VALIDATE(validationLayer,

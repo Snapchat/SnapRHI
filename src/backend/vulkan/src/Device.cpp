@@ -880,11 +880,11 @@ inline VkBool32 setFeatureEnabled(VkBool32 featureSupported, VkBool32 forceToEna
 
 VkPhysicalDeviceVulkan13Features preparePhysicalDeviceFeatures_1_3(
     const VkPhysicalDeviceVulkan13Features& srcPhysicalDeviceFeatures) {
-    VkPhysicalDeviceVulkan13Features dstPhysicalDeviceFeatures{};
-    dstPhysicalDeviceFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
-    dstPhysicalDeviceFeatures.pNext = nullptr;
-
-    dstPhysicalDeviceFeatures.dynamicRendering = setFeatureEnabled(srcPhysicalDeviceFeatures.dynamicRendering, VK_TRUE);
+    const VkPhysicalDeviceVulkan13Features dstPhysicalDeviceFeatures{
+        .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES,
+        .pNext = nullptr,
+        .dynamicRendering = setFeatureEnabled(srcPhysicalDeviceFeatures.dynamicRendering, VK_TRUE),
+    };
 
     return dstPhysicalDeviceFeatures;
 }
@@ -1001,16 +1001,16 @@ std::vector<VkDeviceQueueCreateInfo> prepareDeviceQueueCreateInfo(
 
     for (size_t i = 0; i < queueFamilyProperties.size(); ++i) {
         if (queueFamilyProperties[i].queueFlags & queueFlags) {
-            VkDeviceQueueCreateInfo createInfo{};
-
-            createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-            createInfo.pNext = nullptr;
-            createInfo.flags = 0;
-            createInfo.queueFamilyIndex = static_cast<uint32_t>(i);
-            createInfo.queueCount = std::min(maxQueueCount, queueFamilyProperties[i].queueCount);
-            createInfo.pQueuePriorities = queuePriorities.data();
-
-            queuePriorities.fill(1.0f / float(createInfo.queueCount));
+            const uint32_t queueCount = std::min(maxQueueCount, queueFamilyProperties[i].queueCount);
+            queuePriorities.fill(1.0f / float(queueCount));
+            const VkDeviceQueueCreateInfo createInfo{
+                .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+                .pNext = nullptr,
+                .flags = 0,
+                .queueFamilyIndex = static_cast<uint32_t>(i),
+                .queueCount = queueCount,
+                .pQueuePriorities = queuePriorities.data(),
+            };
             result.push_back(createInfo);
             break; // Currently we have to support only 1 command queue family
         }
@@ -1675,17 +1675,18 @@ void Device::initLogicalDevice(std::span<const char* const> additionalDeviceExte
     // MARK: - Device Creation
     // ==========================================================================
 
-    VkDeviceCreateInfo createInfo{};
-    createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    createInfo.pNext = pNext;
-    createInfo.flags = 0;
-    createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
-    createInfo.pQueueCreateInfos = queueCreateInfos.data();
-    createInfo.enabledLayerCount = static_cast<uint32_t>(enabledLayers.size());
-    createInfo.ppEnabledLayerNames = enabledLayers.data();
-    createInfo.enabledExtensionCount = static_cast<uint32_t>(enabledExtensions.size());
-    createInfo.ppEnabledExtensionNames = enabledExtensions.data();
-    createInfo.pEnabledFeatures = &features;
+    const VkDeviceCreateInfo createInfo{
+        .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+        .pNext = pNext,
+        .flags = 0,
+        .queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size()),
+        .pQueueCreateInfos = queueCreateInfos.data(),
+        .enabledLayerCount = static_cast<uint32_t>(enabledLayers.size()),
+        .ppEnabledLayerNames = enabledLayers.data(),
+        .enabledExtensionCount = static_cast<uint32_t>(enabledExtensions.size()),
+        .ppEnabledExtensionNames = enabledExtensions.data(),
+        .pEnabledFeatures = &features,
+    };
 
     VkResult result = vkCreateDevice(physicalDevice, &createInfo, nullptr, &device);
     SNAP_RHI_VALIDATE(validationLayer,
@@ -1836,12 +1837,13 @@ void Device::initCapabilities() {
     // Note: Vulkan 1.1+ provides subgroupSize, earlier versions need VK_EXT_subgroup_size_control
     caps.threadExecutionWidth = 32u;
     if (physicalDeviceProperties.apiVersion >= VK_API_VERSION_1_1) {
-        VkPhysicalDeviceSubgroupProperties subgroupProperties{};
-        subgroupProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES;
-
-        VkPhysicalDeviceProperties2 deviceProperties2{};
-        deviceProperties2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
-        deviceProperties2.pNext = &subgroupProperties;
+        VkPhysicalDeviceSubgroupProperties subgroupProperties{
+            .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES,
+        };
+        VkPhysicalDeviceProperties2 deviceProperties2{
+            .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
+            .pNext = &subgroupProperties,
+        };
 
         vkGetPhysicalDeviceProperties2(physicalDevice, &deviceProperties2);
         caps.threadExecutionWidth = subgroupProperties.subgroupSize;

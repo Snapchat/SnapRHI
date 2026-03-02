@@ -8,45 +8,36 @@ Sampler::Sampler(Device* device, const snap::rhi::SamplerCreateInfo& info)
     : snap::rhi::Sampler(device, info), vkDevice(device->getVkLogicalDevice()) {
     const auto& validationLayer = device->getValidationLayer();
     {
-        VkSamplerCreateInfo createInfo{};
-        createInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-        createInfo.pNext = nullptr;
+        const VkSamplerMipmapMode mipmapMode = info.mipFilter == snap::rhi::SamplerMipFilter::NotMipmapped ?
+            VK_SAMPLER_MIPMAP_MODE_NEAREST : snap::rhi::backend::vulkan::toVkSamplerMipmapMode(info.mipFilter);
+        const float minLod = info.mipFilter == snap::rhi::SamplerMipFilter::NotMipmapped ? 0.0f : info.lodMin;
+        const float maxLod = info.mipFilter == snap::rhi::SamplerMipFilter::NotMipmapped ? 0.0f :
+            (snap::rhi::backend::common::epsilonEqual(info.lodMax, snap::rhi::DefaultSamplerLodMax, 0.0001f) ?
+                VK_LOD_CLAMP_NONE : info.lodMax);
 
-        /**
-         * https://registry.khronos.org/vulkan/specs/latest/man/html/VkSamplerCreateFlagBits.html
-         * **/
-        createInfo.flags = 0;
-
-        createInfo.magFilter = snap::rhi::backend::vulkan::toVkFilter(info.magFilter);
-        createInfo.minFilter = snap::rhi::backend::vulkan::toVkFilter(info.minFilter);
-
-        if (info.mipFilter == snap::rhi::SamplerMipFilter::NotMipmapped) {
-            createInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
-            createInfo.minLod = createInfo.maxLod = 0.0f;
-        } else {
-            createInfo.mipmapMode = snap::rhi::backend::vulkan::toVkSamplerMipmapMode(info.mipFilter);
-            createInfo.minLod = info.lodMin;
-            createInfo.maxLod =
-                snap::rhi::backend::common::epsilonEqual(info.lodMax, snap::rhi::DefaultSamplerLodMax, 0.0001f) ?
-                    VK_LOD_CLAMP_NONE :
-                    info.lodMax;
-        }
-
-        createInfo.addressModeU = snap::rhi::backend::vulkan::toVkSamplerAddressMode(info.wrapU);
-        createInfo.addressModeV = snap::rhi::backend::vulkan::toVkSamplerAddressMode(info.wrapV);
-        createInfo.addressModeW = snap::rhi::backend::vulkan::toVkSamplerAddressMode(info.wrapW);
-
-        createInfo.mipLodBias = 0.0f;
-
-        createInfo.anisotropyEnable = info.anisotropyEnable ? VK_TRUE : VK_FALSE;
-        createInfo.maxAnisotropy = static_cast<float>(info.maxAnisotropy);
-
-        createInfo.compareEnable = info.compareEnable ? VK_TRUE : VK_FALSE;
-        createInfo.compareOp = snap::rhi::backend::vulkan::toVkCompareOp(info.compareFunction);
-
-        createInfo.borderColor = snap::rhi::backend::vulkan::toVkBorderColor(info.borderColor);
-
-        createInfo.unnormalizedCoordinates = info.unnormalizedCoordinates ? VK_TRUE : VK_FALSE;
+        const VkSamplerCreateInfo createInfo{
+            .sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
+            .pNext = nullptr,
+            /**
+             * https://registry.khronos.org/vulkan/specs/latest/man/html/VkSamplerCreateFlagBits.html
+             * **/
+            .flags = 0,
+            .magFilter = snap::rhi::backend::vulkan::toVkFilter(info.magFilter),
+            .minFilter = snap::rhi::backend::vulkan::toVkFilter(info.minFilter),
+            .mipmapMode = mipmapMode,
+            .addressModeU = snap::rhi::backend::vulkan::toVkSamplerAddressMode(info.wrapU),
+            .addressModeV = snap::rhi::backend::vulkan::toVkSamplerAddressMode(info.wrapV),
+            .addressModeW = snap::rhi::backend::vulkan::toVkSamplerAddressMode(info.wrapW),
+            .mipLodBias = 0.0f,
+            .anisotropyEnable = static_cast<VkBool32>(info.anisotropyEnable ? VK_TRUE : VK_FALSE),
+            .maxAnisotropy = static_cast<float>(info.maxAnisotropy),
+            .compareEnable = static_cast<VkBool32>(info.compareEnable ? VK_TRUE : VK_FALSE),
+            .compareOp = snap::rhi::backend::vulkan::toVkCompareOp(info.compareFunction),
+            .minLod = minLod,
+            .maxLod = maxLod,
+            .borderColor = snap::rhi::backend::vulkan::toVkBorderColor(info.borderColor),
+            .unnormalizedCoordinates = static_cast<VkBool32>(info.unnormalizedCoordinates ? VK_TRUE : VK_FALSE),
+        };
 
         VkResult result = vkCreateSampler(this->vkDevice, &createInfo, nullptr, &sampler);
         SNAP_RHI_VALIDATE(validationLayer,

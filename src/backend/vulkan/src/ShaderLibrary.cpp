@@ -25,18 +25,17 @@ ShaderLibrary::ShaderLibrary(Device* vkDevice, const snap::rhi::ShaderLibraryCre
     std::span<const uint32_t> codeSpan{reinterpret_cast<const uint32_t*>(info.code.data()),
                                        static_cast<uint32_t>(info.code.size()) / sizeof(uint32_t)};
     {
-        VkShaderModuleCreateInfo createInfo{};
-        createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-        createInfo.pNext = nullptr;
-
-        /**
-         * https://registry.khronos.org/vulkan/specs/latest/man/html/VkShaderModuleCreateFlags.html
-         * **/
-        createInfo.flags = 0;
-
-        // Must be the total size in bytes (i.e., WordCount * 4).
-        createInfo.codeSize = static_cast<uint32_t>(codeSpan.size()) * sizeof(uint32_t);
-        createInfo.pCode = codeSpan.data();
+        const VkShaderModuleCreateInfo createInfo{
+            .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+            .pNext = nullptr,
+            /**
+             * https://registry.khronos.org/vulkan/specs/latest/man/html/VkShaderModuleCreateFlags.html
+             * **/
+            .flags = 0,
+            // Must be the total size in bytes (i.e., WordCount * 4).
+            .codeSize = static_cast<uint32_t>(codeSpan.size()) * sizeof(uint32_t),
+            .pCode = codeSpan.data(),
+        };
 
         VkResult result = vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule);
         SNAP_RHI_VALIDATE(validationLayer,

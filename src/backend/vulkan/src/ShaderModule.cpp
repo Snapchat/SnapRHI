@@ -42,18 +42,18 @@ ShaderModule::ShaderModule(Device* vkDevice, const snap::rhi::ShaderModuleCreate
         snap::rhi::backend::common::smart_cast<snap::rhi::backend::vulkan::ShaderLibrary>(info.shaderLibrary);
     resourceResidencySet.track(shaderLibrary);
 
-    shaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    shaderStage.pNext = nullptr;
-
-    /**
-     * https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineShaderStageCreateFlagBits.html
-     * **/
-    shaderStage.flags = 0;
-
-    shaderStage.stage = getShaderStageFlags(info.shaderStage);
-    shaderStage.module = shaderLibrary->getShaderModule();
-    shaderStage.pName = entryName.data();
-    shaderStage.pSpecializationInfo = &specializationInfo;
+    shaderStage = VkPipelineShaderStageCreateInfo{
+        .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+        .pNext = nullptr,
+        /**
+         * https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineShaderStageCreateFlagBits.html
+         * **/
+        .flags = 0,
+        .stage = getShaderStageFlags(info.shaderStage),
+        .module = shaderLibrary->getShaderModule(),
+        .pName = entryName.data(),
+        .pSpecializationInfo = &specializationInfo,
+    };
 
     if (const auto* reflection = getEntryPointReflection(); reflection) {
         shaderReflection = snap::rhi::reflection::ShaderModuleInfo{.vertexAttributes = reflection->vertexAttributes};

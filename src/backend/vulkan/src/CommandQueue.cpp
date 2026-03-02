@@ -15,30 +15,26 @@
 
 namespace {
 void transferInitialImageLayout(VkCommandBuffer commandBuffer, snap::rhi::backend::vulkan::Texture* texture) {
-    VkImageMemoryBarrier imageMemoryBarrier{};
-    imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-
-    imageMemoryBarrier.srcAccessMask = 0;
-    imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-
-    imageMemoryBarrier.oldLayout = texture->getInitialImageLayout();
-    imageMemoryBarrier.newLayout = texture->getDefaultImageLayout();
-
-    imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-
-    imageMemoryBarrier.image = texture->getImage();
-
     const auto& createInfo = texture->getCreateInfo();
 
-    imageMemoryBarrier.subresourceRange = {
-        .aspectMask = snap::rhi::backend::vulkan::getImageAspectFlags(createInfo.format),
-        .baseMipLevel = 0,
-        .levelCount = createInfo.mipLevels,
-        .baseArrayLayer = 0,
-        // Use getArraySize since for 2D textures layers have to be handled separately (e.g. cubemap should return 6 *
-        // depth) while 3D texture must only have 1 layer
-        .layerCount = snap::rhi::backend::vulkan::getArraySize(createInfo.textureType, createInfo.size)};
+    const VkImageMemoryBarrier imageMemoryBarrier{
+        .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+        .srcAccessMask = 0,
+        .dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT,
+        .oldLayout = texture->getInitialImageLayout(),
+        .newLayout = texture->getDefaultImageLayout(),
+        .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+        .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+        .image = texture->getImage(),
+        .subresourceRange = {
+            .aspectMask = snap::rhi::backend::vulkan::getImageAspectFlags(createInfo.format),
+            .baseMipLevel = 0,
+            .levelCount = createInfo.mipLevels,
+            .baseArrayLayer = 0,
+            // Use getArraySize since for 2D textures layers have to be handled separately (e.g. cubemap should return 6
+            // * depth) while 3D texture must only have 1 layer
+            .layerCount = snap::rhi::backend::vulkan::getArraySize(createInfo.textureType, createInfo.size)},
+    };
 
     vkCmdPipelineBarrier(commandBuffer,
                          VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,

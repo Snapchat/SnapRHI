@@ -63,46 +63,41 @@ ImageWithMemory::ImageWithMemory(Device* vkDevice,
     const auto& validationLayer = vkDevice->getValidationLayer();
 
     {
-        VkImageCreateInfo createInfo{};
-        createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-        createInfo.pNext = imageCreateInfoNext;
-        createInfo.flags = toVkImageCreateFlags(info.textureType);
-
+        VkImageCreateFlags flags = toVkImageCreateFlags(info.textureType);
         if (info.textureType == snap::rhi::TextureType::Texture3D && vkDevice->supportsImageView2DOn3DImage()) {
-            createInfo.flags |= VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT;
+            flags |= VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT;
         }
 
-        createInfo.imageType = toVkImageType(info.textureType);
-        createInfo.format = toVkFormat(info.format);
-        createInfo.extent.width = info.size.width;
-        createInfo.extent.height = info.size.height;
-        createInfo.extent.depth = getDepth(info.textureType, info.size);
-        createInfo.mipLevels = info.mipLevels;
-        createInfo.arrayLayers = getArraySize(info.textureType, info.size);
-        createInfo.samples = toVkSampleCountFlagBits(info.sampleCount);
-        createInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-        createInfo.usage = toVkImageUsageFlags(info.textureUsage);
+        defaultImageLayout = getDefaultImageLayoutFromTextureUsage(info.textureUsage);
 
-        /**
-         * VK_SHARING_MODE_EXCLUSIVE specifies that access to any range or image subresource of the object will be
-         * exclusive to a single queue family at a time
-         *
-         * SnapRHI always assume that subresource of the object will be exclusive to a single queue family at a
-         * time
-         * */
-        createInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-        createInfo.queueFamilyIndexCount = 0;
-        createInfo.pQueueFamilyIndices = nullptr;
-
-        {
+        const VkImageCreateInfo createInfo{
+            .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
+            .pNext = imageCreateInfoNext,
+            .flags = flags,
+            .imageType = toVkImageType(info.textureType),
+            .format = toVkFormat(info.format),
+            .extent = {info.size.width, info.size.height, getDepth(info.textureType, info.size)},
+            .mipLevels = info.mipLevels,
+            .arrayLayers = getArraySize(info.textureType, info.size),
+            .samples = toVkSampleCountFlagBits(info.sampleCount),
+            .tiling = VK_IMAGE_TILING_OPTIMAL,
+            .usage = toVkImageUsageFlags(info.textureUsage),
+            /**
+             * VK_SHARING_MODE_EXCLUSIVE specifies that access to any range or image subresource of the object will be
+             * exclusive to a single queue family at a time
+             *
+             * SnapRHI always assume that subresource of the object will be exclusive to a single queue family at a
+             * time
+             * */
+            .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
+            .queueFamilyIndexCount = 0,
+            .pQueueFamilyIndices = nullptr,
             /**
              * SnapRHI will transfer image from initialLayout{VK_IMAGE_LAYOUT_UNDEFINED}
              * into default layout on first image usage
              * */
-            defaultImageLayout = getDefaultImageLayoutFromTextureUsage(info.textureUsage);
-
-            createInfo.initialLayout = InitialImageLayout;
-        }
+            .initialLayout = InitialImageLayout,
+        };
 
         VkResult result = vkCreateImage(device, &createInfo, nullptr, &image);
         SNAP_RHI_VALIDATE(validationLayer,
@@ -118,11 +113,12 @@ ImageWithMemory::ImageWithMemory(Device* vkDevice,
 
         constexpr VkMemoryPropertyFlags memoryProperty = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
-        VkMemoryAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocInfo.pNext = memoryAllocateInfoNext;
-        allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = vkDevice->chooseMemoryTypeIndex(memRequirements.memoryTypeBits, memoryProperty);
+        const VkMemoryAllocateInfo allocInfo{
+            .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+            .pNext = memoryAllocateInfoNext,
+            .allocationSize = memRequirements.size,
+            .memoryTypeIndex = vkDevice->chooseMemoryTypeIndex(memRequirements.memoryTypeBits, memoryProperty),
+        };
 
         VkResult result = vkAllocateMemory(device, &allocInfo, nullptr, &memory);
         SNAP_RHI_VALIDATE(validationLayer,

@@ -268,46 +268,35 @@ RenderPipeline::RenderPipeline(snap::rhi::backend::vulkan::Device* device,
     auto dynamicState = buildDynamicStateCreateInfo();
     auto renderingCreateInfo = buildRenderingCreateInfo(info.attachmentFormatsCreateInfo, colorAttachmentFormats);
 
-    VkGraphicsPipelineCreateInfo createInfo{};
-    createInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-    createInfo.pNext = nullptr;
-
-    createInfo.stageCount = shaderStages.size();
-    createInfo.pStages = shaderStages.data();
-
-    createInfo.pVertexInputState = &vertexInputState;
-    createInfo.pInputAssemblyState = &inputAssemblyState;
-    createInfo.pTessellationState = &tessellationState;
-    createInfo.pViewportState = &viewportState;
-    createInfo.pRasterizationState = &rasterizationState;
-    createInfo.pMultisampleState = &multisampleState;
-    createInfo.pDepthStencilState = &depthStencilState;
-    createInfo.pColorBlendState = &colorBlendState;
-    createInfo.pDynamicState = &dynamicState;
-
-    createInfo.layout = this->pipelineLayout = pPipelineLayout->getPipelineLayout();
-
-    if (renderPass != VK_NULL_HANDLE) {
-        createInfo.renderPass = renderPass;
-        createInfo.subpass = info.subpass;
-    } else {
-        createInfo.renderPass = VK_NULL_HANDLE;
-        createInfo.subpass = 0;
-        createInfo.pNext = &renderingCreateInfo;
-    }
-
+    this->pipelineLayout = pPipelineLayout->getPipelineLayout();
+    const void* pNext = renderPass != VK_NULL_HANDLE ? nullptr : static_cast<const void*>(&renderingCreateInfo);
     /**
      * https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineCreateFlagBits.html
      */
-    createInfo.flags = 0;
-    if (basePipeline) {
-        createInfo.flags |= VK_PIPELINE_CREATE_DERIVATIVE_BIT;
-        createInfo.basePipelineHandle = basePipeline->getVkPipeline();
-    } else {
-        createInfo.flags |= VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT;
-        createInfo.basePipelineHandle = VK_NULL_HANDLE;
-    }
-    createInfo.basePipelineIndex = -1;
+    const VkPipelineCreateFlags flags = basePipeline ? VK_PIPELINE_CREATE_DERIVATIVE_BIT : VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT;
+    const VkPipeline basePipelineHandle = basePipeline ? basePipeline->getVkPipeline() : VK_NULL_HANDLE;
+
+    const VkGraphicsPipelineCreateInfo createInfo{
+        .sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
+        .pNext = pNext,
+        .flags = flags,
+        .stageCount = static_cast<uint32_t>(shaderStages.size()),
+        .pStages = shaderStages.data(),
+        .pVertexInputState = &vertexInputState,
+        .pInputAssemblyState = &inputAssemblyState,
+        .pTessellationState = &tessellationState,
+        .pViewportState = &viewportState,
+        .pRasterizationState = &rasterizationState,
+        .pMultisampleState = &multisampleState,
+        .pDepthStencilState = &depthStencilState,
+        .pColorBlendState = &colorBlendState,
+        .pDynamicState = &dynamicState,
+        .layout = this->pipelineLayout,
+        .renderPass = renderPass,
+        .subpass = renderPass != VK_NULL_HANDLE ? info.subpass : 0u,
+        .basePipelineHandle = basePipelineHandle,
+        .basePipelineIndex = -1,
+    };
 
     const bool isNativeReflectionAcquired = (info.pipelineCreateFlags & PipelineCreateFlags::AcquireNativeReflection) ==
                                             PipelineCreateFlags::AcquireNativeReflection;
