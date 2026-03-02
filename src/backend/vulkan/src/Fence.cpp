@@ -100,11 +100,12 @@ std::unique_ptr<snap::rhi::PlatformSyncHandle> Fence::exportPlatformSyncHandle()
         return std::make_unique<snap::rhi::backend::common::PlatformSyncHandle>(sharedFence);
     }
 
-    VkFenceGetFdInfoKHR getFdInfo{};
-    getFdInfo.sType = VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR;
-    getFdInfo.pNext = nullptr;
-    getFdInfo.fence = fence;
-    getFdInfo.handleType = VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT;
+    const VkFenceGetFdInfoKHR getFdInfo{
+        .sType = VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR,
+        .pNext = nullptr,
+        .fence = fence,
+        .handleType = VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT,
+    };
 
     int fenceFd = -1;
     VkResult result = vkGetFenceFdKHR(this->vkDevice, &getFdInfo, &fenceFd);

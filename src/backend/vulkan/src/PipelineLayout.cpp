@@ -9,29 +9,27 @@ PipelineLayout::PipelineLayout(snap::rhi::backend::vulkan::Device* device,
     : snap::rhi::backend::common::PipelineLayout(device, info), vkDevice(device->getVkLogicalDevice()) {
     const auto& validationLayer = device->getValidationLayer();
     {
-        VkPipelineLayoutCreateInfo createInfo{};
-        createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        createInfo.pNext = nullptr;
-
-        /**
-         * https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineLayoutCreateFlagBits.html
-         * **/
-        createInfo.flags = 0;
-
-        createInfo.setLayoutCount = static_cast<uint32_t>(info.setLayouts.size());
-
         std::vector<VkDescriptorSetLayout> setLayouts(info.setLayouts.size());
         for (size_t i = 0; i < info.setLayouts.size(); ++i) {
             auto* setLayout = snap::rhi::backend::common::smart_cast<DescriptorSetLayout>(info.setLayouts[i]);
             setLayouts[i] = setLayout->getVkDescriptorSetLayout();
         }
-        createInfo.pSetLayouts = setLayouts.data();
 
-        /**
-         * SnapRHI doesn't implement PushConstant API
-         * */
-        createInfo.pushConstantRangeCount = 0;
-        createInfo.pPushConstantRanges = nullptr;
+        const VkPipelineLayoutCreateInfo createInfo{
+            .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+            .pNext = nullptr,
+            /**
+             * https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineLayoutCreateFlagBits.html
+             * **/
+            .flags = 0,
+            .setLayoutCount = static_cast<uint32_t>(info.setLayouts.size()),
+            .pSetLayouts = setLayouts.data(),
+            /**
+             * SnapRHI doesn't implement PushConstant API
+             * */
+            .pushConstantRangeCount = 0,
+            .pPushConstantRanges = nullptr,
+        };
 
         VkResult result = vkCreatePipelineLayout(this->vkDevice, &createInfo, nullptr, &pipelineLayout);
         SNAP_RHI_VALIDATE(validationLayer,
