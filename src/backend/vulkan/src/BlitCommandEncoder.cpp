@@ -86,16 +86,15 @@ void BlitCommandEncoder::copyBufferToTexture(snap::rhi::Buffer* srcBuffer,
         const VkBufferImageCopy region{
             .bufferOffset = copyInfo.bufferOffset, // Must be a multiple of 4
             .bufferRowLength = bufferRowLength,
-            .bufferImageHeight =
-                copyInfo.bytesPerRow ? copyInfo.bytesPerSlice / copyInfo.bytesPerRow : /*Tightly packed*/ 0,
+            .bufferImageHeight = copyInfo.bytesPerRow ?
+                                     static_cast<uint32_t>(copyInfo.bytesPerSlice / copyInfo.bytesPerRow) :
+                                     /*Tightly packed*/ 0,
             .imageSubresource =
                 {
                     .aspectMask = getImageAspectFlags(dstTextureCreateInfo.format),
                     .mipLevel = copyInfo.textureSubresource.mipLevel,
-                    .baseArrayLayer =
-                        getBaseArrayLayer(dstTextureCreateInfo.textureType, copyInfo.textureOffset.z),
-                    .layerCount =
-                        getLayerCount(dstTextureCreateInfo.textureType, copyInfo.textureExtent.depth),
+                    .baseArrayLayer = getBaseArrayLayer(dstTextureCreateInfo.textureType, copyInfo.textureOffset.z),
+                    .layerCount = getLayerCount(dstTextureCreateInfo.textureType, copyInfo.textureExtent.depth),
                 },
             .imageOffset = {copyInfo.textureOffset.x,
                             copyInfo.textureOffset.y,
@@ -167,16 +166,15 @@ void BlitCommandEncoder::copyTextureToBuffer(snap::rhi::Texture* srcTexture,
         const VkBufferImageCopy region{
             .bufferOffset = copyInfo.bufferOffset, // Must be a multiple of 4
             .bufferRowLength = bufferRowLength,
-            .bufferImageHeight =
-                copyInfo.bytesPerRow ? copyInfo.bytesPerSlice / copyInfo.bytesPerRow : /*Tightly packed*/ 0,
+            .bufferImageHeight = copyInfo.bytesPerRow ?
+                                     static_cast<uint32_t>(copyInfo.bytesPerSlice / copyInfo.bytesPerRow) :
+                                     /*Tightly packed*/ 0,
             .imageSubresource =
                 {
                     .aspectMask = getImageAspectFlags(srcTextureCreateInfo.format),
                     .mipLevel = copyInfo.textureSubresource.mipLevel,
-                    .baseArrayLayer =
-                        getBaseArrayLayer(srcTextureCreateInfo.textureType, copyInfo.textureOffset.z),
-                    .layerCount =
-                        getLayerCount(srcTextureCreateInfo.textureType, copyInfo.textureExtent.depth),
+                    .baseArrayLayer = getBaseArrayLayer(srcTextureCreateInfo.textureType, copyInfo.textureOffset.z),
+                    .layerCount = getLayerCount(srcTextureCreateInfo.textureType, copyInfo.textureExtent.depth),
                 },
             .imageOffset = {copyInfo.textureOffset.x,
                             copyInfo.textureOffset.y,
@@ -241,8 +239,7 @@ void BlitCommandEncoder::copyTexture(snap::rhi::Texture* srcTexture,
                 {
                     .aspectMask = getImageAspectFlags(srcTextureCreateInfo.format),
                     .mipLevel = copyInfo.srcSubresource.mipLevel,
-                    .baseArrayLayer =
-                        getBaseArrayLayer(srcTextureCreateInfo.textureType, copyInfo.srcOffset.z),
+                    .baseArrayLayer = getBaseArrayLayer(srcTextureCreateInfo.textureType, copyInfo.srcOffset.z),
                     .layerCount = getLayerCount(srcTextureCreateInfo.textureType, copyInfo.extent.depth),
                 },
             .srcOffset = {copyInfo.srcOffset.x,
@@ -252,8 +249,7 @@ void BlitCommandEncoder::copyTexture(snap::rhi::Texture* srcTexture,
                 {
                     .aspectMask = getImageAspectFlags(dstTextureCreateInfo.format),
                     .mipLevel = copyInfo.dstSubresource.mipLevel,
-                    .baseArrayLayer =
-                        getBaseArrayLayer(dstTextureCreateInfo.textureType, copyInfo.dstOffset.z),
+                    .baseArrayLayer = getBaseArrayLayer(dstTextureCreateInfo.textureType, copyInfo.dstOffset.z),
                     .layerCount = getLayerCount(dstTextureCreateInfo.textureType, copyInfo.extent.depth),
                 },
             .dstOffset = {copyInfo.dstOffset.x,

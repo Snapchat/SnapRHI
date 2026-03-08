@@ -273,7 +273,8 @@ RenderPipeline::RenderPipeline(snap::rhi::backend::vulkan::Device* device,
     /**
      * https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineCreateFlagBits.html
      */
-    const VkPipelineCreateFlags flags = basePipeline ? VK_PIPELINE_CREATE_DERIVATIVE_BIT : VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT;
+    const VkPipelineCreateFlags flags =
+        basePipeline ? VK_PIPELINE_CREATE_DERIVATIVE_BIT : VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT;
     const VkPipeline basePipelineHandle = basePipeline ? basePipeline->getVkPipeline() : VK_NULL_HANDLE;
 
     const VkGraphicsPipelineCreateInfo createInfo{

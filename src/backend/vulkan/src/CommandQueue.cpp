@@ -26,14 +26,15 @@ void transferInitialImageLayout(VkCommandBuffer commandBuffer, snap::rhi::backen
         .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
         .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
         .image = texture->getImage(),
-        .subresourceRange = {
-            .aspectMask = snap::rhi::backend::vulkan::getImageAspectFlags(createInfo.format),
-            .baseMipLevel = 0,
-            .levelCount = createInfo.mipLevels,
-            .baseArrayLayer = 0,
-            // Use getArraySize since for 2D textures layers have to be handled separately (e.g. cubemap should return 6
-            // * depth) while 3D texture must only have 1 layer
-            .layerCount = snap::rhi::backend::vulkan::getArraySize(createInfo.textureType, createInfo.size)},
+        .subresourceRange = {.aspectMask = snap::rhi::backend::vulkan::getImageAspectFlags(createInfo.format),
+                             .baseMipLevel = 0,
+                             .levelCount = createInfo.mipLevels,
+                             .baseArrayLayer = 0,
+                             // Use getArraySize since for 2D textures layers have to be handled separately (e.g.
+                             // cubemap should return 6
+                             // * depth) while 3D texture must only have 1 layer
+                             .layerCount =
+                                 snap::rhi::backend::vulkan::getArraySize(createInfo.textureType, createInfo.size)},
     };
 
     vkCmdPipelineBarrier(commandBuffer,

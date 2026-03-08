@@ -44,7 +44,8 @@ ComputePipeline::ComputePipeline(snap::rhi::backend::vulkan::Device* device,
     VkPipelineCache pipelineCache = pPipelineCache ? pPipelineCache->getPipelineCache() : VK_NULL_HANDLE;
 
     this->pipelineLayout = pPipelineLayout->getPipelineLayout();
-    const VkPipelineCreateFlags flags = basePipeline ? VK_PIPELINE_CREATE_DERIVATIVE_BIT : VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT;
+    const VkPipelineCreateFlags flags =
+        basePipeline ? VK_PIPELINE_CREATE_DERIVATIVE_BIT : VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT;
     const VkPipeline basePipelineHandle = basePipeline ? basePipeline->getVkPipeline() : VK_NULL_HANDLE;
 
     const VkComputePipelineCreateInfo createInfo{

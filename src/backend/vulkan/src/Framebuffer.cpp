@@ -64,7 +64,8 @@ Framebuffer::Framebuffer(Device* device, const snap::rhi::FramebufferCreateInfo&
 
     const VkFramebufferCreateInfo framebufferCreateInfo{
         .sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
-        .renderPass = snap::rhi::backend::common::smart_cast<snap::rhi::backend::vulkan::RenderPass>(info.renderPass)->getRenderPass(),
+        .renderPass = snap::rhi::backend::common::smart_cast<snap::rhi::backend::vulkan::RenderPass>(info.renderPass)
+                          ->getRenderPass(),
         .attachmentCount = static_cast<uint32_t>(attachments.size()),
         .pAttachments = attachments.data(),
         .width = info.width,

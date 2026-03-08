@@ -9,11 +9,15 @@ Sampler::Sampler(Device* device, const snap::rhi::SamplerCreateInfo& info)
     const auto& validationLayer = device->getValidationLayer();
     {
         const VkSamplerMipmapMode mipmapMode = info.mipFilter == snap::rhi::SamplerMipFilter::NotMipmapped ?
-            VK_SAMPLER_MIPMAP_MODE_NEAREST : snap::rhi::backend::vulkan::toVkSamplerMipmapMode(info.mipFilter);
+                                                   VK_SAMPLER_MIPMAP_MODE_NEAREST :
+                                                   snap::rhi::backend::vulkan::toVkSamplerMipmapMode(info.mipFilter);
         const float minLod = info.mipFilter == snap::rhi::SamplerMipFilter::NotMipmapped ? 0.0f : info.lodMin;
-        const float maxLod = info.mipFilter == snap::rhi::SamplerMipFilter::NotMipmapped ? 0.0f :
-            (snap::rhi::backend::common::epsilonEqual(info.lodMax, snap::rhi::DefaultSamplerLodMax, 0.0001f) ?
-                VK_LOD_CLAMP_NONE : info.lodMax);
+        const float maxLod =
+            info.mipFilter == snap::rhi::SamplerMipFilter::NotMipmapped ?
+                0.0f :
+                (snap::rhi::backend::common::epsilonEqual(info.lodMax, snap::rhi::DefaultSamplerLodMax, 0.0001f) ?
+                     VK_LOD_CLAMP_NONE :
+                     info.lodMax);
 
         const VkSamplerCreateInfo createInfo{
             .sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
