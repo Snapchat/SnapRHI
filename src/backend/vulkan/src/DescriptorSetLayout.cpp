@@ -21,22 +21,21 @@ DescriptorSetLayout::DescriptorSetLayout(Device* device, const snap::rhi::Descri
     : snap::rhi::DescriptorSetLayout(device, info), vkDevice(device->getVkLogicalDevice()) {
     const auto& validationLayer = device->getValidationLayer();
     {
-        VkDescriptorSetLayoutCreateInfo createInfo{};
-        createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        createInfo.pNext = nullptr;
-
-        /**
-         * https://registry.khronos.org/vulkan/specs/latest/man/html/VkDescriptorSetLayoutCreateFlagBits.html
-         * **/
-        createInfo.flags = 0;
-
-        createInfo.bindingCount = static_cast<uint32_t>(info.bindings.size());
-
         std::vector<VkDescriptorSetLayoutBinding> bindings(info.bindings.size());
         for (size_t i = 0; i < bindings.size(); ++i) {
             bindings[i] = buildDescriptorSetLayoutBinding(info.bindings[i]);
         }
-        createInfo.pBindings = bindings.data();
+
+        const VkDescriptorSetLayoutCreateInfo createInfo{
+            .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+            .pNext = nullptr,
+            /**
+             * https://registry.khronos.org/vulkan/specs/latest/man/html/VkDescriptorSetLayoutCreateFlagBits.html
+             * **/
+            .flags = 0,
+            .bindingCount = static_cast<uint32_t>(info.bindings.size()),
+            .pBindings = bindings.data(),
+        };
 
         VkResult result = vkCreateDescriptorSetLayout(this->vkDevice, &createInfo, nullptr, &setLayout);
         SNAP_RHI_VALIDATE(validationLayer,

@@ -64,28 +64,25 @@ Buffer::Buffer(Device* vkDevice, const snap::rhi::BufferCreateInfo& info)
     : snap::rhi::Buffer(vkDevice, info), vkDevice(vkDevice->getVkLogicalDevice()) {
     const auto& validationLayer = vkDevice->getValidationLayer();
     {
-        VkBufferCreateInfo createInfo{};
-        createInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        createInfo.pNext = nullptr;
-
         /**
          * https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferCreateFlagBits.html
-         * **/
-        createInfo.flags = 0;
-
-        createInfo.size = info.size;
-        createInfo.usage = getVkBufferUsage(info.bufferUsage);
-
-        /**
+         *
          * VK_SHARING_MODE_EXCLUSIVE specifies that access to any range or image subresource of the object will be
          * exclusive to a single queue family at a time
          *
          * SnapRHI always assume that subresource of the object will be exclusive to a single queue family at a
          * time
          * */
-        createInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-        createInfo.queueFamilyIndexCount = 0;
-        createInfo.pQueueFamilyIndices = nullptr;
+        const VkBufferCreateInfo createInfo{
+            .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+            .size = info.size,
+            .usage = getVkBufferUsage(info.bufferUsage),
+            .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
+            .queueFamilyIndexCount = 0,
+            .pQueueFamilyIndices = nullptr,
+        };
 
         VkResult result = vkCreateBuffer(this->vkDevice, &createInfo, nullptr, &buffer);
         SNAP_RHI_VALIDATE(validationLayer,
@@ -101,11 +98,12 @@ Buffer::Buffer(Device* vkDevice, const snap::rhi::BufferCreateInfo& info)
 
         const auto memoryProperties = toVkMemoryPropertyFlags(info.memoryProperties);
 
-        VkMemoryAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocInfo.pNext = nullptr;
-        allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = vkDevice->chooseMemoryTypeIndex(memRequirements.memoryTypeBits, memoryProperties);
+        const VkMemoryAllocateInfo allocInfo{
+            .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+            .pNext = nullptr,
+            .allocationSize = memRequirements.size,
+            .memoryTypeIndex = vkDevice->chooseMemoryTypeIndex(memRequirements.memoryTypeBits, memoryProperties),
+        };
 
         const VkResult result = vkAllocateMemory(this->vkDevice, &allocInfo, nullptr, &memory);
         SNAP_RHI_VALIDATE(validationLayer,

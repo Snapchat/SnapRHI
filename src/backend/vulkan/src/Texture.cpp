@@ -32,11 +32,12 @@ Texture::Texture(Device* vkDevice, const snap::rhi::TextureCreateInfo& info, voi
       vkDevice(vkDevice->getVkLogicalDevice()),
       imageViewCache(
           std::make_shared<snap::rhi::backend::vulkan::ImageViewCache>(vkDevice, info, imageCreateInfoNext)) {
-    snap::rhi::TextureSubresourceRange range{};
-    range.baseMipLevel = 0;
-    range.levelCount = info.mipLevels;
-    range.baseArrayLayer = 0;
-    range.layerCount = snap::rhi::backend::vulkan::getArraySize(info.textureType, info.size);
+    const snap::rhi::TextureSubresourceRange range{
+        .baseMipLevel = 0,
+        .levelCount = info.mipLevels,
+        .baseArrayLayer = 0,
+        .layerCount = snap::rhi::backend::vulkan::getArraySize(info.textureType, info.size),
+    };
 
     const auto key = buildTextureViewInfo(info, range, info.format, info.textureType, info.components);
     texture = imageViewCache->acquire(key);
@@ -49,11 +50,12 @@ Texture::Texture(Device* vkDevice, const std::shared_ptr<TextureInterop>& textur
       imageViewCache(std::make_shared<snap::rhi::backend::vulkan::ImageViewCache>(vkDevice, textureInterop)) {
     const auto texInfo = textureInterop->getTextureCreateInfo();
 
-    snap::rhi::TextureSubresourceRange range{};
-    range.baseMipLevel = 0;
-    range.levelCount = texInfo.mipLevels;
-    range.baseArrayLayer = 0;
-    range.layerCount = snap::rhi::backend::vulkan::getArraySize(texInfo.textureType, texInfo.size);
+    const snap::rhi::TextureSubresourceRange range{
+        .baseMipLevel = 0,
+        .levelCount = texInfo.mipLevels,
+        .baseArrayLayer = 0,
+        .layerCount = snap::rhi::backend::vulkan::getArraySize(texInfo.textureType, texInfo.size),
+    };
 
     const auto key = buildTextureViewInfo(texInfo, range, texInfo.format, texInfo.textureType, texInfo.components);
     texture = imageViewCache->acquire(key);
@@ -64,11 +66,12 @@ Texture::Texture(Device* vkDevice,
                  const snap::rhi::TextureCreateInfo& info,
                  const std::shared_ptr<ImageViewCache>& imageViewCache)
     : snap::rhi::Texture(vkDevice, info), vkDevice(vkDevice->getVkLogicalDevice()), imageViewCache(imageViewCache) {
-    snap::rhi::TextureSubresourceRange range{};
-    range.baseMipLevel = 0;
-    range.levelCount = info.mipLevels;
-    range.baseArrayLayer = 0;
-    range.layerCount = snap::rhi::backend::vulkan::getArraySize(info.textureType, info.size);
+    const snap::rhi::TextureSubresourceRange range{
+        .baseMipLevel = 0,
+        .levelCount = info.mipLevels,
+        .baseArrayLayer = 0,
+        .layerCount = snap::rhi::backend::vulkan::getArraySize(info.textureType, info.size),
+    };
 
     const auto key = buildTextureViewInfo(info, range, info.format, info.textureType, info.components);
     texture = imageViewCache->acquire(key);
@@ -84,11 +87,12 @@ Texture::Texture(Device* vkDevice,
       vkDevice(vkDevice->getVkLogicalDevice()),
       imageViewCache(std::make_shared<snap::rhi::backend::vulkan::ImageViewCache>(
           vkDevice, info, externalImage, ownsImage, defaultLayout)) {
-    snap::rhi::TextureSubresourceRange range{};
-    range.baseMipLevel = 0;
-    range.levelCount = info.mipLevels;
-    range.baseArrayLayer = 0;
-    range.layerCount = snap::rhi::backend::vulkan::getArraySize(info.textureType, info.size);
+    const snap::rhi::TextureSubresourceRange range{
+        .baseMipLevel = 0,
+        .levelCount = info.mipLevels,
+        .baseArrayLayer = 0,
+        .layerCount = snap::rhi::backend::vulkan::getArraySize(info.textureType, info.size),
+    };
 
     const auto key = buildTextureViewInfo(info, range, info.format, info.textureType, info.components);
     texture = imageViewCache->acquire(key);

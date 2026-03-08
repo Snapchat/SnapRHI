@@ -43,27 +43,20 @@ ComputePipeline::ComputePipeline(snap::rhi::backend::vulkan::Device* device,
 
     VkPipelineCache pipelineCache = pPipelineCache ? pPipelineCache->getPipelineCache() : VK_NULL_HANDLE;
 
-    VkComputePipelineCreateInfo createInfo{};
-    createInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
-    createInfo.pNext = nullptr;
+    this->pipelineLayout = pPipelineLayout->getPipelineLayout();
+    const VkPipelineCreateFlags flags =
+        basePipeline ? VK_PIPELINE_CREATE_DERIVATIVE_BIT : VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT;
+    const VkPipeline basePipelineHandle = basePipeline ? basePipeline->getVkPipeline() : VK_NULL_HANDLE;
 
-    /**
-     * https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineCreateFlagBits.html
-     * **/
-    createInfo.flags = 0;
-
-    createInfo.stage = shaderModule->getShaderStage();
-    createInfo.layout = this->pipelineLayout = pPipelineLayout->getPipelineLayout();
-
-    createInfo.basePipelineIndex = -1;
-
-    if (basePipeline) {
-        createInfo.flags |= VK_PIPELINE_CREATE_DERIVATIVE_BIT;
-        createInfo.basePipelineHandle = basePipeline->getVkPipeline();
-    } else {
-        createInfo.flags |= VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT;
-        createInfo.basePipelineHandle = VK_NULL_HANDLE;
-    }
+    const VkComputePipelineCreateInfo createInfo{
+        .sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = flags,
+        .stage = shaderModule->getShaderStage(),
+        .layout = this->pipelineLayout,
+        .basePipelineHandle = basePipelineHandle,
+        .basePipelineIndex = -1,
+    };
 
     const bool isNativeReflectionAcquired = (info.pipelineCreateFlags & PipelineCreateFlags::AcquireNativeReflection) ==
                                             PipelineCreateFlags::AcquireNativeReflection;

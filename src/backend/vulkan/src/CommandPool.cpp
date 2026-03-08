@@ -4,10 +4,11 @@
 namespace snap::rhi::backend::vulkan {
 CommandPool::CommandPool(snap::rhi::backend::vulkan::Device* device, uint32_t queueFamilyIndex)
     : device(device), queueFamilyIndex(queueFamilyIndex), validationLayer(device->getValidationLayer()) {
-    VkCommandPoolCreateInfo createInfo{};
-    createInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    createInfo.queueFamilyIndex = queueFamilyIndex;
-    createInfo.flags = 0;
+    const VkCommandPoolCreateInfo createInfo{
+        .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+        .flags = 0,
+        .queueFamilyIndex = queueFamilyIndex,
+    };
 
     for (uint32_t i = 0; i < pools.size(); ++i) {
         VkResult result = vkCreateCommandPool(device->getVkLogicalDevice(), &createInfo, nullptr, &pools[i]);

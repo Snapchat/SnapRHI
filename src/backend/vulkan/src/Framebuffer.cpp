@@ -62,16 +62,16 @@ Framebuffer::Framebuffer(Device* device, const snap::rhi::FramebufferCreateInfo&
         attachments.push_back(resolveImageView(vkTexture, range));
     }
 
-    VkFramebufferCreateInfo framebufferCreateInfo{};
-    framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-    framebufferCreateInfo.renderPass =
-        snap::rhi::backend::common::smart_cast<snap::rhi::backend::vulkan::RenderPass>(info.renderPass)
-            ->getRenderPass();
-    framebufferCreateInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
-    framebufferCreateInfo.pAttachments = attachments.data();
-    framebufferCreateInfo.width = info.width;
-    framebufferCreateInfo.height = info.height;
-    framebufferCreateInfo.layers = info.layers;
+    const VkFramebufferCreateInfo framebufferCreateInfo{
+        .sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
+        .renderPass = snap::rhi::backend::common::smart_cast<snap::rhi::backend::vulkan::RenderPass>(info.renderPass)
+                          ->getRenderPass(),
+        .attachmentCount = static_cast<uint32_t>(attachments.size()),
+        .pAttachments = attachments.data(),
+        .width = info.width,
+        .height = info.height,
+        .layers = info.layers,
+    };
 
     VkResult result = vkCreateFramebuffer(vkDevice, &framebufferCreateInfo, nullptr, &framebuffer);
     SNAP_RHI_VALIDATE(device->getValidationLayer(),

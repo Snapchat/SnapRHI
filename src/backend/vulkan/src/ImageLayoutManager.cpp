@@ -83,13 +83,14 @@ void ImageLayoutManager::transferLayout(TextureLayout& textureLayoutInfo,
         }
     };
 
-    VkImageMemoryBarrier imageMemoryBarrier{};
-    imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    imageMemoryBarrier.dstAccessMask = targetAccessMask;
-    imageMemoryBarrier.newLayout = targetLayout;
-    imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    imageMemoryBarrier.image = image;
+    VkImageMemoryBarrier imageMemoryBarrier{
+        .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+        .dstAccessMask = targetAccessMask,
+        .newLayout = targetLayout,
+        .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+        .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+        .image = image,
+    };
 
     if (canTransferWholeRange) {
         const auto& oldLayoutInfo = textureLayoutInfo.getLayout(range.baseArrayLayer, range.baseMipLevel);

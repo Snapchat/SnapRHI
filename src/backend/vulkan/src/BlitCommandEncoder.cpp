@@ -33,10 +33,11 @@ void BlitCommandEncoder::copyBuffer(snap::rhi::Buffer* srcBuffer,
     auto* vkDstBuffer = snap::rhi::backend::common::smart_cast<snap::rhi::backend::vulkan::Buffer>(dstBuffer);
 
     for (const auto& copyInfo : info) {
-        VkBufferCopy copyRegion{};
-        copyRegion.srcOffset = copyInfo.srcOffset;
-        copyRegion.dstOffset = copyInfo.dstOffset;
-        copyRegion.size = copyInfo.size;
+        const VkBufferCopy copyRegion{
+            .srcOffset = copyInfo.srcOffset,
+            .dstOffset = copyInfo.dstOffset,
+            .size = copyInfo.size,
+        };
 
         vkCmdCopyBuffer(vkCommandBuffer, vkSrcBuffer->getVkBuffer(), vkDstBuffer->getVkBuffer(), 1, &copyRegion);
     }
@@ -78,30 +79,30 @@ void BlitCommandEncoder::copyBufferToTexture(snap::rhi::Buffer* srcBuffer,
         const uint32_t bufferRowLength =
             copyInfo.bytesPerRow ? static_cast<uint32_t>(copyInfo.bytesPerRow / bytesPerPixel) : 0;
 
-        VkBufferImageCopy region{};
-        region.bufferOffset = copyInfo.bufferOffset; // Must be a multiple of 4
-        region.bufferRowLength = bufferRowLength;
-        region.bufferImageHeight =
-            copyInfo.bytesPerRow ? copyInfo.bytesPerSlice / copyInfo.bytesPerRow : /*Tightly packed*/ 0;
-
-        region.imageSubresource.aspectMask = getImageAspectFlags(dstTextureCreateInfo.format);
-        region.imageSubresource.mipLevel = copyInfo.textureSubresource.mipLevel;
-
         /**
          * baseArrayLayer + layerCount	=> Image array slices or cube map faces (2D or 2D array images)
          * imageOffset.z + imageExtent.depth =>	Depth within a 3D texture (true 3D volume)
          * */
-        region.imageSubresource.baseArrayLayer =
-            getBaseArrayLayer(dstTextureCreateInfo.textureType, copyInfo.textureOffset.z);
-        region.imageSubresource.layerCount =
-            getLayerCount(dstTextureCreateInfo.textureType, copyInfo.textureExtent.depth);
-
-        region.imageOffset = {copyInfo.textureOffset.x,
-                              copyInfo.textureOffset.y,
-                              getImageOffsetZ(dstTextureCreateInfo.textureType, copyInfo.textureOffset.z)};
-        region.imageExtent = {copyInfo.textureExtent.width,
-                              copyInfo.textureExtent.height,
-                              getImageExtentDepth(dstTextureCreateInfo.textureType, copyInfo.textureExtent.depth)};
+        const VkBufferImageCopy region{
+            .bufferOffset = copyInfo.bufferOffset, // Must be a multiple of 4
+            .bufferRowLength = bufferRowLength,
+            .bufferImageHeight = copyInfo.bytesPerRow ?
+                                     static_cast<uint32_t>(copyInfo.bytesPerSlice / copyInfo.bytesPerRow) :
+                                     /*Tightly packed*/ 0,
+            .imageSubresource =
+                {
+                    .aspectMask = getImageAspectFlags(dstTextureCreateInfo.format),
+                    .mipLevel = copyInfo.textureSubresource.mipLevel,
+                    .baseArrayLayer = getBaseArrayLayer(dstTextureCreateInfo.textureType, copyInfo.textureOffset.z),
+                    .layerCount = getLayerCount(dstTextureCreateInfo.textureType, copyInfo.textureExtent.depth),
+                },
+            .imageOffset = {copyInfo.textureOffset.x,
+                            copyInfo.textureOffset.y,
+                            getImageOffsetZ(dstTextureCreateInfo.textureType, copyInfo.textureOffset.z)},
+            .imageExtent = {copyInfo.textureExtent.width,
+                            copyInfo.textureExtent.height,
+                            getImageExtentDepth(dstTextureCreateInfo.textureType, copyInfo.textureExtent.depth)},
+        };
 
         imageLayoutManager.transferLayout(vkDstTexture,
                                           {.aspectMask = region.imageSubresource.aspectMask,
@@ -158,30 +159,30 @@ void BlitCommandEncoder::copyTextureToBuffer(snap::rhi::Texture* srcTexture,
         const uint32_t bufferRowLength =
             copyInfo.bytesPerRow ? static_cast<uint32_t>(copyInfo.bytesPerRow / bytesPerPixel) : 0;
 
-        VkBufferImageCopy region{};
-        region.bufferOffset = copyInfo.bufferOffset; // Must be a multiple of 4
-        region.bufferRowLength = bufferRowLength;
-        region.bufferImageHeight =
-            copyInfo.bytesPerRow ? copyInfo.bytesPerSlice / copyInfo.bytesPerRow : /*Tightly packed*/ 0;
-
-        region.imageSubresource.aspectMask = getImageAspectFlags(srcTextureCreateInfo.format);
-        region.imageSubresource.mipLevel = copyInfo.textureSubresource.mipLevel;
-
         /**
          * baseArrayLayer + layerCount	=> Image array slices or cube map faces (2D or 2D array images)
          * imageOffset.z + imageExtent.depth =>	Depth within a 3D texture (true 3D volume)
          * */
-        region.imageSubresource.baseArrayLayer =
-            getBaseArrayLayer(srcTextureCreateInfo.textureType, copyInfo.textureOffset.z);
-        region.imageSubresource.layerCount =
-            getLayerCount(srcTextureCreateInfo.textureType, copyInfo.textureExtent.depth);
-
-        region.imageOffset = {copyInfo.textureOffset.x,
-                              copyInfo.textureOffset.y,
-                              getImageOffsetZ(srcTextureCreateInfo.textureType, copyInfo.textureOffset.z)};
-        region.imageExtent = {copyInfo.textureExtent.width,
-                              copyInfo.textureExtent.height,
-                              getImageExtentDepth(srcTextureCreateInfo.textureType, copyInfo.textureExtent.depth)};
+        const VkBufferImageCopy region{
+            .bufferOffset = copyInfo.bufferOffset, // Must be a multiple of 4
+            .bufferRowLength = bufferRowLength,
+            .bufferImageHeight = copyInfo.bytesPerRow ?
+                                     static_cast<uint32_t>(copyInfo.bytesPerSlice / copyInfo.bytesPerRow) :
+                                     /*Tightly packed*/ 0,
+            .imageSubresource =
+                {
+                    .aspectMask = getImageAspectFlags(srcTextureCreateInfo.format),
+                    .mipLevel = copyInfo.textureSubresource.mipLevel,
+                    .baseArrayLayer = getBaseArrayLayer(srcTextureCreateInfo.textureType, copyInfo.textureOffset.z),
+                    .layerCount = getLayerCount(srcTextureCreateInfo.textureType, copyInfo.textureExtent.depth),
+                },
+            .imageOffset = {copyInfo.textureOffset.x,
+                            copyInfo.textureOffset.y,
+                            getImageOffsetZ(srcTextureCreateInfo.textureType, copyInfo.textureOffset.z)},
+            .imageExtent = {copyInfo.textureExtent.width,
+                            copyInfo.textureExtent.height,
+                            getImageExtentDepth(srcTextureCreateInfo.textureType, copyInfo.textureExtent.depth)},
+        };
 
         imageLayoutManager.transferLayout(vkSrcTexture,
                                           {.aspectMask = region.imageSubresource.aspectMask,
@@ -226,25 +227,6 @@ void BlitCommandEncoder::copyTexture(snap::rhi::Texture* srcTexture,
     const auto& dstTextureCreateInfo = vkDstTexture->getCreateInfo();
 
     for (const auto& copyInfo : info) {
-        VkImageCopy copyRegion{};
-        copyRegion.srcSubresource.aspectMask = getImageAspectFlags(srcTextureCreateInfo.format);
-        copyRegion.srcSubresource.mipLevel = copyInfo.srcSubresource.mipLevel;
-        copyRegion.srcSubresource.baseArrayLayer =
-            getBaseArrayLayer(srcTextureCreateInfo.textureType, copyInfo.srcOffset.z);
-        copyRegion.srcSubresource.layerCount = getLayerCount(srcTextureCreateInfo.textureType, copyInfo.extent.depth);
-        copyRegion.srcOffset = {copyInfo.srcOffset.x,
-                                copyInfo.srcOffset.y,
-                                getImageOffsetZ(srcTextureCreateInfo.textureType, copyInfo.srcOffset.z)};
-
-        copyRegion.dstSubresource.aspectMask = getImageAspectFlags(dstTextureCreateInfo.format);
-        copyRegion.dstSubresource.mipLevel = copyInfo.dstSubresource.mipLevel;
-        copyRegion.dstSubresource.baseArrayLayer =
-            getBaseArrayLayer(dstTextureCreateInfo.textureType, copyInfo.dstOffset.z);
-        copyRegion.dstSubresource.layerCount = getLayerCount(dstTextureCreateInfo.textureType, copyInfo.extent.depth);
-        copyRegion.dstOffset = {copyInfo.dstOffset.x,
-                                copyInfo.dstOffset.y,
-                                getImageOffsetZ(dstTextureCreateInfo.textureType, copyInfo.dstOffset.z)};
-
         /**
          * srcOffset.z, dstOffset.z	=> Z offset in 3D texture => VK_IMAGE_TYPE_3D only
          * extent.depth	=> Z size in 3D texture	=> VK_IMAGE_TYPE_3D only
@@ -252,9 +234,31 @@ void BlitCommandEncoder::copyTexture(snap::rhi::Texture* srcTexture,
          **/
 
         // srcImage.imageType == dstImage.imageType <= This is a hard Vulkan rule
-        copyRegion.extent = {copyInfo.extent.width,
-                             copyInfo.extent.height,
-                             getImageExtentDepth(srcTextureCreateInfo.textureType, copyInfo.extent.depth)};
+        const VkImageCopy copyRegion{
+            .srcSubresource =
+                {
+                    .aspectMask = getImageAspectFlags(srcTextureCreateInfo.format),
+                    .mipLevel = copyInfo.srcSubresource.mipLevel,
+                    .baseArrayLayer = getBaseArrayLayer(srcTextureCreateInfo.textureType, copyInfo.srcOffset.z),
+                    .layerCount = getLayerCount(srcTextureCreateInfo.textureType, copyInfo.extent.depth),
+                },
+            .srcOffset = {copyInfo.srcOffset.x,
+                          copyInfo.srcOffset.y,
+                          getImageOffsetZ(srcTextureCreateInfo.textureType, copyInfo.srcOffset.z)},
+            .dstSubresource =
+                {
+                    .aspectMask = getImageAspectFlags(dstTextureCreateInfo.format),
+                    .mipLevel = copyInfo.dstSubresource.mipLevel,
+                    .baseArrayLayer = getBaseArrayLayer(dstTextureCreateInfo.textureType, copyInfo.dstOffset.z),
+                    .layerCount = getLayerCount(dstTextureCreateInfo.textureType, copyInfo.extent.depth),
+                },
+            .dstOffset = {copyInfo.dstOffset.x,
+                          copyInfo.dstOffset.y,
+                          getImageOffsetZ(dstTextureCreateInfo.textureType, copyInfo.dstOffset.z)},
+            .extent = {copyInfo.extent.width,
+                       copyInfo.extent.height,
+                       getImageExtentDepth(srcTextureCreateInfo.textureType, copyInfo.extent.depth)},
+        };
 
         imageLayoutManager.transferLayout(vkSrcTexture,
                                           {.aspectMask = copyRegion.srcSubresource.aspectMask,
@@ -327,24 +331,28 @@ void BlitCommandEncoder::generateMipmaps(snap::rhi::Texture* texture) {
     }
 
     for (uint32_t i = 1; i < createInfo.mipLevels; i++) {
-        VkImageBlit blit{};
-        blit.srcSubresource.aspectMask = aspectMask;
-        blit.srcSubresource.mipLevel = i - 1;
-        blit.srcSubresource.baseArrayLayer = 0;
-        blit.srcSubresource.layerCount = 1;
-        blit.srcOffsets[0] = {0, 0, 0};
-        blit.srcOffsets[1] = {mipWidth, mipHeight, mipDepth};
+        const int32_t dstWidth = std::max(mipWidth >> 1, 1);
+        const int32_t dstHeight = std::max(mipHeight >> 1, 1);
+        const int32_t dstDepth = std::max(mipDepth >> 1, 1);
 
-        int32_t dstWidth = std::max(mipWidth >> 1, 1);
-        int32_t dstHeight = std::max(mipHeight >> 1, 1);
-        int32_t dstDepth = std::max(mipDepth >> 1, 1);
-
-        blit.dstSubresource.aspectMask = aspectMask;
-        blit.dstSubresource.mipLevel = i;
-        blit.dstSubresource.baseArrayLayer = 0;
-        blit.dstSubresource.layerCount = 1;
-        blit.dstOffsets[0] = {0, 0, 0};
-        blit.dstOffsets[1] = {dstWidth, dstHeight, dstDepth};
+        const VkImageBlit blit{
+            .srcSubresource =
+                {
+                    .aspectMask = aspectMask,
+                    .mipLevel = i - 1,
+                    .baseArrayLayer = 0,
+                    .layerCount = 1,
+                },
+            .srcOffsets = {{0, 0, 0}, {mipWidth, mipHeight, mipDepth}},
+            .dstSubresource =
+                {
+                    .aspectMask = aspectMask,
+                    .mipLevel = i,
+                    .baseArrayLayer = 0,
+                    .layerCount = 1,
+                },
+            .dstOffsets = {{0, 0, 0}, {dstWidth, dstHeight, dstDepth}},
+        };
 
         imageLayoutManager.transferLayout(vkTexture,
                                           {.aspectMask = blit.srcSubresource.aspectMask,
